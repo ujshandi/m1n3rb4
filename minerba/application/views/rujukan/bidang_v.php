@@ -4,7 +4,7 @@ $(function(){
     
    
     newData<?=$objectId;?> = function (){  
-        $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add Bidang');  
+        $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Tambah Bidang');  
         $('#fm<?=$objectId;?>').form('clear');  
         url = base_url+'rujukan/bidang/save/add';  
     }
@@ -195,13 +195,13 @@ $(function(){
 	<div id="tb<?=$objectId;?>" style="height:auto">
 	  <div style="margin-bottom:5px">
 		<? if($this->sys_menu_model->cekAkses('ADD;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
+			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Tambah</a>  
 		<?}?>
 		<? if($this->sys_menu_model->cekAkses('EDIT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
 		<? if($this->sys_menu_model->cekAkses('DELETE;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
+			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Hapus</a>
 		<?}?>
 	
 	  </div>
@@ -232,6 +232,6 @@ $(function(){
 	  </form>
     </div>
     <div id="dlg-buttons">
-	  <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>
-	  <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Cancel</a>
+	  <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a>
+	  <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Batal</a>
     </div>

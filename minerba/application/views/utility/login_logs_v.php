@@ -152,40 +152,37 @@
 	</style>
 
 	<div id="tb<?=$objectId;?>" style="height:auto">
-		<table border="0" cellpadding="1" cellspacing="1" width="100%">
-			<tr>
-				<td>
-				<div class="fsearch">
-					<table border="0" cellpadding="1" cellspacing="4"  width="100%">
-					<tr>
-						<td width="60px">Periode :</td>
-						<td width="300px">
-							<input name="periode_awal" value="<?=date('d-m-Y');?>" id="periode_awal<?=$objectId;?>" type="text" size="13" class="easyui-datebox" required="required"> &nbsp;&nbsp;s/d&nbsp;&nbsp;
-							<input id="periode_akhir<?=$objectId;?>" name="periode_akhir" value="<?=date('d-m-Y');?>" type="text" size="13" class="easyui-datebox" required="required">
-						</td>
-						
-					</tr>
-					
-					
-					<tr>
-						<td align="left" colspan="4" valign="top">
-							<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
-							<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
-						</td>
-					</tr>
-					</table>
-				</div>
-				</td>
-			</tr>
-		</table>
-		<div style="margin-bottom:5px">  
-			<!--<? if($this->sys_menu_model->cekAkses('PRINT;',556,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			
-			<?}?>
-			<? if($this->sys_menu_model->cekAkses('EXCEL;',556,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-				<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
-			<?}?> -->
-		</div>
+            <table border="0" cellpadding="1" cellspacing="1" width="100%">
+                <tr>
+                    <td>
+                    <div class="fsearch">
+                    <table border="0" cellpadding="1" cellspacing="4"  width="100%">
+                    <tr>
+                        <td width="60px">Periode :</td>
+                        <td width="300px">
+                                <input name="periode_awal" value="<?=date('d-m-Y');?>" id="periode_awal<?=$objectId;?>" type="text" size="13" class="easyui-datebox" required="required"> &nbsp;&nbsp;s/d&nbsp;&nbsp;
+                                <input id="periode_akhir<?=$objectId;?>" name="periode_akhir" value="<?=date('d-m-Y');?>" type="text" size="13" class="easyui-datebox" required="required">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" colspan="4" valign="top">
+                            <a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
+                            <a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Cari</a>
+                        </td>
+                    </tr>
+                    </table>
+                    </div>
+                    </td>
+                </tr>
+            </table>
+            <div style="margin-bottom:5px">  
+                    <!--<? if($this->sys_menu_model->cekAkses('PRINT;',556,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+
+                    <?}?>
+                    <? if($this->sys_menu_model->cekAkses('EXCEL;',556,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+                            <a href="#" onclick="toExcel<=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
+                    <?}?> -->
+            </div>
 	</div>
 	
 	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data Login Log" toolbar="#tb<?=$objectId;?>" fitColumns="true" singleSelect="true" rownumbers="true" pagination="true">
@@ -199,4 +196,4 @@
 	  </tr>
 	  </thead>  
 	</table>
-	<div class="popdesc" id="popdesc<?=$objectId?>">indriyanto</div>
+        <div class="popdesc" id="popdesc<?=$objectId?>">&nbsp;</div>

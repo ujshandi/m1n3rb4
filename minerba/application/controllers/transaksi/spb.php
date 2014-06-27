@@ -41,6 +41,8 @@ class Spb extends CI_Controller {
     }
 
     function grid($tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori){	
+        $periodeawal = $this->utility->ourDeFormatSQLDate($periodeawal);
+	$periodeakhir = $this->utility->ourDeFormatSQLDate($periodeakhir);
         echo $this->spb_model->easyGrid(1,$tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori);
     }
     

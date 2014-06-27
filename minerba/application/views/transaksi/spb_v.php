@@ -1,7 +1,24 @@
 <script  type="text/javascript" >
 $(function(){
     var url;
-    
+        function number_format(num,dig,dec,sep) {
+            x=new Array();
+            s=(num<0?"-":"");
+            num=Math.abs(num).toFixed(dig).split(".");
+            r=num[0].split("").reverse();
+            for(var i=1;i<=r.length;i++){x.unshift(r[i-1]);if(i%3==0&&i!=r.length)x.unshift(sep);}
+            return s+x.join("")+(num[1]?dec+num[1]:"");
+          }
+        formatMoney = function(val,row){
+//            var lastRow = $("#dg<?=$objectId?>").datagrid('getData').total;
+//            
+//            if (row>lastRow){
+//                return val;
+//                alert('here');
+//            }    
+//            else
+                return number_format(val,0,',','.');
+        }
         myformatter=function(date){
             var y = date.getFullYear();
             var m = date.getMonth()+1;
@@ -22,7 +39,7 @@ $(function(){
         }
 
     newData<?=$objectId;?> = function (){  
-        $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Add SPB');  
+        $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Tambah SPB');  
         $('#fm<?=$objectId;?>').form('clear');  
         $('#tanggal<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
         autoKegiatan<?=$objectId;?>('','');       
@@ -272,45 +289,45 @@ $(function(){
 		}
 	</style>
 	<div id="tb<?=$objectId;?>" style="height:auto">
-        <table border="0" cellpadding="1" cellspacing="1" width="100%">
-		<tr>
-            <td>
+            <table border="0" cellpadding="1" cellspacing="1" width="100%">
+            <tr>
+                <td>
                 <div class="fsearch">                    
-					<table border="0" cellpadding="1" cellspacing="1">				
-					<tr>
-						<td>Periode : &nbsp;</td>
-						<td><input name="periodeawal" id="periodeawal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser"  > s.d. <input name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser"  ></td>
-						<td width="20px">&nbsp;</td>
-						<td>Bidang : &nbsp;</td>
-						<td> <?=$bidanglistFilter?>  </td>
-						 <td width="20px">&nbsp;</td>
-						<td>Kategori : &nbsp;</td>
-						<td> <?=$kategorilistFilter?>  </td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-					</tr>
-					<tr>
-						<td align="right" colspan="8" valign="top">
-							<a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
-							<a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Search</a>
-						</td>
-					</tr>
-					</table>
-			</div>
-			</td>
-		</tr>
-		</table>
+                    <table border="0" cellpadding="1" cellspacing="1">				
+                    <tr>
+                        <td>Periode : &nbsp;</td>
+                        <td><input name="periodeawal" id="periodeawal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser"  > s.d. <input name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser"  ></td>
+                        <td width="20px">&nbsp;</td>
+                        <td>Bidang : &nbsp;</td>
+                        <td> <?=$bidanglistFilter?>  </td>
+                         <td width="20px">&nbsp;</td>
+                        <td>Kategori : &nbsp;</td>
+                        <td> <?=$kategorilistFilter?>  </td>
+                    </tr>
+                    <tr>
+                            <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td align="right" colspan="8" valign="top">
+                                <a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
+                                <a href="#" class="easyui-linkbutton" onclick="searchData<?=$objectId;?>();" iconCls="icon-search">Cari</a>
+                        </td>
+                    </tr>
+                    </table>
+                </div>
+                </td>
+            </tr>
+            </table>
 
 	  <div style="margin-bottom:5px">
 		<? if($this->sys_menu_model->cekAkses('ADD;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Add</a>  
+			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Tambah</a>  
 		<?}?>
 		<? if($this->sys_menu_model->cekAkses('EDIT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
 		<? if($this->sys_menu_model->cekAkses('DELETE;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Delete</a>
+			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Hapus</a>
 		<?}?>
 		<? if($this->sys_menu_model->cekAkses('PRINT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
@@ -327,7 +344,7 @@ $(function(){
 	  <tr>
 		<th halign="center" align="left" rowspan="2" field="tanggal" sortable="true" width="80">Tanggal</th>
 		<th halign="center" align="center" rowspan="2" field="nomor" sortable="true" width="200">Nomor</th>
-		<th halign="center" align="right" rowspan="2" field="jumlah" sortable="true" width="100">Jumlah</th>
+		<th halign="center" align="right" rowspan="2" field="jumlah" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
 		<th halign="center" align="left" rowspan="2" field="bidang" sortable="true" width="100">Bidang</th>
 		<th halign="center" align="left" rowspan="2" field="kategori" sortable="true" width="100">Kategori</th>
 		<th halign="center" align="left" rowspan="2" field="untuk" sortable="true" width="350">Untuk Pembayaran</th>
@@ -347,7 +364,7 @@ $(function(){
 
 	 <!-- AREA untuk Form Add/EDIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 	
-	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:800px;height:350px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
+	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:800px;height:450px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
 	  <div class="ftitle">Tambah/Edit Data SPB</div>
 	  <form id="fm<?=$objectId;?>" method="post">
 		 <div class="fitem">
@@ -385,11 +402,11 @@ $(function(){
 		</div> -->
               <div class="fitem">
 		  <label style="width:150px;vertical-align:top">Jumlah :</label>
-		  <input name="jumlah" class="easyui-numberbox" style="text-align:right" data-options="precision:2,groupSeparator:'.',decimalSeparator:','"  required="true">
+		  <input name="jumlah" class="easyui-numberbox" style="text-align:right" data-options="precision:0,groupSeparator:'.',decimalSeparator:','"  required="true">
 		</div>
 	  </form>
     </div>
     <div id="dlg-buttons">
-	  <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Save</a>
-	  <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Cancel</a>
+	  <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a>
+	  <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Batal</a>
     </div>
