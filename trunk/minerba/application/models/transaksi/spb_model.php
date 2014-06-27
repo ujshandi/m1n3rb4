@@ -31,7 +31,7 @@ class Spb_model extends CI_Model
                 case "verifikasi" : $this->db->where("((status_verifikasi is null) or (status_verifikasi=''))");break;
                 case "penguji" : 
                     $this->db->where("((status_verifikasi is not null) or (status_verifikasi<>''))");
-                    $this->db->where("((status_spm is null) or (status_spm<>'')(status_bendahara is null) or (status_bendahara<>''))");
+                    $this->db->where("((status_spm is null) or (status_spm<>'') or (status_bendahara is null) or (status_bendahara<>''))");
                 break;
                 case "spm" : 
                     $this->db->where("((status_penguji is not null) or (status_penguji<>''))");
@@ -39,7 +39,8 @@ class Spb_model extends CI_Model
                 break;
                 case "bendahara" : 
                     $this->db->where("((status_penguji is not null) or (status_penguji<>''))");
-                    $this->db->where("s.kategori_id in (select kategori_bahan, kategori_non_bahan from tbl_konstanta) ");
+                    $this->db->where("s.kategori_id in (select kategori_bahan from tbl_konstanta union "
+                            . "select kategori_non_bahan from tbl_konstanta)");
                 break;
             }
             if($filawal != '' && $filawal != '-1' && $filawal != null) {
@@ -107,7 +108,7 @@ class Spb_model extends CI_Model
                     $response->rows[$i]['status_bendahara_tanggal']=$this->utility->ourFormatDate2($this->utility->ourEkstrakString($row->status_bendahara,';',1));
                     $response->rows[$i]['status_bendahara_oleh']=$this->user_model->getFullName($this->utility->ourEkstrakString($row->status_bendahara,';',0));                
                 }
-                $response->rows[$i]['jumlah']=$this->utility->ourFormatNumber($row->jumlah);
+                $response->rows[$i]['jumlah']=$row->jumlah; //$this->utility->ourFormatNumber($row->jumlah);
                 $jumlah += $row->jumlah;
                 //utk kepentingan export pdf===================
                 $pdfdata[] = array($no,$response->rows[$i]['nomor'],$response->rows[$i]['tujuan'],$response->rows[$i]['untuk'],$response->rows[$i]['beban_kegiatan']);
@@ -149,7 +150,8 @@ class Spb_model extends CI_Model
         
         $response->footer[0]['no']='';
         $response->footer[0]['sb_id']='';        
-        $response->footer[0]['jumlah']='<b>'.$this->utility->cekNumericFmt($jumlah).'</b>';
+        //$response->footer[0]['jumlah']='<b>'.$jumlah.'</b>';//$this->utility->cekNumericFmt(
+        $response->footer[0]['jumlah']=$jumlah;//$this->utility->cekNumericFmt(
 
         if ($purpose==1) //grid normal
             return json_encode($response);
@@ -174,7 +176,7 @@ class Spb_model extends CI_Model
             case "verifikasi" : $this->db->where("((status_verifikasi is null) or (status_verifikasi=''))");break;
             case "penguji" : 
                 $this->db->where("((status_verifikasi is not null) or (status_verifikasi<>''))");
-                $this->db->where("((status_spm is null) or (status_spm<>'')(status_bendahara is null) or (status_bendahara<>''))");
+                $this->db->where("((status_spm is null) or (status_spm<>'') or (status_bendahara is null) or (status_bendahara<>''))");
             break;
             case "spm" : 
                 $this->db->where("((status_penguji is not null) or (status_penguji<>''))");
@@ -182,7 +184,8 @@ class Spb_model extends CI_Model
             break;
             case "bendahara" : 
                 $this->db->where("((status_penguji is not null) or (status_penguji<>''))");
-                $this->db->where("kategori_id in (select kategori_bahan, kategori_non_bahan from tbl_konstanta) ");
+                $this->db->where("kategori_id in (select kategori_bahan from tbl_konstanta union "
+                            . "select kategori_non_bahan from tbl_konstanta)");
             break;
         }
         if($filawal != '' && $filawal != '-1' && $filawal != null) {
