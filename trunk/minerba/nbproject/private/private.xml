@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/var/www/minerba/public/js/jquery-easyui-1.3.3/easyloader.js</file>
+            <file>file:/var/www/minerba/application/libraries/utility.php</file>
+            <file>file:/var/www/minerba/application/models/rujukan/spb_kategori_model.php</file>
+            <file>file:/var/www/minerba/application/views/transaksi/spb_v.php</file>
+            <file>file:/var/www/minerba/application/views/rujukan/kegiatan_v.php</file>
+            <file>file:/var/www/minerba/application/models/rujukan/bidang_model.php</file>
+            <file>file:/var/www/minerba/application/views/transaksi/spb_approval_v.php</file>
+            <file>file:/var/www/minerba/application/models/transaksi/spb_model.php</file>
+            <file>file:/var/www/minerba/application/views/home_vw.php</file>
+            <file>file:/var/www/minerba/application/controllers/transaksi/spb.php</file>
+        </group>
+    </open-files>
+</project-private>
