@@ -3,11 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/www/minerba/application/logs/log-2014-06-26.php</file>
-            <file>file:/D:/www/minerba/application/views/utility/login_logs_v.php</file>
             <file>file:/D:/www/minerba/application/views/transaksi/spb_v.php</file>
             <file>file:/D:/www/minerba/application/controllers/transaksi/spb.php</file>
-            <file>file:/D:/www/minerba/application/models/utility/login_log_model.php</file>
             <file>file:/D:/www/minerba/application/models/transaksi/spb_model.php</file>
             <file>file:/D:/www/minerba/application/views/transaksi/spb_approval_v.php</file>
         </group>
