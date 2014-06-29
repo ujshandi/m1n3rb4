@@ -113,7 +113,7 @@ class Spb extends CI_Controller {
                         $result = $this->spb_model->InsertOnDb($data,$status);
                 }
                 else
-                        $data['pesan_error'] .= 'Kode sudah ada';
+                        $data['pesan_error'] .= 'Nomor sudah ada';
 
             }else { // edit
                 $result=$this->spb_model->UpdateOnDb($data,$kode);

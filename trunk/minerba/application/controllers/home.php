@@ -23,7 +23,12 @@ class Home extends CI_Controller {
 					'title_page'=>'Aplikasi Penelusuran Approval SPB - MINERBA',
 					'sess_fullname'=>$this->session->userdata('full_name'),
 					'sess_apptype'=>$this->session->userdata('app_type'),//easyui/jquery-1.6.min.js
-					'js'=>array('js/jquery-easyui-1.3.3/jquery.min.js','js/jquery-easyui-1.3.3/jquery.easyui.min.js','js/jquery-easyui-1.3.3/plugins/jquery-easyui-datagridview/datagrid-detailview.js','js/jquery-easyui-1.3.3/plugins/jquery-easyui-datagridview/datagrid-groupview.js','js/uri_encode_decode.js','js/json2.js','js/jquery.autosize.min.js','js/jquery.formatCurrency-1.4.0.min.js','js/formwizard.js','js/jquery.jqURL.js','js/ckeditor/ckeditor.js','js/purl.js','js/autoNumeric.js'),
+					'js'=>array('js/jquery-easyui-1.3.3/jquery.min.js','js/jquery-easyui-1.3.3/jquery.easyui.min.js',
+                                            'js/jquery-easyui-1.3.3/plugins/jquery-easyui-datagridview/datagrid-detailview.js',
+                                            'js/jquery-easyui-1.3.3/plugins/jquery-easyui-datagridview/datagrid-groupview.js',
+                                            'js/uri_encode_decode.js','js/json2.js','js/jquery.autosize.min.js',
+                                            'js/jquery.formatCurrency-1.4.0.min.js','js/formwizard.js','js/jquery.jqURL.js',
+                                            'js/ckeditor/ckeditor.js','js/purl.js','js/autoNumeric.js','js/utility.js'),
 					/* 'js'=>array('js/jquery-easyui-1.3.3/jquery.min.js','js/jquery-easyui-1.3.3/jquery.easyui.min.js','js/easyui/plugins/datagrid-detailview.js','js/uri_encode_decode.js','js/json2.js','js/jquery.autogrow.js','js/jquery.formatCurrency-1.4.0.min.js','js/formwizard.js','js/jquery.jqURL.js','js/ckeditor/ckeditor.js',
 					'js/purl.js'), */
 					'css'=>array('css/jquery-easyui-1.3.3/themes/default/easyui.css','css/themes/icon.css','css/head_style.css')

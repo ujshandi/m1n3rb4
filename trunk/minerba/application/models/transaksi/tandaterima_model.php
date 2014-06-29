@@ -1,0 +1,283 @@
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ *INVISI
+*/
+
+class Tandaterima_model extends CI_Model
+{	
+	/**
+	* constructor
+	*/
+    public function __construct()    {
+        parent::__construct();
+		//$this->CI =& get_instance();
+    }
+	
+    public function easyGrid($purpose=1,$tipeapproval,$filawal,$filakhir,$filbidang){
+        $lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;
+        $page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
+        $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
+
+        $count = $this->GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang);
+        $response = new stdClass();
+        $response->total = $count;
+        $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'tujuan';  
+        $order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';  
+        $offset = ($page-1)*$limit;  
+        $pdfdata = array();
+          $jumlah =0;
+        if ($count>0){
+            
+            if($filawal != '' && $filawal != '-1' && $filawal != null) {
+                $this->db->where("s.tanggal between '$filawal' and '$filakhir'");
+            }
+            if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
+                $this->db->where("s.bidang_id",$filbidang);
+            }
+           
+            $this->db->order_by($sort." ".$order );
+            if($purpose==1){$this->db->limit($limit,$offset);}
+            $this->db->select("s.*,b.bidang ",false);
+            $this->db->from('tbl_tanda_terima s left join tbl_bidang b on b.bidang_id=s.bidang_id'
+                    ,false);
+            $query = $this->db->get();
+          
+            $i=0;
+            $no =$lastNo;
+            foreach ($query->result() as $row)            {
+                $no++;
+                $response->rows[$i]['no']= $no;
+                $response->rows[$i]['tanda_id']=$row->spb_id;
+                $response->rows[$i]['nomor']=$row->nomor;
+                $response->rows[$i]['tanggal']=$this->utility->ourFormatDate2($row->tanggal);
+                $response->rows[$i]['bidang_id']=$row->bidang_id;
+                $response->rows[$i]['bidang']=$row->bidang;                                
+                $response->rows[$i]['keterangan']=$row->keterangan;
+                
+               
+                $response->rows[$i]['jumlah']=$row->jumlah; //$this->utility->ourFormatNumber($row->jumlah);
+                $jumlah += $row->jumlah;
+                //utk kepentingan export pdf===================
+                $pdfdata[] = array($no,$response->rows[$i]['nomor'],$response->rows[$i]['tujuan'],$response->rows[$i]['untuk'],$response->rows[$i]['beban_kegiatan']);
+        //============================================================
+                $i++;
+            } 
+
+            $response->lastNo = $no;
+                //$query->free_result();
+        }else {
+            $response->rows[$count]['no']= '';
+            $response->rows[$count]['tanda_id']= '';
+            $response->rows[$count]['nomor']='';
+            $response->rows[$count]['tanggal']='';
+            $response->rows[$count]['bidang_id']='';
+            $response->rows[$count]['bidang']='';
+            $response->rows[$count]['keterangan']='';
+            
+            $response->lastNo = 0;	
+        }
+        
+        
+        if ($purpose==1) //grid normal
+            return json_encode($response);
+        else if($purpose==2){//pdf
+            return $pdfdata;
+        }
+        else if($purpose==3){//to excel
+                //tambahkan header kolom
+            $colHeaders = array("Kode","Nama Kementerian","Singkatan","Nama Menteri");		
+            //var_dump($query->result());die;
+            to_excel($query,"Kementerian",$colHeaders);
+        }
+        else if ($purpose==4) { //WEB SERVICE
+            return $response;
+        }
+
+    }
+    
+    public function easyGridInput($purpose=1,$tipeapproval,$filbidang){
+        
+        $response = new stdClass();
+        
+        $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'nomor';  
+        $order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';  
+       
+          $jumlah =0;
+       
+            
+         
+            if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
+                $this->db->where("s.bidang_id",$filbidang);
+            }
+           
+            $this->db->order_by($sort." ".$order );
+            //if($purpose==1){$this->db->limit($limit,$offset);}
+             $this->db->select("s.*,k.kategori,b.bidang ",false);
+            $this->db->from('tbl_spb s left join tbl_bidang b on b.bidang_id=s.bidang_id'
+                    . ' left join tbl_spb_kategori k on k.kategori_id = s.kategori_id',false);
+            $query = $this->db->get();
+          
+            $i=0;
+            $no =0;//$lastNo;
+            foreach ($query->result() as $row)            {
+                $no++;
+                $response->rows[$i]['no']= $no;
+                $response->rows[$i]['spb_id']=$row->spb_id;
+                $response->rows[$i]['nomor']=$row->nomor;
+                $response->rows[$i]['tanggal']=$this->utility->ourFormatDate2($row->tanggal);
+                $response->rows[$i]['bidang_id']=$row->bidang_id;
+                $response->rows[$i]['bidang']=$row->bidang;
+                $response->rows[$i]['kategori']=$row->kategori;
+                $response->rows[$i]['kategori_id']=$row->kategori_id;
+                $response->rows[$i]['tujuan']=$row->tujuan;
+                $response->rows[$i]['untuk']=$row->untuk;
+                $response->rows[$i]['beban_kegiatan']=$row->beban_kegiatan;
+                $response->rows[$i]['beban_kode']=$row->beban_kode;
+                $response->rows[$i]['kegiatan']='['.$row->beban_kode.']'.$row->beban_kegiatan;
+                
+               
+                $response->rows[$i]['jumlah']=$row->jumlah; //$this->utility->ourFormatNumber($row->jumlah);
+                $jumlah += $row->jumlah;
+                //utk kepentingan export pdf===================
+              // $pdfdata[] = array($no,$response->rows[$i]['nomor'],$response->rows[$i]['tujuan'],$response->rows[$i]['untuk'],$response->rows[$i]['beban_kegiatan']);
+        //============================================================
+                $i++;
+            } 
+
+            $response->lastNo = $no;
+                //$query->free_result();
+       
+        
+        
+       // if ($purpose==1) //grid normal
+            return json_encode($response);
+       
+
+    }
+	
+	//jumlah data record buat paging
+    public function GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang){
+       
+        if($filawal != '' && $filawal != '-1' && $filawal != null) {
+            $this->db->where("tanggal between '$filawal' and '$filakhir'");
+        }
+        if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
+            $this->db->where("bidang_id",$filbidang);
+        }
+     
+        $query=$this->db->from('tbl_tanda_terima');
+        return $this->db->count_all_results();
+        $this->db->free_result();
+    }
+
+    public function isExistKode($kode=null){	
+        if ($kode!=null)//utk update
+            $this->db->where('nomor',$kode); //buat validasi
+
+        $this->db->select('*');
+        $this->db->from('tbl_tanda_terima');
+
+        $query = $this->db->get();
+        $rs = $query->num_rows() ;		
+        $query->free_result();
+        return ($rs>0);
+    }
+	
+    public function isSaveDelete($kode){			
+        $this->db->where('nomor',$kode); //buat validasi		
+        $this->db->select('*');
+        $this->db->from('tbl_sasaran_kl');
+
+        $query = $this->db->get();
+        $rs = $query->num_rows() ;		
+        $query->free_result();
+        $isSave = ($rs==0);
+        if ($isSave){
+            $this->db->flush_cache();
+            $this->db->where('nomor',$kode); //buat validasi		
+            $this->db->select('*');
+            $this->db->from('tbl_iku_kl');
+
+            $query = $this->db->get();
+            $rs = $query->num_rows() ;		
+            $query->free_result();
+            $isSave = ($rs==0);
+        }
+        return $isSave;
+    }
+	
+	//insert data
+    public function InsertOnDb($data,& $error) {
+            //query insert data		
+        $this->db->set('nomor',$data['nomor']);
+        $this->db->set('tanggal',$this->utility->ourDeFormatSQLDate($data['tanggal']));
+        $this->db->set('bidang_id',$data['bidang_id']);
+        
+        $this->db->set('keterangan',$data['keterangan']);
+      
+        $this->db->set('log_insert', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
+
+        $result = $this->db->insert('tbl_tanda_terima');
+        $errNo   = $this->db->_error_number();
+        $errMess = $this->db->_error_message();
+            $error = $errMess;
+            //var_dump($errMess);die;
+        log_message("error", "Problem Inserting to : ".$errMess." (".$errNo.")"); 
+            //return
+            if($result) {
+                    return TRUE;
+            }else {
+                    return FALSE;
+            }
+    }
+
+	//update data
+    public function UpdateOnDb($data, $kode) {
+        $this->db->where('tanda_id',$kode);
+        //query insert data		
+        $this->db->set('nomor',$data['nomor']);
+        $this->db->set('tanggal',$this->utility->ourDeFormatSQLDate($data['tanggal']));
+        $this->db->set('bidang_id',$data['bidang_id']);
+        $this->db->set('keterangan',$data['keterangan']);
+      
+        $this->db->set('log_update', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
+
+        $result=$this->db->update('tbl_tanda_terima');
+
+        $errNo   = $this->db->_error_number();
+        $errMess = $this->db->_error_message();
+            //var_dump($errMess);die;
+            //return
+        if($result) {
+            return TRUE;
+        }else {
+            return FALSE;
+        }
+    }
+    
+   
+	
+	//hapus data
+    public function DeleteOnDb($id){
+        $this->db->flush_cache();
+        $this->db->where('tanda_id', $id);
+        $result = $this->db->delete('tbl_tanda_terima'); 
+
+        $errNo   = $this->db->_error_number();
+        $errMess = $this->db->_error_message();
+        $error = $errMess;
+        //var_dump($errMess);die;
+       
+		//return
+		
+        if($result) {
+            return TRUE;
+        }else {
+             log_message("error", "Problem Update to : ".$errMess." (".$errNo.")"); 
+            return FALSE;
+        }
+    }
+	
+   
+}
+?>
