@@ -143,7 +143,36 @@ class Tandaterima_model extends CI_Model
         //============================================================
                 $i++;
             } 
-
+            if ($no==0){
+                $count=0;
+                $response->rows[$count]['no']= '';
+                $response->rows[$count]['sb_id']= '';
+                $response->rows[$count]['nomor']='';
+                $response->rows[$count]['tanggal']='';
+                $response->rows[$count]['bidang_id']='';
+                $response->rows[$count]['bidang']='';
+                $response->rows[$count]['kategori']='';
+                $response->rows[$count]['kategori_id']='';
+                $response->rows[$count]['tujuan']='';
+                $response->rows[$count]['untuk']='';
+                $response->rows[$count]['beban_kegiatan']='';
+                $response->rows[$count]['beban_kode']='';
+                $response->rows[$count]['kegiatan']='';
+                $response->rows[$count]['status_verifikasi']='';
+                $response->rows[$count]['status_verifikasi_tanggal']='';
+                $response->rows[$count]['status_verifikasi_oleh']='';
+                $response->rows[$count]['status_penguji']='';
+                $response->rows[$count]['status_penguji_tanggal']='';
+                $response->rows[$count]['status_penguji_oleh']='';
+                $response->rows[$count]['status_spm']='';
+                $response->rows[$count]['status_spm_tanggal']='';
+                $response->rows[$count]['status_spm_oleh']='';
+                $response->rows[$count]['status_bendahara']='';
+                $response->rows[$count]['status_bendahara_tanggal']='';
+                $response->rows[$count]['status_bendahara_oleh']='';
+                $response->rows[$count]['jumlah']='';
+                $response->lastNo = 0;	
+            }
             $response->lastNo = $no;
                 //$query->free_result();
        
@@ -209,6 +238,7 @@ class Tandaterima_model extends CI_Model
 	//insert data
     public function InsertOnDb($data,& $error) {
             //query insert data		
+        $this->db->trans_start();
         $this->db->set('nomor',$data['nomor']);
         $this->db->set('tanggal',$this->utility->ourDeFormatSQLDate($data['tanggal']));
         $this->db->set('bidang_id',$data['bidang_id']);
@@ -218,17 +248,22 @@ class Tandaterima_model extends CI_Model
         $this->db->set('log_insert', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 
         $result = $this->db->insert('tbl_tanda_terima');
+        $tandaid = $this->db->insert_id();
         $errNo   = $this->db->_error_number();
         $errMess = $this->db->_error_message();
+        $dataspb = explode(',', $data['spb_ids']);
+        for ($i=0;$i<count($dataspb);$i++){
+            $this->db->flush_cache();
+            $this->db->set('tanda_id',$tandaid);
+            $this->db->set('spb_id',$dataspb[$i]);
+            $this->db->insert('tbl_tanda_terima_detail');
+        }
             $error = $errMess;
             //var_dump($errMess);die;
-        log_message("error", "Problem Inserting to : ".$errMess." (".$errNo.")"); 
+      //  log_message("error", "Problem Inserting to : ".$errMess." (".$errNo.")"); 
             //return
-            if($result) {
-                    return TRUE;
-            }else {
-                    return FALSE;
-            }
+        $this->db->trans_complete();
+	return $this->db->trans_status();
     }
 
 	//update data

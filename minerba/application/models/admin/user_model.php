@@ -66,6 +66,31 @@ class User_model extends CI_Model
 		echo $out;
 	}
 	
+        public function getListUser($objectId,$withoutSuperAdmin=null,$withAll=TRUE){
+		
+		$this->db->flush_cache();
+		$this->db->select('user_id,full_name');
+		$this->db->from('tbl_user');
+		
+		if ($withoutSuperAdmin!=null)
+			$this->db->where("lower(user_name) <> 'superadmin'");
+		$this->db->order_by('full_name');
+		
+		$que = $this->db->get();
+		
+		$out = '<select name="user_id" id="user_id'.$objectId.'">';
+		if ($withAll)
+			$out .= '<option value="-1">Semua</option>';
+		foreach($que->result() as $r){
+                    $out .= '<option value="'.$r->user_id.'">'.$r->full_name.'</option>';			
+		}
+		
+		$out .= '</select>';
+		
+		echo $out;
+	}
+	
+        
 	public function getListGrupFilter($objectId,$app_type=null,$level=null,$withoutSuperAdmin=null,$withAll=true,$idAsKey=false){
 		
 		$this->db->flush_cache();

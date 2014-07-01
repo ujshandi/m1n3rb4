@@ -2,36 +2,16 @@
 		$(function(){
 			var url;
 			newData<?=$objectId;?> = function (){  
-				$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','New Pengguna');  
+				$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Tambah Pengguna');  
 				$('#fm<?=$objectId;?>').form('clear');  
 				url = base_url+'admin/user/save/add';  
 			}
 			//end newData 
 			
 			
-			setE2<?=$objectId?> = function(valueE2){
-				$("#divUnitKerja<?=$objectId;?>").load(base_url+"admin/user/loadE2/"+$('#unit_kerja_E1').val(),function(){
-					$('#unit_kerja_E2').val(valueE2);
-				});
-			}
 			
-			$("#unit_kerja_E1").change(function(){
-				//$("#divUnitKerja<?=$objectId;?>").load(base_url+"admin/user/loadE2/"+$(this).val());
-				setE2<?=$objectId?>("-1");
 			
-			});
 			
-			setE2Filter<?=$objectId?> = function(){
-				$("#divUnitKerjaFilter<?=$objectId;?>").load(base_url+"rujukan/eselon2/loadFilterE2/"+$("#filter_e1<?=$objectId?>").val()+"/<?=$objectId;?>",function(){
-				//	$('#unit_kerja_E2').val(valueE2);
-				});
-			}
-			
-			$("#filter_e1<?=$objectId?>").change(function(){
-				//$("#divUnitKerja<?=$objectId;?>").load(base_url+"admin/user/loadE2/"+$(this).val());
-				setE2Filter<?=$objectId?>("-1");
-			
-			});
 			
 			clearFilter<?=$objectId;?> = function (){
 				$("#filter_tahun<?=$objectId;?>").val('');
@@ -52,35 +32,23 @@
 					paging = "/"+page+"/"+rows;						
 				}
 			
-				<? if ($this->session->userdata('unit_kerja_e1')==-1){?>
-					var file1 = $("#filter_e1<?=$objectId;?>").val();
-				<?} else {?>
-					var file1 = "<?=$this->session->userdata('unit_kerja_e1');?>";
-				<?}?>
-				<? if ($this->session->userdata('unit_kerja_e2')==-1){?>
-					var file2 = $("#filter_e2<?=$objectId;?>").val();
-				<?} else {?>
-					var file2 = "<?=$this->session->userdata('unit_kerja_e2');?>";
-				<?}?>
 				
 				//ambil nilai-nilai filter
 			//	var file1 = $("#filter_e1<?=$objectId;?>").val();
 			//	var file2 = $("#filter_e2<?=$objectId;?>").val();
 				var filapptype = $("#filter_apptype<?=$objectId;?>").val();
 				var fillevel = $("#filter_level_id<?=$objectId;?>").val();
-			
-				 if(file1==null) file1 ="-1";
-				 if(file2==null) file2 ="-1";				
+							
 				 if(filapptype==null) filapptype ="-1";				
 				 if(fillevel==null) fillevel ="-1";				
 				
 				if (tipe==1){
-					return "<?=base_url()?>admin/user/grid/"+file1+"/"+file2+"/"+filapptype+"/"+fillevel;
+					return "<?=base_url()?>admin/user/grid/"+"/"+filapptype+"/"+fillevel;
 				}
 				else if (tipe==2){
-					return "<?=base_url()?>admin/user/pdf/"+file1+"/"+file2+"/"+filapptype+"/"+fillevel+paging;
+					return "<?=base_url()?>admin/user/pdf/"+"/"+filapptype+"/"+fillevel+paging;
 				}else if (tipe==3){
-					return "<?=base_url()?>admin/user/excel/"+file1+"/"+file2+"/"+filapptype+"/"+fillevel+paging;
+					return "<?=base_url()?>admin/user/excel/"+"/"+filapptype+"/"+fillevel+paging;
 				}
 				
 			}
@@ -105,7 +73,7 @@
 				//alert(row.dokter_kode);
 				
 				if (row){
-					$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit Grup Pengguna');
+					$('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit Pengguna');
 					$('#fm<?=$objectId;?>').form('load',row);
 					setE2<?=$objectId?>(row.unit_kerja_E2);
 					//alert(row.unit_kerja_E2);
@@ -220,25 +188,18 @@
 	  <table border="0" cellpadding="1" cellspacing="1" width="100%">
 	  <tr>
 		<td>
-		  <div class="fsearch" >
+		  <div class="fsearch" style="display:none" >
 			
 			<table border="0" cellpadding="1" cellspacing="1">
 			<tr>
-			 
-			  
-						 <td >
+                            <td >
 				Level:
-			  </td>
-				<td>
-				  <?$this->group_level_model->getListLevelFilter($objectId,$this->session->userdata('level'))?>
-			  </td>
+                            </td>
+                            <td>
+				  <?php $this->group_level_model->getListLevelFilter($objectId,$this->session->userdata('level'))?>
+                            </td>
 			</tr>
-			<!--<tr>				
-			 
-						<td>Grup:</td>				
-				  <td><$this->user_model->getListGrupFilter($objectId,$this->session->userdata('app_type'),$this->session->userdata('level'),true)?>
-			  </td>
-			</tr>-->
+			
 			<tr height="5px">
 				<td colspan="5">&nbsp;</td>
 			</tr>
@@ -272,16 +233,13 @@
 		<th field="user_id" sortable="true" width="30">Kode User</th>
 		<th field="user_name" sortable="true" width="30">Username</th>
 		<th field="full_name" sortable="true" width="50">Nama</th>
-		<th field="group_name" sortable="true" width="50">Grup</th>
-		<th field="level_name" sortable="true" width="50">Level</th>
-		
 	  </tr>
 	  </thead>  
 	</table>
 
 	 <!-- AREA untuk Form Add/EDIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 	
-	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:750px;height:350px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
+	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:650px;height:250px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
 	  <div class="ftitle">Add/Edit Pengguna</div>
 	  <form id="fm<?=$objectId;?>" method="post">
 		
@@ -299,16 +257,6 @@
 		  <label style="width:120px;vertical-align:top">Password:</label>
 		  <input name="passwd" type="password" class="easyui-validatebox" required="true">
 		</div>
-		<div class="fitem">
-		  <label style="width:120px;vertical-align:top">Level Akses:</label>
-		  <?$this->group_level_model->getListLevel($this->session->userdata('level'))?>
-		</div>
-		<div class="fitem">
-		  <label style="width:120px;vertical-align:top">Grup Pengguna:</label>
-		  <?$this->user_model->getListGrup(null,$this->session->userdata('level'))?>
-		</div>
-		
-		
 	  </form>
     </div>
     <div id="dlg-buttons">

@@ -63,8 +63,10 @@ class Tandaterima extends CI_Controller {
             // XXS Filtering enforced for user input
         $data['nomor'] = $this->input->post("nomor", TRUE);
         $data['tanggal'] = $this->input->post("tanggal", TRUE);
-        $data['keterangan'] = $this->input->post("tujuan", TRUE);       
+        $data['tipe'] = $this->input->post("tanggal", TRUE);
+        $data['keterangan'] = $this->input->post("keterangan", TRUE);       
         $data['bidang_id'] = $this->input->post("bidang_id", TRUE);
+        $data['spb_ids'] = $this->input->post("spb_ids", TRUE);
         
         return $data;
     }
