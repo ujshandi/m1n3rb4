@@ -3,10 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/www/minerba/application/views/transaksi/tandaterima_v.php</file>
+            <file>file:/D:/www/minerba/application/logs/log-2014-06-30.php</file>
             <file>file:/D:/www/minerba/application/views/transaksi/spb_v.php</file>
+            <file>file:/D:/www/minerba/application/controllers/transaksi/tandaterima.php</file>
             <file>file:/D:/www/minerba/application/controllers/transaksi/spb.php</file>
             <file>file:/D:/www/minerba/application/models/transaksi/spb_model.php</file>
             <file>file:/D:/www/minerba/application/views/transaksi/spb_approval_v.php</file>
+            <file>file:/D:/www/minerba/application/models/transaksi/tandaterima_model.php</file>
+            <file>file:/D:/www/minerba/application/views/transaksi/tandaterima_rec_v.php</file>
         </group>
     </open-files>
 </project-private>

@@ -1,6 +1,6 @@
 <script  type="text/javascript" >
 $(function(){
-    var url;
+    var url=base_url+'transaksi/tandaterima/save/add';
      $('textarea').autosize(); 
    
    cancel<?=$objectId;?>=function(){
@@ -17,10 +17,19 @@ $(function(){
         $('#fm<?=$objectId;?>').form('submit',{
             url: url,
             onSubmit: function(){
+               
+                var ids = [];
+                var rows = $("#dg<?=$objectId?>").datagrid('getSelections');
+                for(var i=0; i<rows.length; i++){
+                    ids.push(rows[i].spb_id);
+                }
+                //alert(ids.join(''));
+                $("#spb_ids<?=$objectId?>").val(ids.join(','));
+                
                 return $(this).form('validate');
             },
             success: function(result){
-                //alert(result);
+                alert(result);
                 var result = eval('('+result+')');
                 if (result.success){
                     $.messager.show({
@@ -161,7 +170,7 @@ $(function(){
           <div class="fitem">
             <label style="width:150px;vertical-align:top" >Keterangan :</label>
             <textarea name="keterangan" cols="50"></textarea>
-          <!--  <input name="beban_kode" class="easyui-validatebox" size="10" required="true"> -->
+            <input name="spb_ids" id="spb_ids<?=$objectId?>" type="hidden" > 
           </div>
         <table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Daftar SPB untuk dibuatkan tanda terima nya. " toolbar="#tb<?=$objectId;?>" 
                fitColumns="false" singleSelect="false" rownumbers="true" pagination="true" noWrap="false" showFooter="true">
@@ -190,7 +199,7 @@ $(function(){
 	</table>
     </form>
 
-    <div id="dlg-buttons">
+    <div id="dlg-buttons"  style="margin-left:30px">
 	  <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a>
 	  <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="cancel<?=$objectId;?>()">Batal</a>
     </div>
