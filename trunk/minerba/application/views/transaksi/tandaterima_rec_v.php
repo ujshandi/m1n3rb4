@@ -152,7 +152,7 @@ $(function(){
 	</style>
 <!-- AREA untuk Form Add/EDIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 <div>
-    <div class="ftitle">Tambah/Edit Data Tanda Terima</div>
+    <div class="ftitle" style="margin-top:10px;margin-left: 30px">Tambah/Edit Data Tanda Terima</div>
     <form id="fm<?=$objectId;?>" method="post">
            <div class="fitem">
             <label style="width:150px;vertical-align:top">Tanggal :</label>

@@ -21,7 +21,7 @@ class Tandaterima_model extends CI_Model
         $count = $this->GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang);
         $response = new stdClass();
         $response->total = $count;
-        $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'tujuan';  
+        $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'nomor';  
         $order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';  
         $offset = ($page-1)*$limit;  
         $pdfdata = array();
@@ -47,7 +47,7 @@ class Tandaterima_model extends CI_Model
             foreach ($query->result() as $row)            {
                 $no++;
                 $response->rows[$i]['no']= $no;
-                $response->rows[$i]['tanda_id']=$row->spb_id;
+                $response->rows[$i]['tanda_id']=$row->tanda_id;
                 $response->rows[$i]['nomor']=$row->nomor;
                 $response->rows[$i]['tanggal']=$this->utility->ourFormatDate2($row->tanggal);
                 $response->rows[$i]['bidang_id']=$row->bidang_id;
@@ -55,10 +55,10 @@ class Tandaterima_model extends CI_Model
                 $response->rows[$i]['keterangan']=$row->keterangan;
                 
                
-                $response->rows[$i]['jumlah']=$row->jumlah; //$this->utility->ourFormatNumber($row->jumlah);
-                $jumlah += $row->jumlah;
+             //   $response->rows[$i]['jumlah']=$row->jumlah; //$this->utility->ourFormatNumber($row->jumlah);
+             //   $jumlah += $row->jumlah;
                 //utk kepentingan export pdf===================
-                $pdfdata[] = array($no,$response->rows[$i]['nomor'],$response->rows[$i]['tujuan'],$response->rows[$i]['untuk'],$response->rows[$i]['beban_kegiatan']);
+                $pdfdata[] = array($no,$response->rows[$i]['nomor']);
         //============================================================
                 $i++;
             } 
@@ -109,12 +109,12 @@ class Tandaterima_model extends CI_Model
             if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
                 $this->db->where("s.bidang_id",$filbidang);
             }
-           
+           $this->db->where("s.spb_id not in (select spb_id from tbl_tanda_terima_detail)");
             $this->db->order_by($sort." ".$order );
             //if($purpose==1){$this->db->limit($limit,$offset);}
              $this->db->select("s.*,k.kategori,b.bidang ",false);
             $this->db->from('tbl_spb s left join tbl_bidang b on b.bidang_id=s.bidang_id'
-                    . ' left join tbl_spb_kategori k on k.kategori_id = s.kategori_id',false);
+                    . ' left join tbl_spb_kategori k on k.kategori_id = s.kategori_id ',false);
             $query = $this->db->get();
           
             $i=0;

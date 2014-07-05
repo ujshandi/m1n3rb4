@@ -1,4 +1,4 @@
-<?
+<?php
 class Sys_login_model extends CI_Model{
 	var $groupId;
 	var $fullName;
@@ -17,7 +17,7 @@ class Sys_login_model extends CI_Model{
 		$new_password = md5($passwd);
 		$this->db->select('u.user_name,u.full_name, u.passwd,u.group_id,u.user_id,g.app_type, u.unit_kerja_e1,u.unit_kerja_e2,l.level,l.level_id');
 		$this->db->from('tbl_user u');
-		$this->db->join('tbl_group_user g','g.group_id = u.group_id');
+		$this->db->join('tbl_group_user g','g.group_id = u.group_id',"left");
 		$this->db->join('tbl_group_level l','l.level_id = u.level_id',"left");
 		$this->db->where('user_name', $username);
 		$this->db->where('passwd', $new_password);

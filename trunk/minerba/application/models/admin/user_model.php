@@ -187,7 +187,7 @@ class User_model extends CI_Model
 		
 		if ($count>0){
 			
-			if (($fillevel==null)||($fillevel=="-1"))
+		/*	if (($fillevel==null)||($fillevel=="-1"))
 			//$fillevel = $this->session->userdata('level');
 				$this->db->where("l.level <=",$this->session->userdata('level'));
 			else	
@@ -206,7 +206,7 @@ class User_model extends CI_Model
 			if($filapptype != '' && $filapptype != '-1' && $filapptype != null) {
 				$this->db->where("g.app_type",$filapptype);
 			}	
-			
+			*/
 			$this->db->order_by($sort." ".$order );
 			$this->db->limit($limit,$offset);
 			$this->db->select("u.*,g.*,l.*",false);
@@ -401,7 +401,7 @@ class User_model extends CI_Model
 	//jumlah data record
 	public function GetRecordCount($file1=null,$file2=null,$filapptype=null,$fillevel=null){
 		
-		if (($fillevel==null)||($fillevel=="-1"))
+/*		if (($fillevel==null)||($fillevel=="-1"))
 			//$fillevel = $this->session->userdata('level');
 			$this->db->where("l.level <=",$this->session->userdata('level'));
 		else	
@@ -419,7 +419,7 @@ class User_model extends CI_Model
 		if($filapptype != '' && $filapptype != '-1' && $filapptype != null) {
 			$this->db->where("g.app_type",$filapptype);
 		}	
-		
+		*/
 		$query=$this->db->from('tbl_user u left join tbl_group_user g on g.group_id = u.group_id left join tbl_group_level l on u.level_id = l.level_id');
 		return $this->db->count_all_results();
 		$this->db->free_result();
