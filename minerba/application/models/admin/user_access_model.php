@@ -132,71 +132,71 @@ class User_access_model extends CI_Model
 				  <td bgcolor="#F4F4F4" >&nbsp;Print&nbsp;</td>
 				  <td bgcolor="#F4F4F4" >&nbsp;Excel&nbsp;</td>
 				  <td bgcolor="#F4F4F4" >&nbsp;Import&nbsp;</td>
-				  <td bgcolor="#F4F4F4" >&nbsp;Proses&nbsp;</td>	
-				  <td bgcolor="#F4F4F4" >&nbsp;Copy&nbsp;</td>	
+				  <td bgcolor="#F4F4F4" >&nbsp;Persetujuan&nbsp;</td>	
+				  
 				  <td bgcolor="#F4F4F4" width="10px">&nbsp;Auto Tab&nbsp;</td>		
 				</tr>';
 		//chan
 		$i=1; $no=1;
 		if ($query->num_rows()==0){
-				$tmp .= '<tr>
-				  <td>&nbsp;</td>
-				  <td>&nbsp;</td>
-				  <td>&nbsp;</td>
-				  <td>&nbsp;</td>
-				  <td>&nbsp;</td>
-				  <td>&nbsp;</td>
-				  <td>&nbsp;</td>
-				  <td>&nbsp;</td>
-				  <td>&nbsp;</td>
-				  <td>&nbsp;</td>			
-				  <td>&nbsp;</td>			
-				  <td>&nbsp;</td>			
-				</tr>';
+                    $tmp .= '<tr>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>			                      
+                      <td>&nbsp;</td>			
+                    </tr>';
 		}else {
-			foreach($query->result() as $r){
-		//	var_dump(strpos(strtolower($r->policy),'add;'));
-				if (($r->menu_parent != "") && ($r->url=="#")) continue;
-				$tmp .= '<tr> ';
-				if ($r->url=='#'){
-					$no=1;
-					$tmp .= '<td>&nbsp;<input type="hidden" name="menu_id'.$i.'" value="'.$r->menu_id.'"></td>';
-				}
-				else {
-					$tmp .= '<td>'.$no++.'&nbsp;<input type="hidden" name="menu_id'.$i.'" value="'.$r->menu_id.'"></td>';
-				}
-				
-				if (($r->url!='#')&&($r->url!=null))
-					$tmp .= '<td>&nbsp;&nbsp;&nbsp;'.$r->menu_name.'&nbsp;</td>';
-				else
-					$tmp .= '<td><b>'.$r->menu_name.'</b>&nbsp;</td>';
-				 
-				if ($r->url=='#'){
-					$tmpxx = '<td align="center"><input type="checkbox" id="chkView'.$r->menu_group.'" onclick="selectModul(\'View\',\''.$r->menu_group.'\')" name="chkView'.$i.'">&nbsp;</td>				  
-					  <td align="center"><input type="checkbox" id="chkAdd'.$r->menu_group.'" name="chkAdd'.$i.'">&nbsp;</td>				  
-					  <td align="center"><input type="checkbox" id="chkEdit'.$r->menu_group.'" name="chkEdit'.$i.'">&nbsp;</td>				  
-					  <td align="center"><input type="checkbox" id="chkDelete'.$r->menu_group.'" name="chkDelete'.$i.'">&nbsp;</td>				  
-					  <td align="center"><input type="checkbox" id="chkPrint'.$r->menu_group.'" name="chkPrint'.$i.'" >&nbsp;</td>				  
-					  <td align="center"><input type="checkbox" id="chkExcel'.$r->menu_group.'" name="chkExcel'.$i.'" >&nbsp;</td>				  
-					  <td align="center"><input type="checkbox" id="chkImport'.$r->menu_group.'" name="chkImport'.$i.'" >&nbsp;</td>				  
-					  <td align="center"><input type="checkbox" id="chkProses'.$r->menu_group.'" name="chkProses'.$i.'">&nbsp;</td>				  
-					  <td align="center"><input type="checkbox" id="chkCopy'.$r->menu_group.'" name="chkCopy'.$i.'">&nbsp;</td>';				  
-				}
-				else {
-				  $tmp .= '<td align="center">'.(strpos($r->policy,'VIEW;')=== false?'':'<input type="checkbox" id="chkView'.$r->menu_group.$i.'" name="chkView'.$i.'" '.(strpos($r->group_policy,'VIEW;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
-				  <td align="center">'.((strpos($r->policy,'ADD;')===false)?'':'<input type="checkbox" id="chkAdd'.$r->menu_group.$i.'" name="chkAdd'.$i.'"  '.(strpos($r->group_policy,'ADD;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
-				  <td align="center">'.(strpos($r->policy,'EDIT;')===false?'':'<input type="checkbox" id="chkEdit'.$r->menu_group.$i.'" name="chkEdit'.$i.'" '.(strpos($r->group_policy,'EDIT;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
-				  <td align="center">'.(strpos($r->policy,'DELETE;')===false?'':'<input type="checkbox" id="chkDelete'.$r->menu_group.$i.'" name="chkDelete'.$i.'" '.(strpos($r->group_policy,'DELETE;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
-				  <td align="center">'.(strpos($r->policy,'PRINT;')===false?'':'<input type="checkbox" id="chkPrint'.$r->menu_group.$i.'" name="chkPrint'.$i.'" '.(strpos($r->group_policy,'PRINT;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
-				  <td align="center">'.(strpos($r->policy,'EXCEL;')===false?'':'<input type="checkbox" id="chkExcel'.$r->menu_group.$i.'" name="chkExcel'.$i.'" '.(strpos($r->group_policy,'EXCEL;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
-				  <td align="center">'.(strpos($r->policy,'IMPORT;')===false?'':'<input type="checkbox" id="chkImport'.$r->menu_group.$i.'" name="chkImport'.$i.'" '.(strpos($r->group_policy,'IMPORT;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
-				  <td align="center">'.(strpos($r->policy,'PROSES;')===false?'':'<input type="checkbox" id="chkProses'.$r->menu_group.$i.'" name="chkProses'.$i.'"'.(strpos($r->group_policy,'PROSES;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
-				  <td align="center">'.(strpos($r->policy,'COPY;')===false?'':'<input type="checkbox" id="chkCopy'.$r->menu_group.$i.'" name="chkCopy'.$i.'"'.(strpos($r->group_policy,'COPY;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
-				  <td align="center">'.(strpos($r->policy,'AUTOTAB;')===false?'':'<input type="checkbox" id="chkAuto'.$r->menu_group.$i.'" class="chkAutoTab" name="chkAuto'.$i.'"'.(strpos($r->group_policy,'AUTOTAB;')=== false?'':'checked="checked"').'>').'&nbsp;</td>';				  
-				}
-				$tmp .= '</tr>';
-				$i++;
-			}		
+                    foreach($query->result() as $r){
+            //	var_dump(strpos(strtolower($r->policy),'add;'));
+                        if (($r->menu_parent != "") && ($r->url=="#")) continue;
+                        $tmp .= '<tr> ';
+                        if ($r->url=='#'){
+                                $no=1;
+                                $tmp .= '<td>&nbsp;<input type="hidden" name="menu_id'.$i.'" value="'.$r->menu_id.'"></td>';
+                        }
+                        else {
+                                $tmp .= '<td>'.$no++.'&nbsp;<input type="hidden" name="menu_id'.$i.'" value="'.$r->menu_id.'"></td>';
+                        }
+
+                        if (($r->url!='#')&&($r->url!=null))
+                                $tmp .= '<td>&nbsp;&nbsp;&nbsp;'.$r->menu_name.'&nbsp;</td>';
+                        else
+                                $tmp .= '<td><b>'.$r->menu_name.'</b>&nbsp;</td>';
+
+                        if ($r->url=='#'){
+                            $tmpxx = '<td align="center"><input type="checkbox" id="chkView'.$r->menu_group.'" onclick="selectModul(\'View\',\''.$r->menu_group.'\')" name="chkView'.$i.'">&nbsp;</td>				  
+                              <td align="center"><input type="checkbox" id="chkAdd'.$r->menu_group.'" name="chkAdd'.$i.'">&nbsp;</td>				  
+                              <td align="center"><input type="checkbox" id="chkEdit'.$r->menu_group.'" name="chkEdit'.$i.'">&nbsp;</td>				  
+                              <td align="center"><input type="checkbox" id="chkDelete'.$r->menu_group.'" name="chkDelete'.$i.'">&nbsp;</td>				  
+                              <td align="center"><input type="checkbox" id="chkPrint'.$r->menu_group.'" name="chkPrint'.$i.'" >&nbsp;</td>				  
+                              <td align="center"><input type="checkbox" id="chkExcel'.$r->menu_group.'" name="chkExcel'.$i.'" >&nbsp;</td>				  
+                              <td align="center"><input type="checkbox" id="chkImport'.$r->menu_group.'" name="chkImport'.$i.'" >&nbsp;</td>				  
+                              <td align="center"><input type="checkbox" id="chkProses'.$r->menu_group.'" name="chkProses'.$i.'">&nbsp;</td>';				  
+                              //<td align="center"><input type="checkbox" id="chkCopy'.$r->menu_group.'" name="chkCopy'.$i.'">&nbsp;</td>';				  
+                        }
+                        else {
+                          $tmp .= '<td align="center">'.(strpos($r->policy,'VIEW;')=== false?'':'<input type="checkbox" id="chkView'.$r->menu_group.$i.'" name="chkView'.$i.'" '.(strpos($r->group_policy,'VIEW;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
+                          <td align="center">'.((strpos($r->policy,'ADD;')===false)?'':'<input type="checkbox" id="chkAdd'.$r->menu_group.$i.'" name="chkAdd'.$i.'"  '.(strpos($r->group_policy,'ADD;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
+                          <td align="center">'.(strpos($r->policy,'EDIT;')===false?'':'<input type="checkbox" id="chkEdit'.$r->menu_group.$i.'" name="chkEdit'.$i.'" '.(strpos($r->group_policy,'EDIT;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
+                          <td align="center">'.(strpos($r->policy,'DELETE;')===false?'':'<input type="checkbox" id="chkDelete'.$r->menu_group.$i.'" name="chkDelete'.$i.'" '.(strpos($r->group_policy,'DELETE;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
+                          <td align="center">'.(strpos($r->policy,'PRINT;')===false?'':'<input type="checkbox" id="chkPrint'.$r->menu_group.$i.'" name="chkPrint'.$i.'" '.(strpos($r->group_policy,'PRINT;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
+                          <td align="center">'.(strpos($r->policy,'EXCEL;')===false?'':'<input type="checkbox" id="chkExcel'.$r->menu_group.$i.'" name="chkExcel'.$i.'" '.(strpos($r->group_policy,'EXCEL;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
+                          <td align="center">'.(strpos($r->policy,'IMPORT;')===false?'':'<input type="checkbox" id="chkImport'.$r->menu_group.$i.'" name="chkImport'.$i.'" '.(strpos($r->group_policy,'IMPORT;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
+                          <td align="center">'.(strpos($r->policy,'PROSES;')===false?'':'<input type="checkbox" id="chkProses'.$r->menu_group.$i.'" name="chkProses'.$i.'"'.(strpos($r->group_policy,'PROSES;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
+                          <td align="center">'.(strpos($r->policy,'AUTOTAB;')===false?'':'<input type="checkbox" id="chkAuto'.$r->menu_group.$i.'" class="chkAutoTab" name="chkAuto'.$i.'"'.(strpos($r->group_policy,'AUTOTAB;')=== false?'':'checked="checked"').'>').'&nbsp;</td>';				  
+                          //<td align="center">'.(strpos($r->policy,'COPY;')===false?'':'<input type="checkbox" id="chkCopy'.$r->menu_group.$i.'" name="chkCopy'.$i.'"'.(strpos($r->group_policy,'COPY;')=== false?'':'checked="checked"').'>').'&nbsp;</td>				  
+
+                        }
+                        $tmp .= '</tr>';
+                        $i++;
+                    }		
 		}		
 		$tmp .='</table>
 			</div>  ';

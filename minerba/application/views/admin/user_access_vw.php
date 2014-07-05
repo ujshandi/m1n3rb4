@@ -31,7 +31,7 @@
 	
 	saveData<?=$objectId;?>=function(){
             $('#fm<?=$objectId;?>').form('submit',{
-                url: base_url+'admin/group_access/save',
+                url: base_url+'admin/user_access/save',
                 onSubmit: function(){
                     //var $b = $('input[type=checkbox]');
                     var b = $('.chkAutoTab');
@@ -63,11 +63,15 @@
             });
         }
 			//end saveData
-			
+	
+        $("#user_id<?=$objectId;?>").change(function(){
+        
+            searchData<?=$objectId?>();
+        });
 	
 	
 	searchData<?=$objectId?> = function(){
-            var filUser = $("#filter_apptype<?=$objectId;?>").val();
+            var filUser = $("#user_id<?=$objectId;?>").val();
           
           
             $.ajax({
@@ -206,8 +210,7 @@
                 </div>
             </div>
             <form id="fm<?=$objectId;?>" method="post">
-                <div class="fitem" id="content<?=$objectId?>" >
-                    <table border="0" cellpadding="1" cellspacing="1">
+                <table border="0" cellpadding="1" cellspacing="1">
                     <tr>
                       <td>Pengguna&nbsp;:</td>
                             <td>
@@ -216,6 +219,8 @@
                     </tr>
                     <tr><td height="20">&nbsp;</td></tr>
                     </table>
+                <div class="fitem" id="content<?=$objectId?>" >
+                    
                         
                     <table id="tbl<?=$objectId;?>" width="100%">
 
@@ -230,8 +235,7 @@
                       <td bgcolor="#F4F4F4" width="10px">&nbsp;Print&nbsp;</td>
                       <td bgcolor="#F4F4F4" width="10px">&nbsp;Excel&nbsp;</td>
                       <td bgcolor="#F4F4F4" width="10px">&nbsp;Import&nbsp;</td>
-                      <td bgcolor="#F4F4F4" width="10px">&nbsp;Proses&nbsp;</td>			  			  
-                      <td bgcolor="#F4F4F4" width="10px">&nbsp;Copy&nbsp;</td>			  			  
+                      <td bgcolor="#F4F4F4" width="10px">&nbsp;Persetujuan&nbsp;</td>			  			                        
                       <td bgcolor="#F4F4F4" width="10px">&nbsp;Auto Tab&nbsp;</td>			  			  
                     </tr>
                     <tr>
@@ -244,8 +248,7 @@
                       <td>&nbsp;</td>
                       <td>&nbsp;</td>
                       <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>                      
                       <td>&nbsp;</td>
 
                     </tr>

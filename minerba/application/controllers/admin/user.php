@@ -82,17 +82,17 @@ class User extends CI_Controller {
 	
 		$data['pesan_error'] = '';
 		//validasi form
-		$this->form_validation->set_rules("group_id", 'Grup Pengguna', 'trim|required|xss_clean');
-	/*	$this->form_validation->set_rules("user_name", 'Username', 'trim|required|xss_clean');
-		$this->form_validation->set_rules("full_name", 'Nama Lengkap', 'trim|required|xss_clean');
+		//$this->form_validation->set_rules("group_id", 'Grup Pengguna', 'trim|required|xss_clean');
+		$this->form_validation->set_rules("user_name", 'Username', 'trim|required|xss_clean');
+	/*	$this->form_validation->set_rules("full_name", 'Nama Lengkap', 'trim|required|xss_clean');
 		$this->form_validation->set_rules("passwd", 'Password', 'trim|required|xss_clean');
 	*/	
 		if ($this->form_validation->run() == FALSE){
 			//jika data tidak valid kembali ke view
-		//	$data["pesan_error"].=(trim(form_error("user_name"," "," "))==""?"":form_error("user_name"," "," ")."<br/>");
+			$data["pesan_error"].=(trim(form_error("user_name"," "," "))==""?"":form_error("user_name"," "," ")."<br/>");
 			//$data["pesan_error"].=(trim(form_error("full_name"," "," "))==""?"":form_error("full_name"," "," ")."<br/>");
 		//	$data["pesan_error"].=(trim(form_error("passwd"," "," "))==""?"":form_error("passwd"," "," ")."<br/>");
-			$data["pesan_error"].=(trim(form_error("group_id"," "," "))==""?"":form_error("group_id"," "," ")."<br>");
+		//	$data["pesan_error"].=(trim(form_error("group_id"," "," "))==""?"":form_error("group_id"," "," ")."<br>");
 			$status = $data["pesan_error"];
 		}else { 
 			if($aksi=="add"){ // add

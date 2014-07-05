@@ -277,7 +277,7 @@ $(function(){
 		<th halign="center" align="left" field="tanggal" sortable="true" width="80">Tanggal</th>
 		<th halign="center" align="center" field="nomor" sortable="true" width="200">Nomor</th>
 		
-		<th halign="center" align="left" field="bidang" sortable="true" width="100">Bidang</th>
+		<th halign="center" align="left" field="bidang" sortable="true" width="300">Bidang</th>
 		
 		<th halign="center" align="left" field="tujuan" sortable="true" width="500">Keterangan</th>
 		
