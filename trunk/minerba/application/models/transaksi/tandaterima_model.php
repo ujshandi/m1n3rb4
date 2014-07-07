@@ -183,6 +183,72 @@ class Tandaterima_model extends CI_Model
        
 
     }
+    
+    public function easyGridDetail($purpose=1,$tandaid){
+        
+        $response = new stdClass();
+        
+        
+        $pdfdata = array();
+        
+            
+        
+        $this->db->where("s.tanda_id",$tandaid);
+        
+           
+            $this->db->order_by("detail_id");
+            
+            $this->db->select("s.*,p.tanggal,p.nomor ",false);
+            $this->db->from('tbl_tanda_terima_detail s inner join tbl_spb p on p.spb_id = s.spb_id'
+                    ,false);
+            $query = $this->db->get();
+          
+            $i=0;
+            $no=0;
+            foreach ($query->result() as $row)            {
+                $no++;
+                $response->rows[$i]['no']= $no;
+                $response->rows[$i]['detail_id']=$row->detail_id;
+                $response->rows[$i]['tanda_id']=$row->tanda_id;
+                $response->rows[$i]['spb_id']=$row->spb_id;
+                $response->rows[$i]['nomor']=$row->nomor;
+                $response->rows[$i]['tanggal']=$this->utility->ourFormatDate2($row->tanggal);
+                
+                //utk kepentingan export pdf===================
+                $pdfdata[] = array($no,$response->rows[$i]['nomor']);
+        //============================================================
+                $i++;
+            } 
+
+            $response->lastNo = $no;
+                //$query->free_result();
+       if ($no==0) {
+            $count =0;
+            $response->rows[$count]['no']= '';
+            $response->rows[$count]['detail_id']= '';
+            $response->rows[$count]['tanda_id']= '';
+            $response->rows[$count]['spb_id']= '';
+            $response->rows[$count]['nomor']='';
+            $response->rows[$count]['tanggal']='';
+        }
+        
+        
+        if ($purpose==1) //grid normal
+            return json_encode($response);
+        else if($purpose==2){//pdf
+            return $pdfdata;
+        }
+        else if($purpose==3){//to excel
+                //tambahkan header kolom
+            $colHeaders = array("Kode","Nama Kementerian","Singkatan","Nama Menteri");		
+            //var_dump($query->result());die;
+            to_excel($query,"Kementerian",$colHeaders);
+        }
+        else if ($purpose==4) { //WEB SERVICE
+            return $response;
+        }
+
+    }
 	
 	//jumlah data record buat paging
     public function GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang){

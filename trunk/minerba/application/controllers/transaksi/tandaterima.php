@@ -53,6 +53,10 @@ class Tandaterima extends CI_Controller {
         echo $this->tandaterima_model->easyGrid(1,$tipetandaterima,$periodeawal,$periodeakhir,$bidang);
     }
     
+    function griddetail($tandaid){	        
+        echo $this->tandaterima_model->easyGridDetail(1,$tandaid);
+    }
+    
     function gridspb($tipetandaterima,$bidang){	
         
         echo $this->tandaterima_model->easyGridInput(1,$tipetandaterima,$bidang);
