@@ -1,6 +1,8 @@
 <script  type="text/javascript" >
 $(function(){
     var url;
+    var idTanda<?=$objectId;?>;
+    var rowIndexDetail;
        
 
     newData<?=$objectId;?> = function (){    
@@ -27,27 +29,70 @@ $(function(){
         var filawal =  $('#periodeawal<?=$objectId;?>').datebox('getValue');	
         var filakhir = $("#periodeakhir<?=$objectId;?>").datebox('getValue');	
         var filbidang = $("#filter_bidang_id<?=$objectId;?>").val();
-        var filkategori = $("#filter_kategori_id<?=$objectId;?>").val();
+//        var filkategori = $("#filter_kategori_id<?=$objectId;?>").val();
         
 
         filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
-        filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
+  //      filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
         if (tipe==1){
-                return "<?=base_url()?>transaksi/tandaterima/grid/<?=$tipetandaterima?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>transaksi/tandaterima/grid/<?=$tipetandaterima?>/"+filawal+"/"+filakhir+"/"+filbidang;
         }
         else if (tipe==2){
-                return "<?=base_url()?>transaksi/tandaterima/pdf/<?=$tipetandaterima?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>transaksi/tandaterima/pdf/<?=$tipetandaterima?>/"+filawal+"/"+filakhir+"/"+filbidang;
         }else if (tipe==3){
-                return "<?=base_url()?>transaksi/tandaterima/excel/<?=$tipetandaterima?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>transaksi/tandaterima/excel/<?=$tipetandaterima?>/"+filawal+"/"+filakhir+"/"+filbidang;
         }
 
     }
 
     searchData<?=$objectId;?> = function (){
         //ambil nilai-nilai filter
-        
+        $('#dg<?=$objectId;?>').datagrid({
+            url:getUrl<?=$objectId;?>(1),
+            view: detailview,
+                            detailFormatter:function(index,row){
+               return '<div style="padding:2px"><table id="ddv<?=$objectId;?>-' + index + '"></table></div>';
+           //  return "tes";
+           },
+           onExpandRow: function(index,row){
+                           //	alert(row.id_pk_e1);
 
-        $('#dg<?=$objectId;?>').datagrid({url:getUrl<?=$objectId;?>(1)});
+               $('#ddv<?=$objectId;?>-'+index).datagrid({
+                   url:'<?=base_url()?>transaksi/tandaterima/griddetail/'+row.tanda_id+'/?parentIndex='+index,
+                   fitColumns:true,
+                   singleSelect:true,
+                   rownumbers:true,
+                   loadMsg:'',
+                   height:'auto',
+                   columns:[[
+                       {field:'detail_id',title:'detail_id',hidden:true},
+                       {field:'tanda_id',title:'tanda_id',hidden:true},
+                       {field:'spb_id',title:'spb_id',hidden:true},
+                       {field:'nomor',title:'Nomor SPB',width:200},
+                       {field:'tanggal',title:'Tanggal',width:75}
+                       
+                   ]],
+                   onResize:function(){
+                       $('#dg<?=$objectId;?>').datagrid('fixDetailRowHeight',index);
+                   },
+                  onClickCell:function(rowIndex, field, value){
+                        $('#ddv<?=$objectId;?>-'+index).datagrid('selectRow', rowIndex);
+                       var row = $('#ddv<?=$objectId;?>-'+index).datagrid('getSelected');
+                       idTanda<?=$objectId;?> = row.tanda_id;
+                       rowIndexDetail = index;
+                                                   //alert(idTanda);
+                    },
+                   onLoadSuccess:function(){
+                       setTimeout(function(){
+                           $('#dg<?=$objectId;?>').datagrid('fixDetailRowHeight',index);
+                       },0);
+                   }
+               });
+               $('#dg<?=$objectId;?>').datagrid('fixDetailRowHeight',index);
+
+
+           }
+        });
     }
     //end searhData 
 
