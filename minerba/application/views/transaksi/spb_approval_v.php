@@ -147,7 +147,11 @@ $(function(){
 
         window.open(getUrl<?=$objectId;?>(3));;
     }
-
+    
+    tolakData<?=$objectId;?>=function(){
+        
+    }
+    
     saveData<?=$objectId;?>=function(){
         $('#fm<?=$objectId;?>').form('submit',{
             url: url,
@@ -255,7 +259,7 @@ $(function(){
                 <table border="0" cellpadding="1" cellspacing="1">				
                 <tr>
                     <td>Periode : &nbsp;</td>
-                    <td><input name="periodeawal" id="periodeawal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
+                    <td><input name="periodeawal" style="width:100px" id="periodeawal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
                     <td width="20px">&nbsp;</td>
                     <td>Bidang : &nbsp;</td>
                     <td> <?=$bidanglistFilter?>  </td>
@@ -380,5 +384,8 @@ $(function(){
     </div>
     <div id="dlg-buttons">
 	  <a href="#" id="btnApprove<?=$objectId?>" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Setuju</a>
-	  <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Cancel</a>
+          <?php if ($tipeapproval=="verifikasi"){?>
+	  <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Tolak</a>
+          <?php }?>
+	  <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Batal</a>
     </div>
