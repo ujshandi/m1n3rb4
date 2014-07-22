@@ -358,6 +358,68 @@ class Spb_model extends CI_Model
         }
     }
 	
+    public function tolakVerifikasi($id,$data) {
+         $this->db->trans_start();
+        $this->db->flush_cache();
+        $this->db->select("*");
+        $this->db->from("tbl_spb");
+        $this->db->where('spb_id',$id);
+        $qt = $this->db->get();
+       
+        $this->db->flush_cache();
+        $this->db->set('nomor',$qt->row()->nomor);
+        $this->db->set('tanggal',$qt->row()->tanggal);
+        $this->db->set('bidang_id',$qt->row()->bidang_id);
+        $this->db->set('kategori_id',$qt->row()->kategori_id);
+        $this->db->set('tujuan',$qt->row()->tujuan);
+        $this->db->set('untuk',$qt->row()->untuk);
+        $this->db->set('beban_kegiatan',$qt->row()->beban_kegiatan);
+        $this->db->set('beban_kode',$qt->row()->beban_kode);
+        $this->db->set('jumlah',$qt->row()->jumlah);
+        $this->db->set('log_insert', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
+        $this->db->set('keterangan',$data['keterangan']);
+        $this->db->insert('tbl_spb_history');
+        
+        
+        $this->db->flush_cache();
+        $this->db->where('spb_id', $id);
+        $result = $this->db->delete('tbl_spb');
+        $this->db->trans_complete();
+	return $this->db->trans_status();
+    }
+    
+    public function tolakPenguji($id) {
+        $this->db->where('spb_id',$id);
+        $this->db->set('status_penguji', 		$this->session->userdata('user_id').';'.date('Y-m-d'));
+        $result=$this->db->update('tbl_spb');
+        if($result) {
+            return TRUE;
+        }else {
+            return FALSE;
+        }
+    }
+    
+    public function tolakSpm($id) {
+        $this->db->where('spb_id',$id);
+        $this->db->set('status_spm', 		$this->session->userdata('user_id').';'.date('Y-m-d'));
+        $result=$this->db->update('tbl_spb');
+        if($result) {
+            return TRUE;
+        }else {
+            return FALSE;
+        }
+    }
+    public function tolakBendahara($id) {
+        $this->db->where('spb_id',$id);
+        $this->db->set('status_bendahara', 		$this->session->userdata('user_id').';'.date('Y-m-d'));
+        $result=$this->db->update('tbl_spb');
+        if($result) {
+            return TRUE;
+        }else {
+            return FALSE;
+        }
+    }
+    
     public function getListKL($objectId=""){		
         $this->db->flush_cache();
         $this->db->select('nomor,tujuan');
