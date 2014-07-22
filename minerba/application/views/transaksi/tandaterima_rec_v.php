@@ -156,7 +156,7 @@ $(function(){
     <form id="fm<?=$objectId;?>" method="post">
            <div class="fitem">
             <label style="width:150px;vertical-align:top">Tanggal :</label>
-            <input name="tanggal" id="tanggal<?=$objectId;?>" class="easyui-datebox" value="<?=date('d-m-Y')?>" data-options="formatter:myDateFormatter,parser:myDateParser"  required="true">
+            <input name="tanggal" style="width:100px" id="tanggal<?=$objectId;?>" class="easyui-datebox" value="<?=date('d-m-Y')?>" data-options="formatter:myDateFormatter,parser:myDateParser"  required="true">
           </div>
         <div class="fitem">
             <label style="width:150px;vertical-align:top">No.Tanda Terima :</label>

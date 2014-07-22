@@ -260,7 +260,7 @@ $(function(){
                     <table border="0" cellpadding="1" cellspacing="1">				
                     <tr>
                         <td>Periode : &nbsp;</td>
-                        <td><input name="periodeawal" id="periodeawal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
+                        <td><input name="periodeawal" style="width:100px" id="periodeawal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input  style="width:100px" name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
                         <td width="20px">&nbsp;</td>
                         <td>Bidang : &nbsp;</td>
                         <td> <?=$bidanglistFilter?>  </td>
@@ -333,7 +333,7 @@ $(function(){
 	  <form id="fm<?=$objectId;?>" method="post">
 		 <div class="fitem">
 		  <label style="width:150px;vertical-align:top">Tanggal :</label>
-		  <input name="tanggal" id="tanggal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  required="true">
+		  <input name="tanggal" style="width:100px" id="tanggal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  required="true">
 		</div>
               <div class="fitem">
 		  <label style="width:150px;vertical-align:top">No.SPB :</label>

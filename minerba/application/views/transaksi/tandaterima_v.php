@@ -275,7 +275,7 @@ $(function(){
                     <table border="0" cellpadding="1" cellspacing="1">				
                     <tr>
                         <td>Periode : &nbsp;</td>
-                        <td><input name="periodeawal" id="periodeawal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
+                        <td><input name="periodeawal" id="periodeawal<?=$objectId;?>" class="easyui-datebox" style="width:100px" data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input style="width:100px" name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
                         <td width="20px">&nbsp;</td>
                         <td>Bidang : &nbsp;</td>
                         <td> <?=$bidanglistFilter?>  </td>

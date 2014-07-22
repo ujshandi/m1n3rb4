@@ -30,8 +30,15 @@ class Spb extends CI_Controller {
     }
     
     function approval($tipeapproval){
-        $data['tipeapproval'] = $tipeapproval;		
-        $data['title'] = 'SPB Approval';		
+        $data['tipeapproval'] = $tipeapproval;	
+        switch ($tipeapproval){
+            case "verifikasi" : $data['title'] = 'SPB Yang Akan di Verifikasi';break;
+            case "penguji" : $data['title'] = 'SPB Yang Akan di Periksa oleh Pejabat Penguji';break;
+            case "spm" : $data['title'] = 'SPB Yang Akan dibuat Pengajuan SPM';break;
+            case "bendahara" : $data['title'] = 'SPB Yang Akan ditindaklanjuti Bendaharawan';break;
+            default : $data['title'] = 'SPB Approval';		
+        }
+        
         $data['objectId'] = 'SPBAPP'.$tipeapproval;
         $data['bidanglist'] = $this->bidang_model->getListBidang($data['objectId']);
         $data['bidanglistFilter'] = $this->bidang_model->getListBidangFilter($data['objectId']);
@@ -83,6 +90,24 @@ class Spb extends CI_Controller {
                     echo json_encode(array('success'=>true, 'haha'=>''));
             } else {
                     echo json_encode(array('msg'=>'Data tidak bisa diapprove.', 'data'=> ''));
+            }
+        }
+    }
+    
+    function tolak($tipeapprove,$id){
+         if($id != ''){   
+            $data['keterangan'] = $this->input->post("keterangan", TRUE);
+            switch ($tipeapprove) {
+                case 'verifikasi' :$result = $this->spb_model->tolakVerifikasi($id,$data);break;
+                case 'penguji' :$result = $this->spb_model->tolakPenguji($id);break;
+                case 'spm' :$result = $this->spb_model->tolakSpm($id);break;
+                case 'bendahara' :$result = $this->spb_model->tolakBendahara($id);break;
+             }    
+          
+            if ($result){
+                    echo json_encode(array('success'=>true, 'haha'=>''));
+            } else {
+                    echo json_encode(array('msg'=>'Data tidak bisa ditolak.', 'data'=> ''));
             }
         }
     }

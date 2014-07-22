@@ -50,11 +50,13 @@ $(function(){
                 $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Persetujuan SPB');
                 $('#fm<?=$objectId;?>').form('load',row);
                 autoKegiatan<?=$objectId;?>('',row.kegiatan);
+                $('#btnApprove<?=$objectId?>').show();
+                $('#btnTolak<?=$objectId?>').show();
                 url = base_url+'transaksi/spb/approve/'+tipeapprove+'/'+row.spb_id;//+row.id;//'update_user.php?id='+row.id;
         }
     }
     
-    editData<?=$objectId;?> = function (){
+    editData<?=$objectId;?> = function (viewmode){
         var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
         $('#fm<?=$objectId;?>').form('clear');  
         //alert(row.dokter_kode);
@@ -62,6 +64,15 @@ $(function(){
                 $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit SPB');
                 $('#fm<?=$objectId;?>').form('load',row);
                 autoKegiatan<?=$objectId;?>('',row.kegiatan);
+                if (viewmode){
+                    $('#btnApprove<?=$objectId?>').hide();
+                    $('#btnTolak<?=$objectId?>').hide();
+                }
+                else{
+                    $('#btnApprove<?=$objectId?>').show();
+                    $('#btnTolak<?=$objectId?>').show();
+                }    
+                    
                 url = base_url+'transaksi/spb/save/edit/'+row.nomor;//+row.id;//'update_user.php?id='+row.id;
         }
     }
@@ -148,7 +159,61 @@ $(function(){
         window.open(getUrl<?=$objectId;?>(3));;
     }
     
-    tolakData<?=$objectId;?>=function(){
+    getKeterangan<?=$objectId;?>=function(){
+        var keterangan = '';
+       $.messager.prompt('Masukkan Alasan Penolakan', 'Alasan : ', function(r){
+                        
+                        if (r){
+                            //alert('you type: '+r);
+                            keterangan = r;
+                            alert(keterangan);
+                        }
+                        
+                    }); 
+        return keterangan;            
+        
+    }
+    
+    tolakData<?=$objectId;?>=function(tipeapprove){
+       $.messager.prompt('Masukkan Alasan Penolakan', 'Alasan : ', function(r){
+                        
+            if (r){
+                //alert('you type: '+r);
+                keterangan = r;
+                if (keterangan!=""){
+                    $('#fm<?=$objectId;?>').form('submit',{
+                        url: base_url+'transaksi/spb/tolak/'+tipeapprove+'/'+$("#spb_id<?=$objectId?>").val(),      
+                        onSubmit: function(){
+                            $("#keterangan<?=$objectId?>").val(keterangan);
+                            var isValid = $(this).form('validate');
+                           return isValid;
+                        },
+                        success: function(result){
+                            alert(result);
+                            var result = eval('('+result+')');
+                            if (result.success){
+                                $.messager.show({
+                                        title: 'Pesan',
+                                        msg: 'Data berhasil ditolak'
+                                });
+                                $('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
+                                $('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
+                            } else {
+                                $.messager.show({
+                                        title: 'Error',
+                                        msg: result.msg
+                                });
+                            }
+                        }
+                    });//end form submit
+                }else{
+                    alert("Alasan harus diisi");
+                }
+            }
+            else {
+                alert("Alasan harus diisi");
+            }            
+        }); 
         
     }
     
@@ -259,7 +324,7 @@ $(function(){
                 <table border="0" cellpadding="1" cellspacing="1">				
                 <tr>
                     <td>Periode : &nbsp;</td>
-                    <td><input name="periodeawal" style="width:100px" id="periodeawal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
+                    <td><input name="periodeawal" style="width:100px" id="periodeawal<?=$objectId;?>" class="easyui-datebox"  data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input name="periodeakhir" style="width:100px" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
                     <td width="20px">&nbsp;</td>
                     <td>Bidang : &nbsp;</td>
                     <td> <?=$bidanglistFilter?>  </td>
@@ -286,7 +351,7 @@ $(function(){
 			<a href="#" onclick="approveData<?=$objectId;?>('<?=$tipeapproval?>');" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Persetujuan</a>  
 		<?}?>
 		<? if($this->sys_menu_model->cekAkses('VIEW;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-view" plain="true">Lihat</a>
+			<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-view" plain="true">Lihat</a>
 		<?}?>
 		<? if($this->sys_menu_model->cekAkses('DELETE;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Hapus</a>
@@ -300,7 +365,7 @@ $(function(){
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data SPB" toolbar="#tb<?=$objectId;?>"
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data <?=$title;?> " toolbar="#tb<?=$objectId;?>"
                fitColumns="false" singleSelect="true" rownumbers="true" pagination="true"noWrap="false" showFooter="true">
             <thead data-options="frozen:true">
                 <tr>
@@ -345,7 +410,9 @@ $(function(){
 	  <form id="fm<?=$objectId;?>" method="post">
 		 <div class="fitem">                     
 		  <label style="width:150px;vertical-align:top">Tanggal :</label>
-		  <input name="tanggal" id="tanggal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  required="true">
+		  <input name="tanggal" style="width:100px" id="tanggal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  required="true">
+                  <input name="spb_id" type="hidden" id="spb_id<?=$objectId;?>" >
+                  <input name="keterangan" type="hidden" id="keterangan<?=$objectId;?>" >
 		</div>
               <div class="fitem">
 		  <label style="width:150px;vertical-align:top">No.SPB :</label>
@@ -385,7 +452,7 @@ $(function(){
     <div id="dlg-buttons">
 	  <a href="#" id="btnApprove<?=$objectId?>" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Setuju</a>
           <?php if ($tipeapproval=="verifikasi"){?>
-	  <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Tolak</a>
+	  <a href="#" id="btnTolak<?=$objectId?>" class="easyui-linkbutton" iconCls="icon-remove" onclick="tolakData<?=$objectId;?>('<?=$tipeapproval?>')">Tolak</a>
           <?php }?>
 	  <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Batal</a>
     </div>
