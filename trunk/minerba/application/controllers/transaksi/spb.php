@@ -64,6 +64,7 @@ class Spb extends CI_Controller {
         $data['tanggal'] = $this->input->post("tanggal", TRUE);
         $data['tujuan'] = $this->input->post("tujuan", TRUE);
         $data['untuk'] = $this->input->post("untuk", TRUE);
+        $data['spm_bendahara'] = $this->input->post("spm_bendahara", TRUE);
         $kegiatan  = $this->input->post("txtbeban_kegiatan", TRUE);
         
         //var_dump( $this->utility->ourEkstrakString($kegiatan,']',1));die;
@@ -77,11 +78,11 @@ class Spb extends CI_Controller {
         return $data;
     }
 
-    function approve($tipeapprove,$id){
+    function approve($tipeapprove,$id,$spm_bendahara){
          if($id != ''){          
             switch ($tipeapprove) {
                 case 'verifikasi' :$result = $this->spb_model->approveVerifikasi($id);break;
-                case 'penguji' :$result = $this->spb_model->approvePenguji($id);break;
+                case 'penguji' :$result = $this->spb_model->approvePenguji($id,$spm_bendahara);break;
                 case 'spm' :$result = $this->spb_model->approveSpm($id);break;
                 case 'bendahara' :$result = $this->spb_model->approveBendahara($id);break;
              }    
