@@ -218,8 +218,10 @@ $(function(){
     }
     
     saveData<?=$objectId;?>=function(){
+        var spm_bendahara= $("#spm_bendahara<?=$objectId?>").val();
+        if (spm_bendahara==null) spm_bendahara = '';
         $('#fm<?=$objectId;?>').form('submit',{
-            url: url,
+            url: url+'/'+spm_bendahara,
             onSubmit: function(){
                 return $(this).form('validate');
             },
@@ -376,8 +378,8 @@ $(function(){
                  
                      <tr>
 		
-		<th halign="center" align="center" field="pejabat2_oleh" sortable="true" width="100">Oleh</th>
-		<th halign="center" align="center" field="pejabat2_tanggal" sortable="true" width="80">Tanggal</th>
+		<th halign="center" align="center" field="pejabat_oleh" sortable="true" width="100">Oleh</th>
+		<th halign="center" align="center" field="pejabat_tanggal" sortable="true" width="80">Tanggal</th>
                  </tr>
             </thead>
             
@@ -447,6 +449,15 @@ $(function(){
 		  <label style="width:150px;vertical-align:top">Jumlah :</label>
 		  <input name="jumlah" class="easyui-numberbox" style="text-align:right" data-options="precision:0,groupSeparator:'.',decimalSeparator:','"  required="true">
 		</div>
+          <?php if ($tipeapproval=="penguji"){?>
+                <div class="fitem">
+		  <label style="width:150px;vertical-align:top">Proses Selanjutnya :</label>
+                  <select name="spm_bendahara" id="spm_bendahara<?=$objectId?>" >
+                      <option value="spm" >Pengajuan SPM</option>
+                      <option value="bendahara" >Bendaharawan</option>
+                  </select>
+		</div>
+          <?php }?>
 	  </form>
     </div>
     <div id="dlg-buttons">

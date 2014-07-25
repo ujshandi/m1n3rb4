@@ -108,6 +108,22 @@ class Spb_model extends CI_Model
                     $response->rows[$i]['status_bendahara_tanggal']=$this->utility->ourFormatDate2($this->utility->ourEkstrakString($row->status_bendahara,';',1));
                     $response->rows[$i]['status_bendahara_oleh']=$this->user_model->getFullName($this->utility->ourEkstrakString($row->status_bendahara,';',0));                
                 }
+                
+                switch ($tipeapproval){
+                    case "verifikasi" : 
+                        $response->rows[$i]['pejabat_oleh'] = $response->rows[$i]['status_verifikasi_oleh']; 
+                        $response->rows[$i]['pejabat_tanggal'] = $response->rows[$i]['status_verifikasi_tanggal']; 
+                    break;
+                    case "penguji" : 
+                        $response->rows[$i]['pejabat_oleh'] = $response->rows[$i]['status_penguji_oleh']; 
+                        $response->rows[$i]['pejabat_tanggal'] = $response->rows[$i]['status_penguji_tanggal']; 
+                    break;
+                default : 
+                    $response->rows[$i]['pejabat_oleh'] = ""; 
+                    $response->rows[$i]['pejabat_tanggal'] = ""; 
+                   
+                }
+                
                 $response->rows[$i]['jumlah']=$row->jumlah; //$this->utility->ourFormatNumber($row->jumlah);
                 $jumlah += $row->jumlah;
                 //utk kepentingan export pdf===================
@@ -305,9 +321,10 @@ class Spb_model extends CI_Model
         }
     }
     
-    public function approvePenguji($id) {
+    public function approvePenguji($id,$spm_bendahara) {
         $this->db->where('spb_id',$id);
         $this->db->set('status_penguji', 		$this->session->userdata('user_id').';'.date('Y-m-d'));
+        $this->db->set('spm_bendahara',$spm_bendahara);
         $result=$this->db->update('tbl_spb');
         if($result) {
             return TRUE;
