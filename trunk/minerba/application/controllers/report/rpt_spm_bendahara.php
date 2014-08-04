@@ -10,7 +10,7 @@ class Rpt_spm_bendahara extends CI_Controller {
 
         $this->load->model('/security/sys_menu_model');
         $this->load->model('/transaksi/spb_model');
-        $this->load->model('/report/rpt_spb_ditolak_model');
+        $this->load->model('/report/rpt_spm_bendahara_model');
         $this->load->model('/rujukan/spb_kategori_model');
         $this->load->model('/rujukan/bidang_model');
         $this->load->model('/rujukan/kegiatan_model');
@@ -27,15 +27,37 @@ class Rpt_spm_bendahara extends CI_Controller {
         $data['bidanglistFilter'] = $this->bidang_model->getListBidangFilter($data['objectId']);
         $data['kategorilist'] = $this->spb_kategori_model->getListKategori($data['objectId']);
         $data['kategorilistFilter'] = $this->spb_kategori_model->getListKategoriFilter($data['objectId']);
-        $this->load->view('report/rpt_spb_ditolak_v',$data);
+        $this->load->view('report/rpt_spm_bendahara_v',$data);
+    }
+    
+    function bendahara(){
+        $data['title'] = 'Bendaharawan';		
+        $data['objectId'] = 'bendaharawan';
+        $data['tipereport'] = 'bendahara';
+        $data['bidanglist'] = $this->bidang_model->getListBidang($data['objectId']);
+        $data['bidanglistFilter'] = $this->bidang_model->getListBidangFilter($data['objectId']);
+        $data['kategorilist'] = $this->spb_kategori_model->getListKategori($data['objectId']);
+        $data['kategorilistFilter'] = $this->spb_kategori_model->getListKategoriFilter($data['objectId']);
+        $this->load->view('report/rpt_spm_bendahara_v',$data);
+    }
+    
+    function spm(){
+        $data['title'] = 'SPB';		
+        $data['objectId'] = 'spm';
+        $data['tipereport'] = 'spm';
+        $data['bidanglist'] = $this->bidang_model->getListBidang($data['objectId']);
+        $data['bidanglistFilter'] = $this->bidang_model->getListBidangFilter($data['objectId']);
+        $data['kategorilist'] = $this->spb_kategori_model->getListKategori($data['objectId']);
+        $data['kategorilistFilter'] = $this->spb_kategori_model->getListKategoriFilter($data['objectId']);
+        $this->load->view('report/rpt_spm_bendahara_v',$data);
     }
     
     
 
-    function grid($tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori){	
+    function grid($tipereport,$periodeawal,$periodeakhir,$bidang,$kategori){	
         $periodeawal = $this->utility->ourDeFormatSQLDate($periodeawal);
 	$periodeakhir = $this->utility->ourDeFormatSQLDate($periodeakhir);
-        echo $this->rpt_spb_ditolak_model->easyGrid(1,$tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori);
+        echo $this->rpt_spm_bendahara_model->easyGrid(1,$tipereport,$periodeawal,$periodeakhir,$bidang,$kategori);
     }
  
     

@@ -2,29 +2,18 @@
 $(function(){
     var url;
        
-    newData<?=$objectId;?> = function (){  
-        $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Tambah SPB');  
-        $('#fm<?=$objectId;?>').form('clear');  
-        $('#tanggal<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
-        autoKegiatan<?=$objectId;?>('','');       
-        $('#nomor<?=$objectId;?>').val('/PPK/<?=date('Y')?>');  
-        
-        url = base_url+'transaksi/spb/save/add';  
-    }
-    //end newData 
-
-
+  
     clearFilter<?=$objectId;?> = function (){
         //ambil nilai-nilai filter
             $("#filter_bidang_id<?=$objectId?>").val('-1');
             $("#filter_kategori_id<?=$objectId?>").val('-1');
-            $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-01-Y')?>');
+            $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-m-Y')?>');
             $('#periodeakhir<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
 //        $("#filter_nama").val('');
 //        $("#filter_alamat").val('');
 
 
-        //$('#dg<=$objectId;?>').datagrid({url:"<=base_url()?>transaksi/spb/grid/"+filnip+"/"+filnama+"/"+filalamat});
+        //$('#dg<=$objectId;?>').datagrid({url:"<=base_url()?>report/rpt_spm_bendahara/grid/"+filnip+"/"+filnama+"/"+filalamat});
     }
 
         //tipe 1=grid, 2=pdf, 3=excel
@@ -38,12 +27,12 @@ $(function(){
         filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
         filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
         if (tipe==1){
-                return "<?=base_url()?>transaksi/spb/grid/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spm_bendahara/grid/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
         }
         else if (tipe==2){
-                return "<?=base_url()?>transaksi/spb/pdf/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spm_bendahara/pdf/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
         }else if (tipe==3){
-                return "<?=base_url()?>transaksi/spb/excel/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spm_bendahara/excel/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
         }
 
     }
@@ -56,50 +45,7 @@ $(function(){
     }
     //end searhData 
 
-    editData<?=$objectId;?> = function (){
-        var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-        $('#fm<?=$objectId;?>').form('clear');  
-        //alert(row.dokter_kode);
-        if (row){
-                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit SPB');
-                $('#fm<?=$objectId;?>').form('load',row);
-                autoKegiatan<?=$objectId;?>('',row.kegiatan);
-                url = base_url+'transaksi/spb/save/edit/'+row.spb_id;//+row.id;//'update_user.php?id='+row.id;
-        }
-    }
-        //end editData
-
-    deleteData<?=$objectId;?> = function (){
-        var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-        if(row){
-            if(confirm("Apakah yakin akan menghapus data '" + row.nomor + "'?")){
-                var response = '';
-                $.ajax({ type: "GET",
-                    url: base_url+'transaksi/spb/delete/' + row.nomor ,
-                    async: false,
-                    success : function(response){
-                        var response = eval('('+response+')');
-                        if (response.success){
-                            $.messager.show({
-                                title: 'Success',
-                                msg: 'Data Berhasil Dihapus'
-                            });
-
-                            // reload and close tab
-                            $('#dg<?=$objectId;?>').datagrid('reload');
-                        } else {
-                            $.messager.show({
-                                title: 'Error',
-                                msg: response.msg
-                            });
-                        }
-                    }
-                });
-            }
-        }
-    }
-        //end deleteData 
-
+  
     printData<?=$objectId;?>=function(){			
         //$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
         window.open(getUrl<?=$objectId;?>(2));;
@@ -110,75 +56,7 @@ $(function(){
         window.open(getUrl<?=$objectId;?>(3));;
     }
 
-    saveData<?=$objectId;?>=function(){
-        $('#fm<?=$objectId;?>').form('submit',{
-            url: url,
-            onSubmit: function(){
-                return $(this).form('validate');
-            },
-            success: function(result){
-                //alert(result);
-                var result = eval('('+result+')');
-                if (result.success){
-                    $.messager.show({
-                            title: 'Pesan',
-                            msg: 'Data berhasil disimpan'
-                    });
-                    $('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
-                    $('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
-                } else {
-                    $.messager.show({
-                            title: 'Error',
-                            msg: result.msg
-                    });
-                }
-            }
-        });
-    }
-        //end saveData
-         setKegiatan<?=$objectId;?> = function (valu){
-            //$('#kode_iku_e1<?=$objectId;?>').value = valu;
-              $('textarea').autosize();  
-        }
-        $("#bidang_id<?=$objectId?>").change(function(){
-            autoKegiatan<?=$objectId;?>("","")
-           
-        });
-        function autoKegiatan<?=$objectId;?>(key,val){
-           
-            var tgl = $('#tanggal<?=$objectId;?>').datebox('getValue','<?=date('d-m-Y')?>');
-   
-            var tahun = parseInt(tgl.split('-')[2]);
-            var bidang_id = $("#bidang_id<?=$objectId?>").val();
-           
-            if (tahun=="") tahun = "-1";
-            if ((bidang_id==null)||(bidang_id=="")) bidang_id = "-1";
-             $("#divKegiatan<?=$objectId?>").load(
-                base_url+"transaksi/spb/getListKegiatan/<?=$objectId;?>/"+tahun+"/"+bidang_id,
-                function(){
-                    $('textarea').autosize();   
-
-                    $("#txtbeban_kegiatan<?=$objectId;?>").click(function(){
-                       // alert('kadie=<?=$objectId;?>') ;
-                        $("#drop<?=$objectId;?>").slideDown("slow");
-                    });
-
-                    $("#drop<?=$objectId;?> li").click(function(e){
-                            var chose = $(this).text();
-                            $("#txtbeban_kegiatan<?=$objectId;?>").val(chose);
-                            $("#drop<?=$objectId;?>").slideUp("slow");
-                    });
-            //	alert(val);
-//                    if (key!=null)
-                            //$('#kode_sasaran_e2ListSasaran<?=$objectId;?>').val(key);
-                    if (val!=null)
-                            $('#txtbeban_kegiatan<?=$objectId;?>').val(val);
-                }
-            ); 
-            //alert("here");
-
-         }
-
+  
         setTimeout(function(){
             var wHeight = $(window).height();
             clearFilter<?=$objectId?>();
@@ -284,15 +162,7 @@ $(function(){
             </table>
 
 	  <div style="margin-bottom:5px">
-		<? if($this->sys_menu_model->cekAkses('ADD;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Tambah</a>  
-		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EDIT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
-		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
-			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Hapus</a>
-		<?}?>
+		
 		<? if($this->sys_menu_model->cekAkses('PRINT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 		<?}?>
@@ -302,11 +172,11 @@ $(function(){
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data SPB PPK Yang Telah Diverifikasi " toolbar="#tb<?=$objectId;?>" 
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Daftar SPB <?=($tipereport=="spm")?" Untuk Pengajuan SPM":" Untuk Bendaharawan"?> " toolbar="#tb<?=$objectId;?>" 
                fitColumns="false" singleSelect="true" rownumbers="true" pagination="true" noWrap="false" showFooter="true">
 	  <thead>
 	  <tr>
-		<th halign="center" align="left" rowspan="2" field="tanggal" sortable="true" width="80">Tanggal</th>
+              <th halign="center" align="left" rowspan="2" field="tanggal" sortable="true" width="80">Tanggal</th>
 		<th halign="center" align="center" rowspan="2" field="nomor" sortable="true" width="200">Nomor</th>
 		<th halign="center" align="right" rowspan="2" field="jumlah" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
 		<th halign="center" align="left" rowspan="2" field="bidang" sortable="true" width="100">Bidang</th>
