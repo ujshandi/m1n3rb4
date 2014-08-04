@@ -8,7 +8,7 @@ $(function(){
     clearFilter<?=$objectId;?> = function (){
         $("#filter_bidang_id<?=$objectId?>").val('-1');
         $("#filter_kategori_id<?=$objectId?>").val('-1');
-        $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-m-Y')?>');
+        $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-01-Y')?>');
         $('#periodeakhir<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
 
         //$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>transaksi/spb/grid/"+filnip+"/"+filnama+"/"+filalamat});
