@@ -41,9 +41,26 @@ class Tandaterima extends CI_Controller {
     
     public function add(){
         $data['title'] = 'Tanda Terima SPB';	
-        $data['objectId'] = "addTandaTerima";  
+        $data['objectId'] = "addTandaTerima"; 
+        $data['editmode'] = false;
         $data['tipetandaterima'] = 'draft';
         $data['bidanglist'] = $this->bidang_model->getListBidang($data['objectId']);
+        $this->load->view('transaksi/tandaterima_rec_v',$data);
+    }
+    
+     public function edit($id){
+        $data['title'] = 'Edit Tanda Terima SPB';	
+        $data['objectId'] = "editTandaTerima";  
+        $data['tipetandaterima'] = 'draft';
+        $data['editmode'] = true;
+        $data['bidanglist'] = $this->bidang_model->getListBidang($data['objectId']);
+        $row=$this->tandaterima_model->selectById($id);
+        $data['nomor'] = $row->nomor;
+        $data['tanggal'] = $this->utility->ourFormatDate2($row->tanggal);
+        $data['keterangan'] = $row->keterangan;
+        $data['bidang_id'] = $row->bidang_id;
+        $data['tanda_id'] = $row->tanda_id;
+        
         $this->load->view('transaksi/tandaterima_rec_v',$data);
     }
   
@@ -57,11 +74,21 @@ class Tandaterima extends CI_Controller {
         echo $this->tandaterima_model->easyGridDetail(1,$tandaid);
     }
     
-    function gridspb($tipetandaterima,$bidang){	
+    function gridspb($tipetandaterima,$bidang,$tanda_id=null){	
+        if (($tanda_id!=null)&&($tanda_id>0)){
+            echo $this->tandaterima_model->easyGridDetail(1,$tanda_id,true);
+        }
+        else{
+            echo $this->tandaterima_model->easyGridInput(1,$tipetandaterima,$bidang,$tanda_id);
+        }
+                
         
-        echo $this->tandaterima_model->easyGridInput(1,$tipetandaterima,$bidang);
     }
     
+    function get_new_number($bln,$tahun){
+        
+        echo $this->tandaterima_model->getNewNumber($bln,$tahun);
+    }
    
     private function get_form_values() {
             // XXS Filtering enforced for user input
