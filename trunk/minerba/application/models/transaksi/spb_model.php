@@ -232,7 +232,7 @@ class Spb_model extends CI_Model
     }
 	
     public function isSaveDelete($kode){			
-        $this->db->where('nomor',$kode); //buat validasi		
+        /*$this->db->where('nomor',$kode); //buat validasi		
         $this->db->select('*');
         $this->db->from('tbl_sasaran_kl');
 
@@ -250,7 +250,8 @@ class Spb_model extends CI_Model
             $rs = $query->num_rows() ;		
             $query->free_result();
             $isSave = ($rs==0);
-        }
+        }*/
+        $isSave = true;
         return $isSave;
     }
 	

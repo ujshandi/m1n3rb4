@@ -95,7 +95,7 @@ class Tandaterima_model extends CI_Model
 
     }
     
-    public function easyGridInput($purpose=1,$tipeapproval,$filbidang){
+    public function easyGridInput($purpose=1,$tipeapproval,$filbidang,$filtandaid=null){
         
         $response = new stdClass();
         
@@ -184,7 +184,7 @@ class Tandaterima_model extends CI_Model
 
     }
     
-    public function easyGridDetail($purpose=1,$tandaid){
+    public function easyGridDetail($purpose=1,$tandaid,$forInput=false){
         
         $response = new stdClass();
         
@@ -198,9 +198,9 @@ class Tandaterima_model extends CI_Model
            
             $this->db->order_by("detail_id");
             
-            $this->db->select("s.*,p.tanggal,p.nomor ",false);
-            $this->db->from('tbl_tanda_terima_detail s inner join tbl_spb p on p.spb_id = s.spb_id'
-                    ,false);
+            $this->db->select("s.*,p.tanggal,p.nomor,p.jumlah,p.kategori_id,k.kategori,p.untuk,p.bidang_id,b.bidang,p.tujuan,p.beban_kode, p.beban_kegiatan",false);
+            $this->db->from('tbl_tanda_terima_detail s inner join tbl_spb p on p.spb_id = s.spb_id left join tbl_spb_kategori k on p.kategori_id = k.kategori_id '
+                    . 'left join tbl_bidang b on p.bidang_id = b.bidang_id ',false);
             $query = $this->db->get();
           
             $i=0;
@@ -212,7 +212,24 @@ class Tandaterima_model extends CI_Model
                 $response->rows[$i]['tanda_id']=$row->tanda_id;
                 $response->rows[$i]['spb_id']=$row->spb_id;
                 $response->rows[$i]['nomor']=$row->nomor;
-                $response->rows[$i]['tanggal']=$this->utility->ourFormatDate2($row->tanggal);
+                if ($forInput){
+                    $response->rows[$i]['jumlah']=$row->jumlah;
+                }
+                else {
+                    $response->rows[$i]['jumlah']=$this->utility->ourFormatNumber($row->jumlah);    
+                }
+                
+                
+                $response->rows[$i]['kategori']=$row->kategori;
+                $response->rows[$i]['untuk']=$row->untuk;
+                $response->rows[$i]['tanggal']=$this->utility->ourFormatDate2($row->tanggal);                
+                $response->rows[$i]['bidang_id']=$row->bidang_id;
+                $response->rows[$i]['bidang']=$row->bidang;                
+                $response->rows[$i]['kategori_id']=$row->kategori_id;
+                $response->rows[$i]['tujuan']=$row->tujuan;
+                $response->rows[$i]['beban_kegiatan']=$row->beban_kegiatan;
+                $response->rows[$i]['beban_kode']=$row->beban_kode;
+                $response->rows[$i]['kegiatan']='['.$row->beban_kode.']'.$row->beban_kegiatan;
                 
                 //utk kepentingan export pdf===================
                 $pdfdata[] = array($no,$response->rows[$i]['nomor']);
@@ -230,6 +247,17 @@ class Tandaterima_model extends CI_Model
             $response->rows[$count]['spb_id']= '';
             $response->rows[$count]['nomor']='';
             $response->rows[$count]['tanggal']='';
+            $response->rows[$count]['jumlah']='';
+            $response->rows[$count]['kategori']='';
+            $response->rows[$count]['untuk']='';
+            $response->rows[$count]['tanggal']='';                
+            $response->rows[$count]['bidang_id']='';
+            $response->rows[$count]['bidang']='';                
+            $response->rows[$count]['kategori_id']='';
+            $response->rows[$count]['tujuan']='';
+            $response->rows[$count]['beban_kegiatan']='';
+            $response->rows[$count]['beban_kode']='';
+            $response->rows[$count]['kegiatan']='';
         }
         
         
@@ -264,6 +292,8 @@ class Tandaterima_model extends CI_Model
         return $this->db->count_all_results();
         $this->db->free_result();
     }
+    
+    
 
     public function isExistKode($kode=null){	
         if ($kode!=null)//utk update
@@ -276,6 +306,15 @@ class Tandaterima_model extends CI_Model
         $rs = $query->num_rows() ;		
         $query->free_result();
         return ($rs>0);
+    }
+    
+    public function selectById($id){
+        $this->db->select("*", false);
+        $this->db->from('tbl_tanda_terima');
+        $this->db->where('tanda_id',$id);
+
+        $query = $this->db->get();
+        return $query->row();
     }
 	
     public function isSaveDelete($kode){			
@@ -379,6 +418,11 @@ class Tandaterima_model extends CI_Model
         }
     }
 	
-   
+   function getNewNumber($bln,$tahun){
+       $prefix = 'TT'."/".$bln."/".$tahun.'/';
+       $no= $this->utility->ourGetNextIDNum("nomor","tbl_tanda_terima","date_format(tanggal,'%m')= '$bln' and  date_format(tanggal,'%Y')='$tahun'",
+               $prefix,"",4);
+       echo $no;
+   }
 }
 ?>

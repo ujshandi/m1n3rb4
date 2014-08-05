@@ -3,7 +3,7 @@ $(function(){
     var url;
        
     newData<?=$objectId;?> = function (){  
-        $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Tambah SPB');  
+        $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Tambah SPB (Draft)');  
         $('#fm<?=$objectId;?>').form('clear');  
         $('#tanggal<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
         autoKegiatan<?=$objectId;?>('','');       
@@ -61,7 +61,7 @@ $(function(){
         $('#fm<?=$objectId;?>').form('clear');  
         //alert(row.dokter_kode);
         if (row){
-                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit SPB');
+                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit SPB (Draft)');
                 $('#fm<?=$objectId;?>').form('load',row);
                 autoKegiatan<?=$objectId;?>('',row.kegiatan);
                 url = base_url+'transaksi/spb/save/edit/'+row.spb_id;//+row.id;//'update_user.php?id='+row.id;
@@ -72,10 +72,10 @@ $(function(){
     deleteData<?=$objectId;?> = function (){
         var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
         if(row){
-            if(confirm("Apakah yakin akan menghapus data '" + row.nomor + "'?")){
+            if(confirm("Apakah yakin akan menghapus data Draft SPB dengan nomor '" + row.nomor + "'?")){
                 var response = '';
                 $.ajax({ type: "GET",
-                    url: base_url+'transaksi/spb/delete/' + row.nomor ,
+                    url: base_url+'transaksi/spb/delete/' + row.spb_id ,
                     async: false,
                     success : function(response){
                         var response = eval('('+response+')');
@@ -284,25 +284,25 @@ $(function(){
             </table>
 
 	  <div style="margin-bottom:5px">
-		<? if($this->sys_menu_model->cekAkses('ADD;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('ADD;',21,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Tambah</a>  
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EDIT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EDIT;',21,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('DELETE;',21,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Hapus</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('PRINT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('PRINT;',21,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EXCEL;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EXCEL;',21,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
 		<?}?>
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data SPB PPK Yang Telah Diverifikasi " toolbar="#tb<?=$objectId;?>" 
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data SPB (Draft)" toolbar="#tb<?=$objectId;?>" 
                fitColumns="false" singleSelect="true" rownumbers="true" pagination="true" noWrap="false" showFooter="true">
 	  <thead>
 	  <tr>
@@ -329,7 +329,7 @@ $(function(){
 	 <!-- AREA untuk Form Add/EDIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 	
 	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:800px;height:450px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
-	  <div class="ftitle">Tambah/Edit Data SPB</div>
+	  <div class="ftitle">Tambah/Edit Data SPB (Draft)</div>
 	  <form id="fm<?=$objectId;?>" method="post">
 		 <div class="fitem">
 		  <label style="width:150px;vertical-align:top">Tanggal :</label>

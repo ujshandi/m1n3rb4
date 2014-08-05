@@ -50,7 +50,7 @@ $(function(){
         $('#dg<?=$objectId;?>').datagrid({
             url:getUrl<?=$objectId;?>(1),
             view: detailview,
-                            detailFormatter:function(index,row){
+            detailFormatter:function(index,row){
                return '<div style="padding:2px"><table id="ddv<?=$objectId;?>-' + index + '"></table></div>';
            //  return "tes";
            },
@@ -68,8 +68,11 @@ $(function(){
                        {field:'detail_id',title:'detail_id',hidden:true},
                        {field:'tanda_id',title:'tanda_id',hidden:true},
                        {field:'spb_id',title:'spb_id',hidden:true},
+                       {field:'tanggal',title:'Tanggal',width:80},
                        {field:'nomor',title:'Nomor SPB',width:200},
-                       {field:'tanggal',title:'Tanggal',width:75}
+                       {field:'jumlah',title:'Jumlah',width:100,align:'right'},
+                       {field:'kategori',title:'Kategori',width:100},
+                       {field:'untuk',title:'Untuk Pembayaran',width:200}
                        
                    ]],
                    onResize:function(){
@@ -101,10 +104,10 @@ $(function(){
         $('#fm<?=$objectId;?>').form('clear');  
         //alert(row.dokter_kode);
         if (row){
-                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit Tanda Terima');
-                $('#fm<?=$objectId;?>').form('load',row);
-                autoKegiatan<?=$objectId;?>('',row.kegiatan);
-                url = base_url+'transaksi/tandaterima/save/edit/'+row.tanda_id;//+row.id;//'update_user.php?id='+row.id;
+           //     $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit Tanda Terima SPB');
+             //   $('#fm<?=$objectId;?>').form('load',row);
+              addTab("Edit Tanda Terima","transaksi/tandaterima/edit/"+row.tanda_id); 
+            // url = base_url+'transaksi/tandaterima/save/edit/'+row.tanda_id;//+row.id;//'update_user.php?id='+row.id;
         }
     }
         //end editData
@@ -112,10 +115,10 @@ $(function(){
     deleteData<?=$objectId;?> = function (){
         var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
         if(row){
-            if(confirm("Apakah yakin akan menghapus data '" + row.nomor + "'?")){
+            if(confirm("Apakah yakin akan menghapus data Tanda Terima dengan nomor '" + row.nomor + "'?")){
                 var response = '';
                 $.ajax({ type: "GET",
-                    url: base_url+'transaksi/tandaterima/delete/' + row.nomor ,
+                    url: base_url+'transaksi/tandaterima/delete/' + row.tanda_id ,
                     async: false,
                     success : function(response){
                         var response = eval('('+response+')');
@@ -151,48 +154,7 @@ $(function(){
     }
 
    
-         setKegiatan<?=$objectId;?> = function (valu){
-            //$('#kode_iku_e1<?=$objectId;?>').value = valu;
-              $('textarea').autosize();  
-        }
-        $("#bidang_id<?=$objectId?>").change(function(){
-            autoKegiatan<?=$objectId;?>("","")
-           
-        });
-        function autoKegiatan<?=$objectId;?>(key,val){
-           
-            var tgl = $('#tanggal<?=$objectId;?>').datebox('getValue','<?=date('d-m-Y')?>');
-   
-            var tahun = parseInt(tgl.split('-')[2]);
-            var bidang_id = $("#bidang_id<?=$objectId?>").val();
-           
-            if (tahun=="") tahun = "-1";
-            if ((bidang_id==null)||(bidang_id=="")) bidang_id = "-1";
-             $("#divKegiatan<?=$objectId?>").load(
-                base_url+"transaksi/tandaterima/getListKegiatan/<?=$objectId;?>/"+tahun+"/"+bidang_id,
-                function(){
-                    $('textarea').autosize();   
-
-                    $("#txtbeban_kegiatan<?=$objectId;?>").click(function(){
-                       // alert('kadie=<?=$objectId;?>') ;
-                        $("#drop<?=$objectId;?>").slideDown("slow");
-                    });
-
-                    $("#drop<?=$objectId;?> li").click(function(e){
-                            var chose = $(this).text();
-                            $("#txtbeban_kegiatan<?=$objectId;?>").val(chose);
-                            $("#drop<?=$objectId;?>").slideUp("slow");
-                    });
-            //	alert(val);
-//                    if (key!=null)
-                            //$('#kode_sasaran_e2ListSasaran<?=$objectId;?>').val(key);
-                    if (val!=null)
-                            $('#txtbeban_kegiatan<?=$objectId;?>').val(val);
-                }
-            ); 
-            //alert("here");
-
-         }
+        
 
         setTimeout(function(){
             var wHeight = $(window).height();
@@ -297,19 +259,19 @@ $(function(){
             </table>
 
 	  <div style="margin-bottom:5px">
-		<? if($this->sys_menu_model->cekAkses('ADD;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('ADD;',22,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Tambah</a>  
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EDIT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EDIT;',22,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('DELETE;',22,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Hapus</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('PRINT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('PRINT;',22,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EXCEL;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EXCEL;',22,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
 		<?}?>
 	  </div>
