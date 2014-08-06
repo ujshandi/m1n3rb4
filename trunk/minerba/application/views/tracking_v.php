@@ -8,8 +8,25 @@
 
     <style type="text/css">
 		html {
-			background-image: none;
+		  height: 100%;
+		  overflow-y: scroll;
+		  overflow-x: hidden
 		}
+
+		body {
+		  width: 100%;
+		  height: 100%;
+		  line-height: 1.5;
+		  font-family: 'Lato', sans-serif;
+		  font-weight: 300;
+		  font-size: 16px;
+		  background-color: #eee;
+		  /*background: url(../images/1.png) left top no-repeat;*/
+		  /*background: url(../images/footer-bg.png) repeat;*/
+		  background-size: 100% 100%
+		}
+
+		
 
 		#versionBar {
 			background-color:#ffffff;
@@ -32,8 +49,84 @@
 	</style>
 
     
-    <link rel="stylesheet" type="text/css" href="<?=base_url()?>public/css/windows8.css" />
+    
     <!-- END General Styles -->
+	<style type="text/css">
+		ol.progtrckr {
+			margin: 0;
+			padding: 0;
+			list-style-type none;
+		}
+		ol.progtrckr li {
+			display: inline-block;
+			text-align: center;
+			line-height: 3em;
+		}
+		
+		ol.progtrckr[data-progtrckr-steps="2"] li { width: 49%; }
+		ol.progtrckr[data-progtrckr-steps="3"] li { width: 33%; }
+		ol.progtrckr[data-progtrckr-steps="4"] li { width: 24%; }
+		ol.progtrckr[data-progtrckr-steps="5"] li { width: 19%; }
+		ol.progtrckr[data-progtrckr-steps="6"] li { width: 16%; }
+		ol.progtrckr[data-progtrckr-steps="7"] li { width: 14%; }
+		ol.progtrckr[data-progtrckr-steps="8"] li { width: 12%; }
+		ol.progtrckr[data-progtrckr-steps="9"] li { width: 11%; }
+		
+		ol.progtrckr li.progtrckr-done {
+			color: black;
+			border-bottom: 4px solid yellowgreen;
+		}
+		ol.progtrckr li.progtrckr-todo {
+			color: silver; 
+			border-bottom: 4px solid silver;
+		}
+		
+		ol.progtrckr li:after {
+			content: "\00a0\00a0";
+		}
+		ol.progtrckr li:before {
+			position: relative;
+			bottom: -2.5em;
+			float: left;
+			left: 50%;
+			line-height: 1em;
+		}
+		ol.progtrckr li.progtrckr-done:before {
+			content: "\2713";
+			color: white;
+			background-color: yellowgreen;
+			height: 1.2em;
+			width: 1.2em;
+			line-height: 1.2em;
+			border: none;
+			border-radius: 1.2em;
+		}
+		ol.progtrckr li.progtrckr-todo:before {
+			content: "\039F";
+			color: silver;
+			background-color: #eee;
+			font-size: 1.5em;
+			bottom: -1.6em;
+		}
+		
+		#nospb_id {
+			font-size: 25px;
+			background-repeat:no-repeat;
+		
+			text-align:center;
+			margin:auto;	
+			height: 35px;
+			background-position: 2px 3px;
+		
+			line-height: 35px;
+			color: #999;
+			width: 30%;
+			margin-bottom: 10px;
+			font-family:"Myriad Pro", Arial, Helvetica, sans-serif;
+		}
+	</style>
+	
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>public/admin/css/login.css" />
 	
 	<script type="text/javascript">var  base_url = "<?php echo base_url(); ?>"</script>
 	
@@ -47,101 +140,56 @@
 </head>
 
 <body>	
-     <header>
+     <header style="text-align:center;color:white;background-color:red">
    Penulusuran Dokumen SPB
  </header>
-	<div id="alertMessage" class="error"/><?=$err_msg;?>
-        <br></br>
-        <center>
-	<form id="formLogin" method="post" action="<?=base_url();?>security/login/login_usr">
-					<input name="username" type="text"  id="username_id" title="Username"/>
+	<div id="alertMessage" class="error"/><?=$err_msg;?></div>
+	
+	 <br></br>
+	
+		
+	 <div style="text-align:center">
+	<form id="formLogin" method="post" action="<?=base_url();?>tracking/go_tracking">
+					No.SPB : 
+					<input name="nospb" type="text"  id="nospb_id" title="Nomor SPB"/>
 			 		
-
+					
+								
+								<a class="uibutton normal" style="display: inline-block;padding:7px 12px 2px;font-size:19px" href="javascript:document.getElementById('formLogin').submit();" id="but_login" >Cari</a>
+					
+					
 				</form>
-            </center>
-            <br></br>
-            <div class="dashboard clearfix">
-                <ul class="tiles">
-                    <div class="col1 clearfix">
-                        
-                    </div>
-                    <div class="col2 clearfix">
-                        
-                        <br>
-                         <li class="tile tile-big tile-6 slideTextLeft" data-page-type="r-page" data-page-name="random-r-page">
-                            <div><p>Penulusuran</p></div>
-                            <div><p>Telusuri!</p></div>
-                          </li>
-                     </div>
-                </ul>
-            </div>    
-		
-    	
-			
-				
-			
-		
-
-
+				</div>
 	
-		
-	<!--Login div-->
+        <br></br>
+    <center>    
+		<ol class="progtrckr" data-progtrckr-steps="5">
+			<li class="progtrckr-done">Draft</li>
+			<li class="progtrckr-todo">Tanda Terima</li> <!--done -->
+			<li class="progtrckr-todo">Verifikasi</li>
+			<li class="progtrckr-todo">Pejabat Penguji</li>
+			<li class="progtrckr-todo">Pengajuan SPM/Bendaharawan</li>
+		</ol>
 	
+    </center>        
+            
 	<div id="versionBar">
 		<div class="copyright" > Copyright 2014  All Rights Reserved <span class="tip"><a href="#" style="color:#A31F1A" title="Kemenhub">Kementerian Energi Sumber Daya Dan Mineral</a></span></div>
   <!-- // copyright-->
 	</div>
 
         
-        <div class="r-page random-r-page">
-
-    <div class="page-content">
-      <h2 class="page-title">App Screen</h2>
-      <p>Chew iPad power cord chew iPad power cord attack feet chase mice leave dead animals as gifts and stick butt in face chew iPad power cord. Chase mice. Run in circles use lap as chair why must they do that. Intrigued by the shower destroy couch leave hair everywhere sleep on keyboard chew iPad power cord. Use lap as chair. Missing until dinner time stand in front of the computer screen, intently sniff hand. Find something else more interesting. Destroy couch play time so inspect anything brought into the house hate dog burrow under covers. Sleep on keyboard destroy couch so hate dog so hide when guests come over. Chase mice destroy couch lick butt throwup on your pillow use lap as chair yet intrigued by the shower but climb leg. Stare at ceiling make muffins or hunt anything that moves claw drapes. Intently sniff hand intrigued by the shower. Why must they do that. Cat snacks leave dead animals as gifts or inspect anything brought into the house sweet beast so stare at ceiling give attitude. Flop over claw drapes but sun bathe lick butt, and chase mice. Rub face on everything lick butt leave hair everywhere lick butt, missing until dinner time for use lap as chair lick butt. Make muffins leave dead animals as gifts play time. Chew foot intrigued by the shower stare at ceiling inspect anything brought into the house yet hopped up on goofballs. 
-
-
-
-      
-      </p>
-    </div>
-    
-    <div class="close-button r-close-button">x</div>
-  </div>
+        
         <script src="<?=base_url()?>public/js/jquery-easyui-1.3.3/jquery.min.js"></script>
         <script type="text/javascript">
-            $('.tile').on('click',function(){
-                $this= $(this),
-                page = $this.data('page-name');
-                bgcolor = $this.css('background-color');
-                textColor = $this.css('color');
-                //alert(page);
-                $('.'+page).css({'background-color': bgcolor, 'color': textColor})
-                     .find('.close-button').css({'background-color': textColor, 'color': bgcolor});
-                fadeDashBoard();     
-                $('.'+page).addClass('slidePageInFromLeft').removeClass('slidePageBackLeft');     
-                $('.'+page).addClass('openpage');
-        });
-        
-        $('.r-close-button').click(function(){
-            $(this).parent().addClass('slidePageLeft')
-                .one('webkitAnimationEnd oanimationend msAnimationEnd animationend', function(e) {
-                      $(this).removeClass('slidePageLeft').removeClass('openpage');
-                    });
-            showDashBoard();
-        });
-     
-        function showDashBoard(){
-            for(var i = 1; i <= 3; i++) {
-              $('.col'+i).each(function(){
-                  $(this).addClass('fadeInForward-'+i).removeClass('fadeOutback');
-              });
-            }
-          }
-        function fadeDashBoard(){
-            for(var i = 1; i <= 3; i++) {
-              $('.col'+i).addClass('fadeOutback').removeClass('fadeInForward-'+i);
-            }
-          }
+            
+		  
+		  $(window).load(function(){
+			$("ol.progtrckr").each(function(){
+				$(this).attr("data-progtrckr-steps", 
+							 $(this).children("li").length);
+			});
+		})
         </script>
 </body>
 
