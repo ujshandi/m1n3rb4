@@ -32,21 +32,12 @@ class Tracking extends CI_Controller {
 		$response = $this->tracking->cek_spb($this->input->post('nospb'));
 		//var_dump($response);die;
 		if(is_string($response) && $response == 'REQUIRED') {
-			$this->index('Username and Password required',$this->input->post('username'));
-		}else if($response == true) {
-			if($form=='portal'){
-				//chan redirect(base_url().'portal');
-				redirect(base_url().'home');
-			}
-			else
-				redirect(base_url().'home');
+			$this->index('Nomor SPB harus diisi',$this->input->post('nospb'));
+		}else if($response == true) {			
+				redirect(base_url().'tracking');
 		}else {
-			if($form=='portal'){
-				$this->session->set_flashdata('err_login','Invalid Username and Password');
-				redirect(base_url().'portal');
-			}
-			else
-				$this->index('Invalid Username and Password');
+			
+			$this->index('Nomor SPB belum terdaftar');
 			//$this->session->flash_data();
 		}
 	}
