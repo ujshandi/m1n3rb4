@@ -40,6 +40,93 @@
 			color:#000;
 			text-decoration:none
 		}
+		
+		
+		.ftitle{
+			font-size:14px;
+			font-weight:bold;
+			color:#666;
+			padding:5px 0;
+			margin-bottom:10px;
+			border-bottom:1px solid #ccc;
+		}
+		.fitem{
+			margin-bottom:5px;
+		}
+		.fitem label{
+			display:inline-block;
+			width:80px;
+		}
+		  .fsearch{
+			background:#fafafa;
+			border-radius:5px;
+			-moz-border-radius:0px;
+			-webkit-border-radius: 5px;
+			-moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+			-webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+			filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2,MakeShadow=false,ShadowOpacity=0.2);
+			margin-bottom:10px;
+			border: 1px solid #99BBE8;
+			color: #15428B;
+			font-size: 11px;
+			font-weight: bold;
+			position: relative;
+		  }
+		  .fsearch div{
+			background:url('<?=base_url();?>public/css/themes/gray/images/panel_title.gif') repeat-x;
+			height:200%;
+			border-bottom: 1px solid #99BBE8;
+			color:#15428B;
+			font-size:10pt;
+			text-transform:uppercase;
+			font-weight: bold;
+			padding: 5px;
+			position: relative;
+		  }
+		  .fsearch table{
+			padding: 15px;
+		  }
+		  .fsearch label{
+			display:inline-block;
+			width:60px;
+		  }
+			.fitemArea{
+				margin-bottom:5px;
+				text-align:left;
+				/* border:1px solid blue; */
+			}
+			.fitemArea label{
+				display:inline-block;
+				width:84px;
+				margin-bottom:5px;
+			}
+			
+		
+		.fieldset
+		{
+			border: 1px solid #ddd;
+			margin-top: 1em;
+			/*width: 500px;*/
+		}
+
+		.fieldset h1
+		{
+			font-size: 12px;
+			text-align: left;
+			margin-bottom:-20px;
+		}
+
+		.fieldset h1 span
+		{
+			display: inline;
+			border: 1px solid #ddd;
+			background: #fff;
+			padding: 5px 10px;
+			position: relative;
+			margin-left:10px;
+			/*top: -1.3em;*/
+			top: -0.5em;
+		}
 	</style>
 	<!--	
 		background-color:#212121;

@@ -18,7 +18,7 @@ $(function(){
         //ambil nilai-nilai filter
             $("#filter_bidang_id<?=$objectId?>").val('-1');
             $("#filter_kategori_id<?=$objectId?>").val('-1');
-            $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-m-Y')?>');
+            $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-01-Y')?>');
             $('#periodeakhir<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
 //        $("#filter_nama").val('');
 //        $("#filter_alamat").val('');
@@ -251,13 +251,15 @@ $(function(){
 			width:84px;
 			margin-bottom:5px;
 		}
+		
+		
 	</style>
 	<div id="tb<?=$objectId;?>" style="height:auto">
             <table border="0" cellpadding="1" cellspacing="1" width="100%">
             <tr>
                 <td>
-                <div class="fsearch">                    
-                    <table border="0" cellpadding="1" cellspacing="1">				
+                <div class="fsearch fieldset">  <h1><span>Kriteria Pencarian</span></h1>                   
+                    <table border="0" cellpadding="1" cellspacing="4">				
                     <tr>
                         <td>Periode : &nbsp;</td>
                         <td><input name="periodeawal" style="width:100px" id="periodeawal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input  style="width:100px" name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
@@ -269,6 +271,8 @@ $(function(){
                         <td> <?=$kategorilistFilter?>  </td>
                     </tr>
                     <tr>
+						 <td>Nomor SPB : &nbsp;</td>
+                        <td colspan="2"><input name="nomor" style="width:225px" id="nomor<?=$objectId;?>" class="easyui-validatebox" /></td>
                             <td>&nbsp;</td>
                     </tr>
                     <tr>
