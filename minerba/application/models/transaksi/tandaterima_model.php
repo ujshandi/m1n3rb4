@@ -420,7 +420,7 @@ class Tandaterima_model extends CI_Model
 	
    function getNewNumber($bln,$tahun){
        $prefix = 'TT'."/".$bln."/".$tahun.'/';
-       $no= $this->utility->ourGetNextIDNum("nomor","tbl_tanda_terima","date_format(tanggal,'%m')= '$bln' and  date_format(tanggal,'%Y')='$tahun'",
+       $no= $this->utility->ourGetNextIDNum("nomor","tbl_tanda_terima"," and date_format(tanggal,'%m')= '$bln' and  date_format(tanggal,'%Y')='$tahun'",
                $prefix,"",4);
        echo $no;
    }

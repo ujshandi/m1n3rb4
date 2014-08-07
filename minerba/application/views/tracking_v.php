@@ -109,7 +109,7 @@
 			bottom: -1.6em;
 		}
 		
-		#nospb_id {
+		#nospb_id<?=$objectId?> {
 			font-size: 25px;
 			background-repeat:no-repeat;
 		
@@ -143,7 +143,7 @@
      <header style="text-align:center;color:white;background-color:red">
    Penulusuran Dokumen SPB
  </header>
-	<div id="alertMessage" class="error"/><?=$err_msg;?></div>
+	
 	
 	 <br></br>
 	
@@ -151,26 +151,27 @@
 	 <div style="text-align:center">
 	<form id="formLogin" method="post" action="<?=base_url();?>tracking/go_tracking">
 					No.SPB : 
-					<input name="nospb" type="text"  id="nospb_id" title="Nomor SPB"/>
+					<input name="nospb" type="text"  id="nospb_id<?=$objectId?>" title="Nomor SPB"/>
 			 		
 					
 								
-								<a class="uibutton normal" style="display: inline-block;padding:7px 12px 2px;font-size:19px" href="javascript:document.getElementById('formLogin').submit();" id="but_login" >Cari</a>
+								<a class="uibutton normal" style="display: inline-block;padding:7px 12px 2px;font-size:19px" href="javascript:cari<?=$objectId?>();" id="but_login" >Cari</a>
 					
-					
+								<div id="alertMessage<?=$objectId?>" class="error"/><?=$err_msg;?></div>
 				</form>
 				</div>
 	
         <br></br>
     <center>    
+	<div id="divProgress<?=$objectId?>">
 		<ol class="progtrckr" data-progtrckr-steps="5">
-			<li class="progtrckr-done">Draft</li>
+			<li class="progtrckr-todo">Draft</li>
 			<li class="progtrckr-todo">Tanda Terima</li> <!--done -->
 			<li class="progtrckr-todo">Verifikasi</li>
 			<li class="progtrckr-todo">Pejabat Penguji</li>
 			<li class="progtrckr-todo">Pengajuan SPM/Bendaharawan</li>
 		</ol>
-	
+	</div>
     </center>        
             
 	<div id="versionBar">
@@ -181,6 +182,7 @@
         
         
         <script src="<?=base_url()?>public/js/jquery-easyui-1.3.3/jquery.min.js"></script>
+        <script src="<?=base_url()?>public/js/uri_encode_decode.js"></script>
         <script type="text/javascript">
             
 		  
@@ -190,6 +192,31 @@
 							 $(this).children("li").length);
 			});
 		})
+		
+		cari<?=$objectId?> = function(){
+			var nospb =  $('#nospb_id<?=$objectId;?>').val();
+            if (nospb.length==0) {
+				alert('No SPB harus diisi');
+				return;
+			}
+			nospb = DoAsciiHex(nospb,'A2H');
+            $.ajax({url:base_url+"tracking/go_tracking/"+nospb,
+                success : function(result){
+					
+					var result = eval('('+result+')');
+					//alert(result.success);
+					if (result.success){
+						$("#divProgress<?=$objectId?>").html(result.data);
+						$("#alertMessage<?=$objectId?>").html("");
+					}
+					else {
+						$("#divProgress<?=$objectId?>").html(result.data);
+						$("#alertMessage<?=$objectId?>").html(result.msg);
+					}
+					
+                }					
+            })
+		}
         </script>
 </body>
 
