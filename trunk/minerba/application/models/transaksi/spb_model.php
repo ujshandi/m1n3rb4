@@ -25,22 +25,29 @@ class Spb_model extends CI_Model
         $order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';  
         $offset = ($page-1)*$limit;  
         $pdfdata = array();
+		$viewname = 'v_spb_draft s';
           $jumlah =0;
         if ($count>0){
             switch ($tipeapproval){
-                case "verifikasi" : $this->db->where("((status_verifikasi is null) or (status_verifikasi=''))");break;
+                case "verifikasi" : /// adalah draft yg telah di buat tanda terima
+					$viewname = 'v_spb_verifikasi s';
+					//$this->db->where("((status_verifikasi is null) or (status_verifikasi=''))");break;
+				break;	
                 case "penguji" : 
-                    $this->db->where("((status_verifikasi is not null) or (status_verifikasi<>''))");
-                    $this->db->where("((status_spm is null) or (status_spm<>'') or (status_bendahara is null) or (status_bendahara<>''))");
+                  //  $this->db->where("((status_verifikasi is not null) or (status_verifikasi<>''))");
+                  //  $this->db->where("((status_spm is null) or (status_spm<>'') or (status_bendahara is null) or (status_bendahara<>''))");
+					$viewname = 'v_spb_penguji s';
                 break;
                 case "spm" : 
-                    $this->db->where("((status_penguji is not null) or (status_penguji<>''))");
-                    $this->db->where("s.kategori_id in (select kategori_sppd from tbl_konstanta) ");
+                    //$this->db->where("((status_penguji is not null) or (status_penguji<>''))");
+                    //$this->db->where("s.kategori_id in (select kategori_sppd from tbl_konstanta) ");
+					$viewname = 'v_spb_spm s';
                 break;
                 case "bendahara" : 
-                    $this->db->where("((status_penguji is not null) or (status_penguji<>''))");
-                    $this->db->where("s.kategori_id in (select kategori_bahan from tbl_konstanta union "
-                            . "select kategori_non_bahan from tbl_konstanta)");
+                    //$this->db->where("((status_penguji is not null) or (status_penguji<>''))");
+                    //$this->db->where("s.kategori_id in (select kategori_bahan from tbl_konstanta union "
+                      //      . "select kategori_non_bahan from tbl_konstanta)");
+					  $viewname = 'v_spb_bendahara s';
                 break;
             }
             if($filawal != '' && $filawal != '-1' && $filawal != null) {
@@ -54,9 +61,12 @@ class Spb_model extends CI_Model
             }
             $this->db->order_by($sort." ".$order );
             if($purpose==1){$this->db->limit($limit,$offset);}
-            $this->db->select("s.*,k.kategori,b.bidang ",false);
-            $this->db->from('tbl_spb s left join tbl_bidang b on b.bidang_id=s.bidang_id'
-                    . ' left join tbl_spb_kategori k on k.kategori_id = s.kategori_id',false);
+			
+           // $this->db->select("s.*,k.kategori,b.bidang ",false);
+            //$this->db->from('tbl_spb s left join tbl_bidang b on b.bidang_id=s.bidang_id'
+              //      . ' left join tbl_spb_kategori k on k.kategori_id = s.kategori_id',false);
+			$this->db->select("* ",false);  
+			$this->db->from($viewname,false);
             $query = $this->db->get();
           
             $i=0;
@@ -188,22 +198,29 @@ class Spb_model extends CI_Model
 	
 	//jumlah data record buat paging
     public function GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori){
-        switch ($tipeapproval){
-            case "verifikasi" : $this->db->where("((status_verifikasi is null) or (status_verifikasi=''))");break;
-            case "penguji" : 
-                $this->db->where("((status_verifikasi is not null) or (status_verifikasi<>''))");
-                $this->db->where("((status_spm is null) or (status_spm<>'') or (status_bendahara is null) or (status_bendahara<>''))");
-            break;
-            case "spm" : 
-                $this->db->where("((status_penguji is not null) or (status_penguji<>''))");
-                $this->db->where("kategori_id in (select kategori_sppd from tbl_konstanta) ");
-            break;
-            case "bendahara" : 
-                $this->db->where("((status_penguji is not null) or (status_penguji<>''))");
-                $this->db->where("kategori_id in (select kategori_bahan from tbl_konstanta union "
-                            . "select kategori_non_bahan from tbl_konstanta)");
-            break;
-        }
+		$viewname = 'v_spb_draft';
+         switch ($tipeapproval){
+                case "verifikasi" : /// adalah draft yg telah di buat tanda terima
+					$viewname = 'v_spb_verifikasi';
+					//$this->db->where("((status_verifikasi is null) or (status_verifikasi=''))");
+				break;					
+                case "penguji" : 
+                  //  $this->db->where("((status_verifikasi is not null) or (status_verifikasi<>''))");
+                  //  $this->db->where("((status_spm is null) or (status_spm<>'') or (status_bendahara is null) or (status_bendahara<>''))");
+					$viewname = 'v_spb_penguji';
+                break;
+                case "spm" : 
+                    //$this->db->where("((status_penguji is not null) or (status_penguji<>''))");
+                    //$this->db->where("s.kategori_id in (select kategori_sppd from tbl_konstanta) ");
+					$viewname = 'v_spb_spm';
+                break;
+                case "bendahara" : 
+                    //$this->db->where("((status_penguji is not null) or (status_penguji<>''))");
+                    //$this->db->where("s.kategori_id in (select kategori_bahan from tbl_konstanta union "
+                      //      . "select kategori_non_bahan from tbl_konstanta)");
+					  $viewname = 'v_spb_bendahara';
+                break;
+            }
         if($filawal != '' && $filawal != '-1' && $filawal != null) {
             $this->db->where("tanggal between '$filawal' and '$filakhir'");
         }
@@ -213,7 +230,7 @@ class Spb_model extends CI_Model
         if($filkategori != '' && $filkategori != '-1' && $filkategori != null) {
             $this->db->where("kategori_id",$filkategori);
         }
-        $query=$this->db->from('tbl_spb');
+        $query=$this->db->from($viewname);
         return $this->db->count_all_results();
         $this->db->free_result();
     }

@@ -21,7 +21,7 @@ class Rpt_spb_ditolak extends CI_Controller {
 
     function index(){
         $data['title'] = 'SPB';		
-        $data['objectId'] = 'SPB';
+        $data['objectId'] = 'SPBDitolak';
         $data['tipeapproval'] = 'draft';
         $data['bidanglist'] = $this->bidang_model->getListBidang($data['objectId']);
         $data['bidanglistFilter'] = $this->bidang_model->getListBidangFilter($data['objectId']);
