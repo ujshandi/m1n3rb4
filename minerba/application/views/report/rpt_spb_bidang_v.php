@@ -7,13 +7,13 @@ $(function(){
         //ambil nilai-nilai filter
             $("#filter_bidang_id<?=$objectId?>").val('-1');
             $("#filter_kategori_id<?=$objectId?>").val('-1');
-            $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-m-Y')?>');
+            $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-01-Y')?>');
             $('#periodeakhir<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
 //        $("#filter_nama").val('');
 //        $("#filter_alamat").val('');
 
 
-        //$('#dg<=$objectId;?>').datagrid({url:"<=base_url()?>report/rpt_spm_bendahara/grid/"+filnip+"/"+filnama+"/"+filalamat});
+        //$('#dg<=$objectId;?>').datagrid({url:"<=base_url()?>report/rpt_spb_bidang/grid/"+filnip+"/"+filnama+"/"+filalamat});
     }
 
         //tipe 1=grid, 2=pdf, 3=excel
@@ -27,12 +27,12 @@ $(function(){
         filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
         filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
         if (tipe==1){
-                return "<?=base_url()?>report/rpt_spm_bendahara/grid/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spb_bidang/grid/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
         }
         else if (tipe==2){
-                return "<?=base_url()?>report/rpt_spm_bendahara/pdf/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spb_bidang/pdf/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
         }else if (tipe==3){
-                return "<?=base_url()?>report/rpt_spm_bendahara/excel/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spb_bidang/excel/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
         }
 
     }
@@ -86,8 +86,7 @@ $(function(){
                         <td>Bidang : &nbsp;</td>
                         <td> <?=$bidanglistFilter?>  </td>
                          <td width="20px">&nbsp;</td>
-                        <td>Kategori : &nbsp;</td>
-                        <td> <?=$kategorilistFilter?>  </td>
+                        
                     </tr>
                     <tr>
                             <td>&nbsp;</td>
@@ -115,26 +114,32 @@ $(function(){
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Daftar SPB <?=($tipereport=="spm")?" Untuk Pengajuan SPM":" Untuk Bendaharawan"?> " toolbar="#tb<?=$objectId;?>" 
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Daftar SPB Per Bidang " toolbar="#tb<?=$objectId;?>" 
                fitColumns="false" singleSelect="true" rownumbers="true" pagination="true" noWrap="false" showFooter="true">
 	  <thead>
+	  
 	  <tr>
-              <th halign="center" align="left" rowspan="2" field="tanggal" sortable="true" width="80">Tanggal</th>
-		<th halign="center" align="center" rowspan="2" field="nomor" sortable="true" width="200">Nomor</th>
-		<th halign="center" align="right" rowspan="2" field="jumlah" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
-		<th halign="center" align="left" rowspan="2" field="bidang" sortable="true" width="100">Bidang</th>
-		<th halign="center" align="left" rowspan="2" field="kategori" sortable="true" width="100">Kategori</th>
-		<th halign="center" align="left" rowspan="2" field="untuk" sortable="true" width="350">Untuk Pembayaran</th>
-		<th halign="center" align="left" rowspan="2" field="tujuan" sortable="true" width="225">Kepada</th>
-		<th halign="center" sortable="true" colspan="2" width="125">Dibebankan pada</th>
-		<th halign="center" field="bidang_id" hidden="true" colspan="2" width="0">bidang_id</th>
-		<th halign="center" field="kategori_id" hidden="true" colspan="2" width="0">kategori_id</th>
-		<th halign="center" field="kegiatan" hidden="true" colspan="2" width="0">kegiatan</th>
-		<th halign="center" field="spb_id" hidden="true" colspan="2" width="0">spb_id</th>
+        
+		<th halign="center" align="left" rowspan="2" field="bidang" sortable="true" width="300">Bidang</th>
+		<th halign="center" align="left" colspan="2" sortable="true" width="100">Draft</th>		
+		<th halign="center" align="left" colspan="2" sortable="true" width="100">Verifikasi</th>		
+		<th halign="center" align="left" colspan="2" sortable="true" width="100">Pejabat Penguji</th>		
+		<th halign="center" align="left" colspan="2" sortable="true" width="100">Pengajuan SPM</th>		
+		<th halign="center" align="left" colspan="2" sortable="true" width="100">Bendaharawan</th>		
+		
 	  </tr>
-          <tr>
-              <th halign="center"  align="center" field="beban_kode" sortable="true" width="100">Kode</th>
-		<th halign="center" align="left" field="beban_kegiatan" sortable="true" width="250">Kegiatan</th>		
+      <tr>
+		  <th halign="center" align="center"  field="draft_count" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
+		  <th halign="center" align="right"  field="draft_sum" sortable="true" width="100" formatter="formatMoney">Nilai</th>
+		  <th halign="center" align="center"  field="verifikasi_count" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
+		  <th halign="center" align="right"  field="verifikasi_sum" sortable="true" width="100" formatter="formatMoney">Nilai</th>
+		  <th halign="center" align="center"  field="penguji_count" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
+		  <th halign="center" align="right"  field="penguji_sum" sortable="true" width="100" formatter="formatMoney">Nilai</th>
+		  <th halign="center" align="center"  field="spm_count" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
+		  <th halign="center" align="right"  field="spm_sum" sortable="true" width="100" formatter="formatMoney">Nilai</th>
+		  <th halign="center" align="center"  field="bendahara_count" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
+		  <th halign="center" align="right"  field="bendahara_sum" sortable="true" width="100" formatter="formatMoney">Nilai</th>
+		  
 	  </tr>
 	  </thead> 
 	</table>

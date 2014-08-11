@@ -395,7 +395,7 @@ $(function(){
           <?php if ($tipeapproval=="penguji"){?>
                 <div class="fitem">
 		  <label style="width:150px;vertical-align:top">Proses Selanjutnya :</label>
-                  <select name="spm_bendahara" id="spm_bendahara<?=$objectId?>" >
+                  <select name="spm_bendahara" id="spm_bendahara<?=$objectId?>" class="easyui-validatebox">
                       <option value="spm" >Pengajuan SPM</option>
                       <option value="bendahara" >Bendaharawan</option>
                   </select>

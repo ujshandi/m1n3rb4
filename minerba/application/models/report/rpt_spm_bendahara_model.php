@@ -26,16 +26,19 @@ class Rpt_spm_bendahara_model extends CI_Model
         $offset = ($page-1)*$limit;  
         $pdfdata = array();
           $jumlah =0;
+		  $viewname = '';
         if ($count>0){
             switch ($tipereport){
                 
                 case "spm" : 
-                    $this->db->where("((status_penguji is not null) or (status_penguji<>''))");
-                    $this->db->where("spm_bendahara = 'spm' ");
+					$viewname = 'v_spb_spm s'		;
+                    /*$this->db->where("((status_penguji is not null) or (status_penguji<>''))");
+                    $this->db->where("spm_bendahara = 'spm' ");*/
                 break;
                 case "bendahara" : 
-                    $this->db->where("((status_penguji is not null) or (status_penguji<>''))");
-                    $this->db->where("spm_bendahara = 'bendahara' ");
+					$viewname = 'v_spb_bendahara s'		;
+                    /*$this->db->where("((status_penguji is not null) or (status_penguji<>''))");
+                    $this->db->where("spm_bendahara = 'bendahara' "); */
                 break;
                 
             }
@@ -50,9 +53,10 @@ class Rpt_spm_bendahara_model extends CI_Model
             }
             $this->db->order_by($sort." ".$order );
             if($purpose==1){$this->db->limit($limit,$offset);}
-            $this->db->select("s.*,k.kategori,b.bidang ",false);
-            $this->db->from('tbl_spb s left join tbl_bidang b on b.bidang_id=s.bidang_id'
-                    . ' left join tbl_spb_kategori k on k.kategori_id = s.kategori_id',false);
+            $this->db->select("* ",false);
+			$this->db->from($viewname,false);
+            //$this->db->from('tbl_spb s left join tbl_bidang b on b.bidang_id=s.bidang_id'
+              //      . ' left join tbl_spb_kategori k on k.kategori_id = s.kategori_id',false);
             $query = $this->db->get();
           
             $i=0;

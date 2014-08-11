@@ -78,7 +78,7 @@ class Spb extends CI_Controller {
         return $data;
     }
 
-    function approve($tipeapprove,$id,$spm_bendahara){
+    function approve($tipeapprove,$id,$spm_bendahara=''){
          if($id != ''){          
             switch ($tipeapprove) {
                 case 'verifikasi' :$result = $this->spb_model->approveVerifikasi($id);break;

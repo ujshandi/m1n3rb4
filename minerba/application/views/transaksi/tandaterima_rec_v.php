@@ -29,7 +29,7 @@ $(function(){
                 return $(this).form('validate');
             },
             success: function(result){
-                alert(result);
+               // alert(result);
                 var result = eval('('+result+')');
                 if (result.success){
                     $.messager.show({
