@@ -48,11 +48,12 @@ $(function(){
   
     printData<?=$objectId;?>=function(){			
         //$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
+		alert("underconstruction");return; 
         window.open(getUrl<?=$objectId;?>(2));;
     }
 
     toExcel<?=$objectId;?>=function(){
-
+		alert("underconstruction");return;
         window.open(getUrl<?=$objectId;?>(3));;
     }
 
@@ -106,10 +107,10 @@ $(function(){
 
 	  <div style="margin-bottom:5px">
 		
-		<? if($this->sys_menu_model->cekAkses('PRINT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('PRINT;',(($tipereport=="spm")?252:253) ,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EXCEL;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EXCEL;',(($tipereport=="spm")?252:253),$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
 		<?}?>
 	  </div>
@@ -127,10 +128,10 @@ $(function(){
 		<th halign="center" align="left" rowspan="2" field="untuk" sortable="true" width="350">Untuk Pembayaran</th>
 		<th halign="center" align="left" rowspan="2" field="tujuan" sortable="true" width="225">Kepada</th>
 		<th halign="center" sortable="true" colspan="2" width="125">Dibebankan pada</th>
-		<th halign="center" field="bidang_id" hidden="true" colspan="2" width="0">bidang_id</th>
-		<th halign="center" field="kategori_id" hidden="true" colspan="2" width="0">kategori_id</th>
-		<th halign="center" field="kegiatan" hidden="true" colspan="2" width="0">kegiatan</th>
-		<th halign="center" field="spb_id" hidden="true" colspan="2" width="0">spb_id</th>
+		<th halign="center" field="bidang_id" hidden="true" width="0">bidang_id</th>
+		<th halign="center" field="kategori_id" hidden="true"  width="0">kategori_id</th>
+		<th halign="center" field="kegiatan" hidden="true"  width="0">kegiatan</th>
+		<th halign="center" field="spb_id" hidden="true"  width="0">spb_id</th>
 	  </tr>
           <tr>
               <th halign="center"  align="center" field="beban_kode" sortable="true" width="100">Kode</th>
