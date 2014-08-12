@@ -13,7 +13,7 @@ $(function(){
 //        $("#filter_alamat").val('');
 
 
-        //$('#dg<=$objectId;?>').datagrid({url:"<=base_url()?>report/rpt_spb_bidang/grid/"+filnip+"/"+filnama+"/"+filalamat});
+        //$('#dg<=$objectId;?>').datagrid({url:"<=base_url()?>report/rpt_spb_rekap_bidang/grid/"+filnip+"/"+filnama+"/"+filalamat});
     }
 
         //tipe 1=grid, 2=pdf, 3=excel
@@ -27,12 +27,12 @@ $(function(){
         filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
         filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
         if (tipe==1){
-                return "<?=base_url()?>report/rpt_spb_bidang/grid/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spb_rekap_bidang/grid/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
         }
         else if (tipe==2){
-                return "<?=base_url()?>report/rpt_spb_bidang/pdf/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spb_rekap_bidang/pdf/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
         }else if (tipe==3){
-                return "<?=base_url()?>report/rpt_spb_bidang/excel/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spb_rekap_bidang/excel/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
         }
 
     }
@@ -89,6 +89,7 @@ $(function(){
                          <td width="20px">&nbsp;</td>
                         <td>Kategori : &nbsp;</td>
                         <td> <?=$kategorilistFilter?>  </td>
+						
                         
                     </tr>
                     <tr>
@@ -108,16 +109,16 @@ $(function(){
 
 	  <div style="margin-bottom:5px">
 		
-		<? if($this->sys_menu_model->cekAkses('PRINT;',254,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('PRINT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EXCEL;',254,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EXCEL;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
 		<?}?>
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Daftar SPB Per Bidang " toolbar="#tb<?=$objectId;?>" 
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Daftar SPB Yang Telah Disetujui " toolbar="#tb<?=$objectId;?>" 
                fitColumns="false" singleSelect="true" rownumbers="true" pagination="true" noWrap="false" showFooter="true">
 	  <thead>
 	  
@@ -129,7 +130,7 @@ $(function(){
 		<th halign="center" align="left" colspan="2" sortable="true" width="100">Pejabat Penguji</th>		
 		<th halign="center" align="left" colspan="2" sortable="true" width="100">Pengajuan SPM</th>		
 		<th halign="center" align="left" colspan="2" sortable="true" width="100">Bendaharawan</th>		
-		<th halign="center" align="left" colspan="2" sortable="true" width="100">TOTAL</th>				
+		
 	  </tr>
       <tr>
 		  <th halign="center" align="center"  field="draft_count" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
@@ -142,8 +143,6 @@ $(function(){
 		  <th halign="center" align="right"  field="spm_sum" sortable="true" width="100" formatter="formatMoney">Nilai</th>
 		  <th halign="center" align="center"  field="bendahara_count" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
 		  <th halign="center" align="right"  field="bendahara_sum" sortable="true" width="100" formatter="formatMoney">Nilai</th>
-		  <th halign="center" align="center"  field="total_count" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
-		  <th halign="center" align="right"  field="total_sum" sortable="true" width="100" formatter="formatMoney">Nilai</th>
 		  
 	  </tr>
 	  </thead> 

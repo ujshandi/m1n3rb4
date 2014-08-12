@@ -151,11 +151,12 @@ $(function(){
 
     printData<?=$objectId;?>=function(){			
         //$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
+		alert("underconstruction");return;
         window.open(getUrl<?=$objectId;?>(2));;
     }
 
     toExcel<?=$objectId;?>=function(){
-
+		alert("underconstruction");return;
         window.open(getUrl<?=$objectId;?>(3));;
     }
     
@@ -292,19 +293,19 @@ $(function(){
             </tr>
             </table>
 	  <div style="margin-bottom:5px">
-		<? if($this->sys_menu_model->cekAkses('APPROVAL;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('APPROVAL;',(($tipeapproval=="penguji")?24:23),$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="approveData<?=$objectId;?>('<?=$tipeapproval?>');" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Persetujuan</a>  
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('VIEW;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('VIEW;',(($tipeapproval=="penguji")?24:23),$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>(true);" class="easyui-linkbutton" iconCls="icon-view" plain="true">Lihat</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('DELETE;',(($tipeapproval=="penguji")?24:23),$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Hapus</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('PRINT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('PRINT;',(($tipeapproval=="penguji")?24:23),$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="printData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-print" plain="true">Print</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EXCEL;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EXCEL;',(($tipeapproval=="penguji")?24:23),$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="toExcel<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-excel" plain="true">Excel</a>
 		<?}?>
 	  </div>

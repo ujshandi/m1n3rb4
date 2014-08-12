@@ -1,6 +1,6 @@
 <?php
 
-class Rpt_spb_bidang extends CI_Controller {
+class Rpt_spb_rekap_bidang extends CI_Controller {
 
     function __construct()
     {
@@ -10,7 +10,7 @@ class Rpt_spb_bidang extends CI_Controller {
 
         $this->load->model('/security/sys_menu_model');
         $this->load->model('/transaksi/spb_model');
-        $this->load->model('/report/rpt_spb_bidang_model');
+        $this->load->model('/report/rpt_spb_rekap_bdang_model');
         $this->load->model('/rujukan/spb_kategori_model');
         $this->load->model('/rujukan/bidang_model');
         $this->load->model('/rujukan/kegiatan_model');
@@ -21,20 +21,20 @@ class Rpt_spb_bidang extends CI_Controller {
 
     function index(){
         $data['title'] = 'SPB';		
-        $data['objectId'] = 'rptSpbBidang';
+        $data['objectId'] = 'rptSpbRekapBidang';
         $data['tipeapproval'] = 'draft';        
         $data['bidanglistFilter'] = $this->bidang_model->getListBidangFilter($data['objectId']);
 		$data['kategorilistFilter'] = $this->spb_kategori_model->getListKategoriFilter($data['objectId']);
-        $this->load->view('report/rpt_spb_bidang_v',$data);
+        $this->load->view('report/rpt_spb_rekap_v',$data);
     }
     
   
     
 
-    function grid($periodeawal,$periodeakhir,$bidang,$kategori=null){	
+    function grid($periodeawal,$periodeakhir,$bidang,$kategori,$prosesakhir){	
         $periodeawal = $this->utility->ourDeFormatSQLDate($periodeawal);
 	$periodeakhir = $this->utility->ourDeFormatSQLDate($periodeakhir);
-        echo $this->rpt_spb_bidang_model->easyGrid(1,$periodeawal,$periodeakhir,$bidang,$kategori);
+        echo $this->rpt_spb_rekap_bdang_model->easyGrid(1,$periodeawal,$periodeakhir,$bidang,$kategori,$prosesakhir);
     }
  
     

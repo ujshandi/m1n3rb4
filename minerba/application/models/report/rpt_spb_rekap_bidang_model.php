@@ -3,7 +3,7 @@
  *INVISI
 */
 
-class Rpt_spb_bidang_model extends CI_Model
+class Rpt_spb_rekap_bidang_model extends CI_Model
 {	
 	/**
 	* constructor
@@ -13,7 +13,7 @@ class Rpt_spb_bidang_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	
-    public function easyGrid($purpose=1,$filawal,$filakhir,$filbidang,$filkategori){
+    public function easyGrid($purpose=1,$filawal,$filakhir,$filbidang,$filkategori,$filproses=null){
         $lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;
         $page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
         $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
@@ -35,8 +35,6 @@ class Rpt_spb_bidang_model extends CI_Model
           $spm_count =0;
           $bendahara_jumlah =0;
           $bendahara_count =0;
-		  $total_jumlah =0;
-          $total_count =0;
         if ($count>0){
             $filtanggal ='';
             $wherekategori ='';
@@ -89,9 +87,6 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
 				$response->rows[$i]['spm_sum']=$row->spm_sum;
 				$response->rows[$i]['bendahara_count']=$row->bendahara_count;
 				$response->rows[$i]['bendahara_sum']=$row->bendahara_sum;
-				
-				$response->rows[$i]['total_count']=($row->verifikasi_count+$row->penguji_count+$row->spm_count+$row->bendahara_count);
-				$response->rows[$i]['total_sum']=($row->verifikasi_sum+$row->penguji_sum+$row->spm_sum+$row->bendahara_sum);
                 $draft_jumlah += $row->draft_sum;
                 $draft_count += $row->draft_count;
                 $verifikasi_count += $row->verifikasi_count;
@@ -102,8 +97,6 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
                 $spm_count += $row->spm_count;
                 $bendahara_jumlah += $row->bendahara_sum;
                 $bendahara_count += $row->bendahara_count;
-				$total_jumlah += $response->rows[$i]['total_sum'];
-                $total_count += $response->rows[$i]['total_count'];
                 //utk kepentingan export pdf===================
                 $pdfdata[] = array($no,$response->rows[$i]['bidang'],$response->rows[$i]['draft_count'],$response->rows[$i]['draft_sum'],$response->rows[$i]['verifikasi_count']);
         //============================================================
@@ -125,8 +118,6 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
 			$response->rows[$count]['spm_sum']='0';
 			$response->rows[$count]['bendahara_count']='0';
 			$response->rows[$count]['bendahara_sum']='0';
-            $response->rows[$count]['total_count']='0';
-			$response->rows[$count]['total_sum']='0';
             
             $response->lastNo = 0;	
         }
@@ -144,8 +135,6 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
         $response->footer[0]['spm_count']=$spm_count;//$this->utility->cekNumericFmt(
         $response->footer[0]['bendahara_sum']=$bendahara_jumlah;//$this->utility->cekNumericFmt(
         $response->footer[0]['bendahara_count']=$bendahara_count;//$this->utility->cekNumericFmt(
-		$response->footer[0]['total_sum']=$total_jumlah;//$this->utility->cekNumericFmt(
-        $response->footer[0]['total_count']=$total_count;//$this->utility->cekNumericFmt(
 
         if ($purpose==1) //grid normal
             return json_encode($response);
@@ -165,7 +154,7 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
     }
 	
 	//jumlah data record buat paging
-    public function GetRecordCount($filawal,$filakhir,$filbidang,$filkategori){
+    public function GetRecordCount($filawal,$filakhir,$filbidang,$filkategori,$filproses){
         
        /* if($filawal != '' && $filawal != '-1' && $filawal != null) {
             $this->db->where("tanggal between '$filawal' and '$filakhir'");

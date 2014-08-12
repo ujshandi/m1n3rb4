@@ -3,7 +3,7 @@
  *INVISI
 */
 
-class Rpt_spb_bidang_model extends CI_Model
+class Rpt_spb_kategori_model extends CI_Model
 {	
 	/**
 	* constructor
@@ -21,7 +21,7 @@ class Rpt_spb_bidang_model extends CI_Model
         $count = $this->GetRecordCount($filawal,$filakhir,$filbidang,$filkategori);
         $response = new stdClass();
         $response->total = $count;
-        $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'b.bidang';  
+        $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'k.kategori';  
         $order = isset($_POST['order']) ? strval($_POST['order']) : 'asc';  
         $offset = ($page-1)*$limit;  
         $pdfdata = array();
@@ -35,38 +35,39 @@ class Rpt_spb_bidang_model extends CI_Model
           $spm_count =0;
           $bendahara_jumlah =0;
           $bendahara_count =0;
-		  $total_jumlah =0;
+		   $total_jumlah =0;
           $total_count =0;
         if ($count>0){
             $filtanggal ='';
-            $wherekategori ='';
+			$wherebidang ='';
             if($filawal != '' && $filawal != '-1' && $filawal != null) {
                 //$this->db->where("s.tanggal between '$filawal' and '$filakhir'");
 				$filtanggal = "tanggal between '$filawal' and '$filakhir'";
             }
 			if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
-                $this->db->where("b.bidang_id",$filbidang);
+                //$this->db->where("k.kategori_id",$filbidang);
+				$wherebidang = "bidang_id = $filbidang";
             }
-            
+			
+          
             if($filkategori != '' && $filkategori != '-1' && $filkategori != null) {
-                //$this->db->where("s.kategori_id",$filkategori);
-				$wherekategori = "kategori_id=$filkategori";
+                $this->db->where("k.kategori_id",$filkategori);
             }
             $this->db->order_by($sort." ".$order );
             if($purpose==1){$this->db->limit($limit,$offset);}
-            $this->db->select(" b.bidang, 
-count(d.bidang_id) as draft_count, sum(ifnull(d.jumlah,0)) as draft_sum,
-count(v.bidang_id) as verifikasi_count, sum(ifnull(v.jumlah,0)) as verifikasi_sum,
-count(p.bidang_id) as penguji_count, sum(ifnull(p.jumlah,0)) as penguji_sum,
-count(s.bidang_id) as spm_count, sum(ifnull(s.jumlah,0)) as spm_sum,
-count(h.bidang_id) as bendahara_count, sum(ifnull(h.jumlah,0)) as bendahara_sum ",false);
-            $this->db->from('tbl_bidang b
-left join v_spb_draft d on b.bidang_id = d.bidang_id '.($filtanggal<>''?' and d.'.$filtanggal:'').($wherekategori<>''?' and d.'.$wherekategori:'').'
-left join v_spb_verifikasi v on b.bidang_id = v.bidang_id '.($filtanggal<>''?' and v.'.$filtanggal:'').($wherekategori<>''?' and v.'.$wherekategori:'').'
-left join v_spb_penguji p on b.bidang_id = p.bidang_id '.($filtanggal<>''?' and p.'.$filtanggal:'').($wherekategori<>''?' and p.'.$wherekategori:'').'
-left join v_spb_spm s on b.bidang_id = s.bidang_id '.($filtanggal<>''?' and s.'.$filtanggal:'').($wherekategori<>''?' and s.'.$wherekategori:'').'
-left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' and h.'.$filtanggal:'').($wherekategori<>''?' and h.'.$wherekategori:''),false);
-			$this->db->group_by('b.bidang');
+            $this->db->select(" k.kategori, 
+count(d.kategori_id) as draft_count, sum(ifnull(d.jumlah,0)) as draft_sum,
+count(v.kategori_id) as verifikasi_count, sum(ifnull(v.jumlah,0)) as verifikasi_sum,
+count(p.kategori_id) as penguji_count, sum(ifnull(p.jumlah,0)) as penguji_sum,
+count(s.kategori_id) as spm_count, sum(ifnull(s.jumlah,0)) as spm_sum,
+count(h.kategori_id) as bendahara_count, sum(ifnull(h.jumlah,0)) as bendahara_sum ",false);
+            $this->db->from('tbl_spb_kategori k
+left join v_spb_draft d on k.kategori_id = d.kategori_id '.($filtanggal<>''?' and d.'.$filtanggal:'').($wherebidang<>''?' and d.'.$wherebidang:'').'
+left join v_spb_verifikasi v on k.kategori_id = v.kategori_id '.($filtanggal<>''?' and v.'.$filtanggal:'').($wherebidang<>''?' and v.'.$wherebidang:'').'
+left join v_spb_penguji p on k.kategori_id = p.kategori_id '.($filtanggal<>''?' and p.'.$filtanggal:'').($wherebidang<>''?' and p.'.$wherebidang:'').'
+left join v_spb_spm s on k.kategori_id = s.kategori_id '.($filtanggal<>''?' and s.'.$filtanggal:'').($wherebidang<>''?' and s.'.$wherebidang:'').'
+left join v_spb_bendahara h on k.kategori_id = h.kategori_id '.($filtanggal<>''?' and h.'.$filtanggal:'').($wherebidang<>''?' and h.'.$wherebidang:''),false);
+			$this->db->group_by('k.kategori');
             $query = $this->db->get();
           
             $i=0;
@@ -76,7 +77,7 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
                 $response->rows[$i]['no']= $no;
                
                
-                $response->rows[$i]['bidang']=$row->bidang;
+                $response->rows[$i]['kategori']=$row->kategori;
                      
                 
                 $response->rows[$i]['draft_count']=$row->draft_count; //$this->utility->ourFormatNumber($row->jumlah);
@@ -89,7 +90,6 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
 				$response->rows[$i]['spm_sum']=$row->spm_sum;
 				$response->rows[$i]['bendahara_count']=$row->bendahara_count;
 				$response->rows[$i]['bendahara_sum']=$row->bendahara_sum;
-				
 				$response->rows[$i]['total_count']=($row->verifikasi_count+$row->penguji_count+$row->spm_count+$row->bendahara_count);
 				$response->rows[$i]['total_sum']=($row->verifikasi_sum+$row->penguji_sum+$row->spm_sum+$row->bendahara_sum);
                 $draft_jumlah += $row->draft_sum;
@@ -105,7 +105,7 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
 				$total_jumlah += $response->rows[$i]['total_sum'];
                 $total_count += $response->rows[$i]['total_count'];
                 //utk kepentingan export pdf===================
-                $pdfdata[] = array($no,$response->rows[$i]['bidang'],$response->rows[$i]['draft_count'],$response->rows[$i]['draft_sum'],$response->rows[$i]['verifikasi_count']);
+                $pdfdata[] = array($no,$response->rows[$i]['kategori'],$response->rows[$i]['draft_count'],$response->rows[$i]['draft_sum'],$response->rows[$i]['verifikasi_count']);
         //============================================================
                 $i++;
             } 
@@ -127,7 +127,6 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
 			$response->rows[$count]['bendahara_sum']='0';
             $response->rows[$count]['total_count']='0';
 			$response->rows[$count]['total_sum']='0';
-            
             $response->lastNo = 0;	
         }
         
@@ -146,7 +145,6 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
         $response->footer[0]['bendahara_count']=$bendahara_count;//$this->utility->cekNumericFmt(
 		$response->footer[0]['total_sum']=$total_jumlah;//$this->utility->cekNumericFmt(
         $response->footer[0]['total_count']=$total_count;//$this->utility->cekNumericFmt(
-
         if ($purpose==1) //grid normal
             return json_encode($response);
         else if($purpose==2){//pdf
@@ -170,14 +168,14 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
        /* if($filawal != '' && $filawal != '-1' && $filawal != null) {
             $this->db->where("tanggal between '$filawal' and '$filakhir'");
         }
-      
+      */
         if($filkategori != '' && $filkategori != '-1' && $filkategori != null) {
             $this->db->where("kategori_id",$filkategori);
-        }*/
-		  if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
-            $this->db->where("bidang_id",$filbidang);
         }
-        $query=$this->db->from('tbl_bidang');
+		/*  if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
+            $this->db->where("kategori_id",$filbidang);
+        }*/
+        $query=$this->db->from('tbl_spb_kategori');
         return $this->db->count_all_results();
         $this->db->free_result();
     }
