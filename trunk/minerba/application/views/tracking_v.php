@@ -124,6 +124,27 @@
 			margin-bottom: 10px;
 			font-family:"Myriad Pro", Arial, Helvetica, sans-serif;
 		}
+		
+		
+		ol.progtrckr2 {
+			margin-top: -45px;
+			padding: 0;
+			list-style-type none;
+		}
+		ol.progtrckr2 li {
+			display: inline-block;
+			text-align: center;
+			line-height: 3em;
+		}
+		
+		ol.progtrckr2[data-progtrckr-steps="2"] li { width: 49%; }
+		ol.progtrckr2[data-progtrckr-steps="3"] li { width: 33%; }
+		ol.progtrckr2[data-progtrckr-steps="4"] li { width: 24%; }
+		ol.progtrckr2[data-progtrckr-steps="5"] li { width: 19%; }
+		ol.progtrckr2[data-progtrckr-steps="6"] li { width: 16%; }
+		ol.progtrckr2[data-progtrckr-steps="7"] li { width: 14%; }
+		ol.progtrckr2[data-progtrckr-steps="8"] li { width: 12%; }
+		ol.progtrckr2[data-progtrckr-steps="9"] li { width: 11%; }
 	</style>
 	
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url()?>public/admin/css/login.css" />
@@ -149,7 +170,7 @@
 	
 		
 	 <div style="text-align:center">
-	<form id="formLogin" method="post" action="<?=base_url();?>tracking/go_tracking">
+	<!-- <form id="formLogin" method="post" action="<=base_url();?>tracking/go_tracking"> -->
 					No.SPB : 
 					<input name="nospb" type="text"  id="nospb_id<?=$objectId?>" title="Nomor SPB"/>
 			 		
@@ -158,7 +179,7 @@
 								<a class="uibutton normal" style="display: inline-block;padding:7px 12px 2px;font-size:19px" href="javascript:cari<?=$objectId?>();" id="but_login" >Cari</a>
 					
 								<div id="alertMessage<?=$objectId?>" class="error"/><?=$err_msg;?></div>
-				</form>
+			<!--	</form> -->
 				</div>
 	
         <br></br>

@@ -9,8 +9,8 @@ class Tracking_model extends CI_Model{
 
 		
 		$this->db->select("ifnull(status_verifikasi,'') status_verifikasi, ifnull(status_penguji,'') status_penguji,  
-ifnull(spm_bendahara,'') spm_bendahara,ifnull(d.detail_id,0) tanda_terima",false);
-		$this->db->from("tbl_spb s left join tbl_tanda_terima_detail d on s.spb_id = d.spb_id",false);
+ifnull(spm_bendahara,'') spm_bendahara,ifnull(d.detail_id,0) tanda_terima,s.log_insert, t.log_insert as tgl_terima",false);
+		$this->db->from("tbl_spb s left join tbl_tanda_terima_detail d on s.spb_id = d.spb_id left join tbl_tanda_terima t on t.tanda_id = d.tanda_id",false);
 		
 		$this->db->where('s.nomor', $nospb);
 	
