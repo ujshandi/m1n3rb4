@@ -402,6 +402,7 @@ class Spb_model extends CI_Model
         $qt = $this->db->get();
        
         $this->db->flush_cache();
+        $this->db->set('spb_id',$qt->row()->spb_id);
         $this->db->set('nomor',$qt->row()->nomor);
         $this->db->set('tanggal',$qt->row()->tanggal);
         $this->db->set('bidang_id',$qt->row()->bidang_id);

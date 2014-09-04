@@ -43,12 +43,22 @@ class Tracking extends CI_Controller {
 		
 		$data = $this->tracking->cek_spb($nospb);
 		$success = $data->num_rows() > 0;
+		$tgl_draft = '';
+		$tgl_terima = '';
+		$tgl_verifikasi = '';
+		$tgl_penguji = '';
 		if ($success){
 			$isAlreadyDraft = true;
 			$isAlreadyTandaTerima = $data->row()->tanda_terima > 0;
 			$isAlreadyVerifikasi = $data->row()->status_verifikasi !='';
 			$isAlreadyPejabatPenguji = $data->row()->status_penguji != '';
 			$isAlreadySPMBendahara = $data->row()->spm_bendahara != '';
+			
+			if ($isAlreadyDraft) $tgl_draft = $this->utility->ourFormatDate2($this->utility->ourEkstrakString($data->row()->log_insert,';',1));
+			if ($isAlreadyTandaTerima) $tgl_terima = $this->utility->ourFormatDate2($this->utility->ourEkstrakString($data->row()->tgl_terima,';',1));
+			if ($isAlreadyVerifikasi) $tgl_verifikasi = $this->utility->ourFormatDate2($this->utility->ourEkstrakString($data->row()->status_verifikasi,';',1));
+			if ($isAlreadyPejabatPenguji) $tgl_penguji = $this->utility->ourFormatDate2($this->utility->ourEkstrakString($data->row()->status_penguji,';',1));
+			
 		}
 		$rs = '<ol class="progtrckr" data-progtrckr-steps="5">
 			<li class="progtrckr-'.($isAlreadyDraft?'done':'todo').'">Draft</li>
@@ -57,6 +67,15 @@ class Tracking extends CI_Controller {
 			<li class="progtrckr-'.($isAlreadyPejabatPenguji?'done':'todo').'">Pejabat Penguji</li>
 			<li class="progtrckr-'.($isAlreadySPMBendahara?'done':'todo').'">Pengajuan SPM/Bendaharawan</li>
 		</ol>';
+		if ($tgl_draft!=""){
+			$rs .= '<ol class="progtrckr2" data-progtrckr-steps="5">
+			<li class="progtrckr2-'.($isAlreadyDraft?'done':'todo').'">'.($tgl_draft!=""?"<br>".$tgl_draft:"").'</li>
+			<li class="progtrckr2-'.($isAlreadyTandaTerima?'done':'todo').'">'.($tgl_terima!=""?"<br>".$tgl_terima:"").'</li>
+			<li class="progtrckr2-'.($isAlreadyVerifikasi?'done':'todo').'">'.($tgl_verifikasi!=""?"<br>".$tgl_verifikasi:"").'</li>
+			<li class="progtrckr2-'.($isAlreadyPejabatPenguji?'done':'todo').'">'.($tgl_penguji!=""?"<br>".$tgl_penguji:"").'</li>
+			<li class="progtrckr2-'.($isAlreadySPMBendahara?'done':'todo').'"></li>
+		</ol>';
+		}
 		echo json_encode(array('success'=>$success,'data'=>$rs,'msg'=>'Nomor SPB belum terdaftar'));
 		
 	}
