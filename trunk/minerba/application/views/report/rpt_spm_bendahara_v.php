@@ -9,6 +9,7 @@ $(function(){
             $("#filter_kategori_id<?=$objectId?>").val('-1');
             $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-m-Y')?>');
             $('#periodeakhir<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
+            $("#txtNomor<?=$objectId?>").val('');
 //        $("#filter_nama").val('');
 //        $("#filter_alamat").val('');
 
@@ -22,17 +23,18 @@ $(function(){
         var filakhir = $("#periodeakhir<?=$objectId;?>").datebox('getValue');	
         var filbidang = $("#filter_bidang_id<?=$objectId;?>").val();
         var filkategori = $("#filter_kategori_id<?=$objectId;?>").val();
-        
+		var filnomor = $("#txtNomor<?=$objectId;?>").val();
 
         filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
         filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
+        filnomor = ((filnomor=="undefined")||(filnomor=="")||(filnomor==null))?"-1":filnomor;
         if (tipe==1){
-                return "<?=base_url()?>report/rpt_spm_bendahara/grid/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spm_bendahara/grid/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
         }
         else if (tipe==2){
-                return "<?=base_url()?>report/rpt_spm_bendahara/pdf/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spm_bendahara/pdf/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
         }else if (tipe==3){
-                return "<?=base_url()?>report/rpt_spm_bendahara/excel/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spm_bendahara/excel/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
         }
 
     }
@@ -79,7 +81,7 @@ $(function(){
             <tr>
                 <td>
                 <div class="fsearch fieldset">  <h1><span>Kriteria Pencarian</span></h1>                     
-                    <table border="0" cellpadding="1" cellspacing="1">				
+                    <table border="0" cellpadding="1" cellspacing="4">				
                     <tr>
                         <td>Periode : &nbsp;</td>
                         <td><input name="periodeawal" style="width:100px" id="periodeawal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input  style="width:100px" name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
@@ -91,6 +93,8 @@ $(function(){
                         <td> <?=$kategorilistFilter?>  </td>
                     </tr>
                     <tr>
+						 <td>Nomor SPBY : &nbsp;</td>
+                        <td colspan="2"><input name="txtNomor" style="padding:7px;font-size:14px" size="33px"  id="txtNomor<?=$objectId;?>" class="easyui-validatebox" /></td>
                             <td>&nbsp;</td>
                     </tr>
                     <tr>
@@ -116,7 +120,7 @@ $(function(){
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Daftar SPB <?=($tipereport=="spm")?" Untuk Pengajuan SPM":" Untuk Bendaharawan"?> " toolbar="#tb<?=$objectId;?>" 
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Daftar SPBY <?=($tipereport=="spm")?" Untuk Pengajuan SPM":" Untuk Bendaharawan"?> " toolbar="#tb<?=$objectId;?>" 
                fitColumns="false" singleSelect="true" rownumbers="true" pagination="true" noWrap="false" showFooter="true">
 	  <thead>
 	  <tr>

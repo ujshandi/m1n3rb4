@@ -13,12 +13,12 @@ class Spb_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	
-    public function easyGrid($purpose=1,$tipeapproval,$filawal,$filakhir,$filbidang,$filkategori){
+    public function easyGrid($purpose=1,$tipeapproval,$filawal,$filakhir,$filbidang,$filkategori,$filNomor){
         $lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;
         $page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
         $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 
-        $count = $this->GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori);
+        $count = $this->GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori,$filNomor);
         $response = new stdClass();
         $response->total = $count;
         $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'tujuan';  
@@ -59,6 +59,9 @@ class Spb_model extends CI_Model
             if($filkategori != '' && $filkategori != '-1' && $filkategori != null) {
                 $this->db->where("s.kategori_id",$filkategori);
             }
+			if($filNomor != '' && $filNomor != '-1' && $filNomor != null) {
+				$this->db->like("nomor",$filNomor);
+			}
             $this->db->order_by($sort." ".$order );
             if($purpose==1){$this->db->limit($limit,$offset);}
 			
@@ -197,7 +200,7 @@ class Spb_model extends CI_Model
     }
 	
 	//jumlah data record buat paging
-    public function GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori){
+    public function GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori,$filNomor){
 		$viewname = 'v_spb_draft';
          switch ($tipeapproval){
                 case "verifikasi" : /// adalah draft yg telah di buat tanda terima
@@ -229,6 +232,9 @@ class Spb_model extends CI_Model
         }
         if($filkategori != '' && $filkategori != '-1' && $filkategori != null) {
             $this->db->where("kategori_id",$filkategori);
+        }
+		if($filNomor != '' && $filNomor != '-1' && $filNomor != null) {
+            $this->db->like("nomor",$filNomor);
         }
         $query=$this->db->from($viewname);
         return $this->db->count_all_results();

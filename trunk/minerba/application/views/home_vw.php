@@ -77,14 +77,18 @@
 			height:200%;
 			border-bottom: 1px solid #99BBE8;
 			color:#15428B;
-			font-size:10pt;
+			font-size:11pt;
 			text-transform:uppercase;
 			font-weight: bold;
 			padding: 5px;
 			position: relative;
 		  }
+		  .fsearch input{
+			font-size:12px;
+		  }
 		  .fsearch table{
-			padding: 15px;
+			padding: 11px;
+			font-size:10pt;
 		  }
 		  .fsearch label{
 			display:inline-block;
@@ -250,12 +254,13 @@
 			border-bottom:1px solid #ccc;
 		}
 		.fitem{
-			margin-bottom:5px;
+			margin-bottom:10px;
 		}
 		.fitem label{
 			display:inline-block;
 			width:80px;
 			float: left;
+			font-sze:12px;
 		}
 	  .fsearch{
 		background:#fafafa;
@@ -622,7 +627,7 @@
 		<div class="bg">
 		  
 			<div class="logo"><a href="<?=base_url()?>">home</a></div>
-			<div class="title"><h1>e-Tracking</h1><h2>Aplikasi Penelusuran Approval SPB - MINERBA</h2><!--<h2>Sistem Informasi Pengukuran Kinerja Kementerian Perhubungan</h2>--></div>
+			<div class="title"><h1>e-Tracking</h1><h2>Aplikasi Penelusuran Approval SPBY - MINERBA</h2><!--<h2>Sistem Informasi Pengukuran Kinerja Kementerian Perhubungan</h2>--></div>
 			
 			<div class="rpanel">
 				<div class="left">

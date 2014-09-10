@@ -13,12 +13,12 @@ class Tandaterima_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	
-    public function easyGrid($purpose=1,$tipeapproval,$filawal,$filakhir,$filbidang){
+    public function easyGrid($purpose=1,$tipeapproval,$filawal,$filakhir,$filbidang,$filSpb,$filNomor){
         $lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;
         $page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
         $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 
-        $count = $this->GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang);
+        $count = $this->GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filSpb,$filNomor);
         $response = new stdClass();
         $response->total = $count;
         $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'nomor';  
@@ -33,8 +33,16 @@ class Tandaterima_model extends CI_Model
             }
             if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
                 $this->db->where("s.bidang_id",$filbidang);
+            } 
+			if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
+                $this->db->where("s.bidang_id",$filbidang);
             }
-           
+			if($filNomor != '' && $filNomor != '-1' && $filNomor != null) {
+				$this->db->like("nomor",$filNomor);
+			}
+			if($filSpb != '' && $filSpb != '-1' && $filSpb != null) {
+				$this->db->where("tanda_id in (select tanda_id from tbl_tanda_terima_detail d inner join tbl_spb s on d.spb_id = s.spb_id and s.nomor like '%$filSpb%')");
+			}
             $this->db->order_by($sort." ".$order );
             if($purpose==1){$this->db->limit($limit,$offset);}
             $this->db->select("s.*,b.bidang ",false);
@@ -279,13 +287,20 @@ class Tandaterima_model extends CI_Model
     }
 	
 	//jumlah data record buat paging
-    public function GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang){
+    public function GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filSpb,$filNomor){
        
         if($filawal != '' && $filawal != '-1' && $filawal != null) {
             $this->db->where("tanggal between '$filawal' and '$filakhir'");
         }
         if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
             $this->db->where("bidang_id",$filbidang);
+        }
+		
+		if($filNomor != '' && $filNomor != '-1' && $filNomor != null) {
+            $this->db->like("nomor",$filNomor);
+        }
+		if($filSpb != '' && $filSpb != '-1' && $filSpb != null) {
+            $this->db->where("tanda_id in (select tanda_id from tbl_tanda_terima_detail d inner join tbl_spb s on d.spb_id = s.spb_id and s.nomor like '%$filSpb%')");
         }
      
         $query=$this->db->from('tbl_tanda_terima');

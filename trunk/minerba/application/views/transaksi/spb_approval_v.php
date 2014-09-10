@@ -10,7 +10,7 @@ $(function(){
         $("#filter_kategori_id<?=$objectId?>").val('-1');
         $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-01-Y')?>');
         $('#periodeakhir<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
-
+		$("#txtNomor<?=$objectId?>").val('');
         //$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>transaksi/spb/grid/"+filnip+"/"+filnama+"/"+filalamat});
     }
 
@@ -20,17 +20,18 @@ $(function(){
         var filakhir = $("#periodeakhir<?=$objectId;?>").datebox('getValue');	
         var filbidang = $("#filter_bidang_id<?=$objectId;?>").val();
         var filkategori = $("#filter_kategori_id<?=$objectId;?>").val();
-        
+        var filnomor = $("#txtNomor<?=$objectId;?>").val();
+         filnomor = ((filnomor=="undefined")||(filnomor=="")||(filnomor==null))?"-1":filnomor;
 
         filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
         filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
         if (tipe==1){
-                return "<?=base_url()?>transaksi/spb/grid/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>transaksi/spb/grid/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
         }
         else if (tipe==2){
-                return "<?=base_url()?>transaksi/spb/pdf/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>transaksi/spb/pdf/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
         }else if (tipe==3){
-                return "<?=base_url()?>transaksi/spb/excel/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>transaksi/spb/excel/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
         }
 
     }
@@ -47,7 +48,7 @@ $(function(){
         $('#fm<?=$objectId;?>').form('clear');  
         //alert(row.dokter_kode);
         if (row){
-                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Persetujuan SPB');
+                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Persetujuan SPBY');
                 $('#fm<?=$objectId;?>').form('load',row);
                 autoKegiatan<?=$objectId;?>('',row.kegiatan);
                 $('#btnApprove<?=$objectId?>').show();
@@ -61,7 +62,7 @@ $(function(){
         $('#fm<?=$objectId;?>').form('clear');  
         //alert(row.dokter_kode);
         if (row){
-                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit SPB');
+                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit SPBY');
                 $('#fm<?=$objectId;?>').form('load',row);
                 autoKegiatan<?=$objectId;?>('',row.kegiatan);
                 if (viewmode){
@@ -267,7 +268,7 @@ $(function(){
             <tr>
             <td>
                 <div class="fsearch fieldset">  <h1><span>Kriteria Pencarian</span></h1>                     
-                <table border="0" cellpadding="1" cellspacing="1">				
+                <table border="0" cellpadding="1" cellspacing="4">				
                 <tr>
                     <td>Periode : &nbsp;</td>
                     <td><input name="periodeawal" style="width:100px" id="periodeawal<?=$objectId;?>" class="easyui-datebox"  data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input name="periodeakhir" style="width:100px" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
@@ -278,9 +279,12 @@ $(function(){
                     <td>Kategori : &nbsp;</td>
                     <td> <?=$kategorilistFilter?>  </td>
                 </tr>
-                <tr>
-                    <td>&nbsp;</td>
-                </tr>
+			
+					 <tr>
+                        <td>No.SPBY : &nbsp;</td>
+                        <td><input type="text" size="33px" name="txtNomor" style="padding:7px;font-size:14px" id="txtNomor<?=$objectId;?>" class="easyui-validatebox"/></td>
+					</tr>	
+            
                 <tr>
                     <td align="right" colspan="8" valign="top">
                         <a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>
@@ -329,7 +333,7 @@ $(function(){
             
           <thead>
               <tr>
-		<th halign="center" align="left" rowspan="2" field="tanggal" sortable="true" width="80">Tgl.SPB</th>
+		<th halign="center" align="left" rowspan="2" field="tanggal" sortable="true" width="80">Tgl.SPBY</th>
 		<th halign="center" align="right" rowspan="2" field="jumlah" formatter="formatMoney" sortable="true" width="100">Jumlah</th>
 		<th halign="center" align="left" rowspan="2" field="bidang" sortable="true" width="100">Bidang</th>
 		<th halign="center" align="left" rowspan="2" field="kategori" sortable="true" width="100">Kategori</th>
@@ -352,7 +356,7 @@ $(function(){
 	 <!-- AREA untuk Form Add/EDIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 	
 	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:800px;height:450px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
-	  <div class="ftitle">Data SPB</div>
+	  <div class="ftitle">Data SPBY</div>
 	  <form id="fm<?=$objectId;?>" method="post">
 		 <div class="fitem">                     
 		  <label style="width:150px;vertical-align:top">Tanggal :</label>
@@ -361,7 +365,7 @@ $(function(){
                   <input name="keterangan" type="hidden" id="keterangan<?=$objectId;?>" >
 		</div>
               <div class="fitem">
-		  <label style="width:150px;vertical-align:top">No.SPB :</label>
+		  <label style="width:150px;vertical-align:top">No.SPBY :</label>
                   <input name="nomor" id="nomor<?=$objectId?>" class="easyui-validatebox"  style="text-transform: uppercase" required="true" >
 		</div>
               <div class="fitem">
@@ -374,11 +378,11 @@ $(function(){
 		</div>
 		<div class="fitem">
 		  <label style="width:150px;vertical-align:top">Dibayarkan kepada :</label>
-		  <input name="tujuan" class="easyui-validatebox" size="30" required="true">
+		  <input name="tujuan" class="easyui-validatebox" size="30" >
 		</div>
 		<div class="fitem">
 		  <label style="width:150px;vertical-align:top">Tujuan Pembayaran :</label>
-		  <input name="untuk" class="easyui-validatebox" size="50" required="true">
+		  <input name="untuk" class="easyui-validatebox" size="50" >
 		</div>
 		<div class="fitem">
 		  <label style="width:150px;vertical-align:top">Beban Kegiatan :</label>
@@ -391,7 +395,7 @@ $(function(){
 		</div> -->
               <div class="fitem">
 		  <label style="width:150px;vertical-align:top">Jumlah :</label>
-		  <input name="jumlah" class="easyui-numberbox" style="text-align:right" data-options="precision:0,groupSeparator:'.',decimalSeparator:','"  required="true">
+		  <input name="jumlah" class="easyui-numberbox" style="text-align:right" data-options="precision:0,groupSeparator:'.',decimalSeparator:','"  >
 		</div>
           <?php if ($tipeapproval=="penguji"){?>
                 <div class="fitem">
