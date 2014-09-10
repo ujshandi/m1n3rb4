@@ -13,12 +13,12 @@ class Rpt_spb_ditolak_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	
-    public function easyGrid($purpose=1,$tipeapproval,$filawal,$filakhir,$filbidang,$filkategori){
+    public function easyGrid($purpose=1,$tipeapproval,$filawal,$filakhir,$filbidang,$filkategori,$filNomor){
         $lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;
         $page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
         $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 
-        $count = $this->GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori);
+        $count = $this->GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori,$filNomor);
         $response = new stdClass();
         $response->total = $count;
         $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'tujuan';  
@@ -52,6 +52,10 @@ class Rpt_spb_ditolak_model extends CI_Model
             if($filkategori != '' && $filkategori != '-1' && $filkategori != null) {
                 $this->db->where("s.kategori_id",$filkategori);
             }
+			
+			if($filNomor != '' && $filNomor != '-1' && $filNomor != null) {
+				$this->db->like("nomor",$filNomor);
+			}
             $this->db->order_by($sort." ".$order );
             if($purpose==1){$this->db->limit($limit,$offset);}
             $this->db->select("s.*,k.kategori,b.bidang ",false);
@@ -173,7 +177,7 @@ class Rpt_spb_ditolak_model extends CI_Model
     }
 	
 	//jumlah data record buat paging
-    public function GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori){
+    public function GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori,$filNomor){
         switch ($tipeapproval){
             case "verifikasi" : $this->db->where("((status_verifikasi is null) or (status_verifikasi=''))");break;
             case "penguji" : 
@@ -199,6 +203,10 @@ class Rpt_spb_ditolak_model extends CI_Model
         if($filkategori != '' && $filkategori != '-1' && $filkategori != null) {
             $this->db->where("kategori_id",$filkategori);
         }
+		
+		if($filNomor != '' && $filNomor != '-1' && $filNomor != null) {
+			$this->db->like("nomor",$filNomor);
+		}
         $query=$this->db->from('tbl_spb_history');
         return $this->db->count_all_results();
         $this->db->free_result();

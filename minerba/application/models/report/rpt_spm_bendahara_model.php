@@ -13,12 +13,12 @@ class Rpt_spm_bendahara_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	
-    public function easyGrid($purpose=1,$tipereport,$filawal,$filakhir,$filbidang,$filkategori){
+    public function easyGrid($purpose=1,$tipereport,$filawal,$filakhir,$filbidang,$filkategori,$filNomor){
         $lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;
         $page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
         $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 
-        $count = $this->GetRecordCount($tipereport,$filawal,$filakhir,$filbidang,$filkategori);
+        $count = $this->GetRecordCount($tipereport,$filawal,$filakhir,$filbidang,$filkategori,$filNomor);
         $response = new stdClass();
         $response->total = $count;
         $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'tujuan';  
@@ -50,6 +50,9 @@ class Rpt_spm_bendahara_model extends CI_Model
             }
             if($filkategori != '' && $filkategori != '-1' && $filkategori != null) {
                 $this->db->where("s.kategori_id",$filkategori);
+            }
+			if($filNomor != '' && $filNomor != '-1' && $filNomor != null) {
+                $this->db->like("nomor",$filNomor);
             }
             $this->db->order_by($sort." ".$order );
             if($purpose==1){$this->db->limit($limit,$offset);}
@@ -173,17 +176,21 @@ class Rpt_spm_bendahara_model extends CI_Model
     }
 	
 	//jumlah data record buat paging
-    public function GetRecordCount($tipereport,$filawal,$filakhir,$filbidang,$filkategori){
+    public function GetRecordCount($tipereport,$filawal,$filakhir,$filbidang,$filkategori,$filNomor){
         switch ($tipereport){
-            case "spm" : 
-                    $this->db->where("((status_penguji is not null) or (status_penguji<>''))");
-                    $this->db->where("spm_bendahara = 'spm' ");
+                
+                case "spm" : 
+					$viewname = 'v_spb_spm s'		;
+                    /*$this->db->where("((status_penguji is not null) or (status_penguji<>''))");
+                    $this->db->where("spm_bendahara = 'spm' ");*/
                 break;
                 case "bendahara" : 
-                    $this->db->where("((status_penguji is not null) or (status_penguji<>''))");
-                    $this->db->where("spm_bendahara = 'bendahara' ");
+					$viewname = 'v_spb_bendahara s'		;
+                    /*$this->db->where("((status_penguji is not null) or (status_penguji<>''))");
+                    $this->db->where("spm_bendahara = 'bendahara' "); */
                 break;
-        }
+                
+            }
         if($filawal != '' && $filawal != '-1' && $filawal != null) {
             $this->db->where("tanggal between '$filawal' and '$filakhir'");
         }
@@ -193,7 +200,10 @@ class Rpt_spm_bendahara_model extends CI_Model
         if($filkategori != '' && $filkategori != '-1' && $filkategori != null) {
             $this->db->where("kategori_id",$filkategori);
         }
-        $query=$this->db->from('tbl_spb');
+		if($filNomor != '' && $filNomor != '-1' && $filNomor != null) {
+                $this->db->like("nomor",$filNomor);
+            }
+        $query=$this->db->from($viewname,false);
         return $this->db->count_all_results();
         $this->db->free_result();
     }

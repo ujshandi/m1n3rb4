@@ -32,10 +32,10 @@ class Rpt_spb_ditolak extends CI_Controller {
     
     
 
-    function grid($tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori){	
+    function grid($tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor){	
         $periodeawal = $this->utility->ourDeFormatSQLDate($periodeawal);
 	$periodeakhir = $this->utility->ourDeFormatSQLDate($periodeakhir);
-        echo $this->rpt_spb_ditolak_model->easyGrid(1,$tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori);
+        echo $this->rpt_spb_ditolak_model->easyGrid(1,$tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor);
     }
  
     

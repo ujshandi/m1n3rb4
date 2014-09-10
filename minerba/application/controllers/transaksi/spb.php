@@ -47,10 +47,10 @@ class Spb extends CI_Controller {
         $this->load->view('transaksi/spb_approval_v',$data);
     }
 
-    function grid($tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori){	
+    function grid($tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor){	
         $periodeawal = $this->utility->ourDeFormatSQLDate($periodeawal);
 	$periodeakhir = $this->utility->ourDeFormatSQLDate($periodeakhir);
-        echo $this->spb_model->easyGrid(1,$tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori);
+        echo $this->spb_model->easyGrid(1,$tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor);
     }
     
     function getListKegiatan($objectId,$tahun,$bidang){
@@ -120,17 +120,17 @@ class Spb extends CI_Controller {
         $result = false;
 
         //validasi form
-        $this->form_validation->set_rules("nomor", 'Nomor SPB', 'trim|required|xss_clean');
-        $this->form_validation->set_rules("tujuan", 'Dibayarkan kepada', 'trim|required|xss_clean');
-        $this->form_validation->set_rules("untuk", 'Tujuan Pembayaran', 'trim|required|xss_clean');
+        $this->form_validation->set_rules("nomor", 'Nomor SPBY', 'trim|required|xss_clean');
+        //$this->form_validation->set_rules("tujuan", 'Dibayarkan kepada', 'trim|required|xss_clean');
+        //$this->form_validation->set_rules("untuk", 'Tujuan Pembayaran', 'trim|required|xss_clean');
         //$this->form_validation->set_rules("jumlah", 'Jumlah Uang', 'trim|required|xss_clean');
 
         $data['pesan_error'] = '';
         if ($this->form_validation->run() == FALSE){
                 //jika data tidak valid kembali ke view
                 $data["pesan_error"].=(trim(form_error("nomor"," "," "))==""?"":form_error("nomor"," "," ")."<br/>");
-                $data["pesan_error"].=(trim(form_error("tujuan"," "," "))==""?"":form_error("tujuan"," "," ")."<br/>");
-                $data["pesan_error"].=(trim(form_error("untuk"," "," "))==""?"":form_error("untuk"," "," ")."<br/>");
+            //    $data["pesan_error"].=(trim(form_error("tujuan"," "," "))==""?"":form_error("tujuan"," "," ")."<br/>");
+            //    $data["pesan_error"].=(trim(form_error("untuk"," "," "))==""?"":form_error("untuk"," "," ")."<br/>");
                 //$data["pesan_error"].=(trim(form_error("jumlah"," "," "))==""?"":form_error("jumlah"," "," ")."<br/>");
                 $status = $data["pesan_error"];
         }else {

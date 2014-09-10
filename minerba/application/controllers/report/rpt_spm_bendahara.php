@@ -54,10 +54,10 @@ class Rpt_spm_bendahara extends CI_Controller {
     
     
 
-    function grid($tipereport,$periodeawal,$periodeakhir,$bidang,$kategori){	
+    function grid($tipereport,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor){	
         $periodeawal = $this->utility->ourDeFormatSQLDate($periodeawal);
 	$periodeakhir = $this->utility->ourDeFormatSQLDate($periodeakhir);
-        echo $this->rpt_spm_bendahara_model->easyGrid(1,$tipereport,$periodeawal,$periodeakhir,$bidang,$kategori);
+        echo $this->rpt_spm_bendahara_model->easyGrid(1,$tipereport,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor);
     }
  
     

@@ -17,7 +17,8 @@ $(function(){
             $("#filter_kategori_id<?=$objectId?>").val('-1');
             $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-m-Y')?>');
             $('#periodeakhir<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
-//        $("#filter_nama").val('');
+			$("#txtNomor<?=$objectId?>").val('');
+			$("#txtNomorTerima<?=$objectId?>").val('');
 //        $("#filter_alamat").val('');
 
 
@@ -29,18 +30,22 @@ $(function(){
         var filawal =  $('#periodeawal<?=$objectId;?>').datebox('getValue');	
         var filakhir = $("#periodeakhir<?=$objectId;?>").datebox('getValue');	
         var filbidang = $("#filter_bidang_id<?=$objectId;?>").val();
+		var filnomor = $("#txtNomor<?=$objectId;?>").val();
+		var filnomorTerima = $("#txtNomorTerima<?=$objectId;?>").val();
 //        var filkategori = $("#filter_kategori_id<?=$objectId;?>").val();
         
 
         filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
+        filnomor = ((filnomor=="undefined")||(filnomor=="")||(filnomor==null))?"-1":filnomor;
+        filnomorTerima = ((filnomorTerima=="undefined")||(filnomorTerima=="")||(filnomorTerima==null))?"-1":filnomorTerima;
   //      filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
         if (tipe==1){
-                return "<?=base_url()?>transaksi/tandaterima/grid/<?=$tipetandaterima?>/"+filawal+"/"+filakhir+"/"+filbidang;
+                return "<?=base_url()?>transaksi/tandaterima/grid/<?=$tipetandaterima?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filnomor+"/"+filnomorTerima;
         }
         else if (tipe==2){
-                return "<?=base_url()?>transaksi/tandaterima/pdf/<?=$tipetandaterima?>/"+filawal+"/"+filakhir+"/"+filbidang;
+                return "<?=base_url()?>transaksi/tandaterima/pdf/<?=$tipetandaterima?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filnomor+"/"+filnomorTerima;
         }else if (tipe==3){
-                return "<?=base_url()?>transaksi/tandaterima/excel/<?=$tipetandaterima?>/"+filawal+"/"+filakhir+"/"+filbidang;
+                return "<?=base_url()?>transaksi/tandaterima/excel/<?=$tipetandaterima?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filnomor+"/"+filnomorTerima;
         }
 
     }
@@ -104,7 +109,7 @@ $(function(){
         $('#fm<?=$objectId;?>').form('clear');  
         //alert(row.dokter_kode);
         if (row){
-           //     $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit Tanda Terima SPB');
+           //     $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit Tanda Terima SPBY');
              //   $('#fm<?=$objectId;?>').form('load',row);
               addTab("Edit Tanda Terima","transaksi/tandaterima/edit/"+row.tanda_id); 
             // url = base_url+'transaksi/tandaterima/save/edit/'+row.tanda_id;//+row.id;//'update_user.php?id='+row.id;
@@ -178,7 +183,7 @@ $(function(){
             <tr>
                 <td>
                 <div class="fsearch fieldset">  <h1><span>Kriteria Pencarian</span></h1>                      
-                    <table border="0" cellpadding="1" cellspacing="1">				
+                    <table border="0" cellpadding="1" cellspacing="4">				
                     <tr>
                         <td>Periode : &nbsp;</td>
                         <td><input name="periodeawal" id="periodeawal<?=$objectId;?>" class="easyui-datebox" style="width:100px" data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input style="width:100px" name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
@@ -187,9 +192,15 @@ $(function(){
                         <td> <?=$bidanglistFilter?>  </td>
                         
                     </tr>
-                    <tr>
-                            <td>&nbsp;</td>
-                    </tr>
+					
+					 <tr>
+                        <td>No.SPBY : &nbsp;</td>
+                        <td><input type="text" size="33px" name="txtNomor" style="padding:7px;font-size:14px" id="txtNomor<?=$objectId;?>" class="easyui-validatebox"/></td> 
+						<td width="20px">&nbsp;</td>
+						<td>No.Tanda Terima : &nbsp;</td>
+                        <td><input type="text" size="33px" name="txtNomorTerima" style="padding:7px;font-size:14px" id="txtNomorTerima<?=$objectId;?>" class="easyui-validatebox"/></td>
+					</tr>	
+                   
                     <tr>
                         <td align="right" colspan="5" valign="top">
                                 <a href="#" class="easyui-linkbutton" onclick="clearFilter<?=$objectId;?>();" iconCls="icon-reset">Reset</a>

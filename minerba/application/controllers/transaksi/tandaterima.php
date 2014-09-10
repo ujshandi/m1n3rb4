@@ -64,10 +64,10 @@ class Tandaterima extends CI_Controller {
         $this->load->view('transaksi/tandaterima_rec_v',$data);
     }
   
-    function grid($tipetandaterima,$periodeawal,$periodeakhir,$bidang){	
+    function grid($tipetandaterima,$periodeawal,$periodeakhir,$bidang,$nomor,$nomorTerima){	
         $periodeawal = $this->utility->ourDeFormatSQLDate($periodeawal);
 	$periodeakhir = $this->utility->ourDeFormatSQLDate($periodeakhir);
-        echo $this->tandaterima_model->easyGrid(1,$tipetandaterima,$periodeawal,$periodeakhir,$bidang);
+        echo $this->tandaterima_model->easyGrid(1,$tipetandaterima,$periodeawal,$periodeakhir,$bidang,$nomor,$nomorTerima);
     }
     
     function griddetail($tandaid){	        

@@ -1,17 +1,7 @@
 <script  type="text/javascript" >
 $(function(){
     var url;
-       
-    newData<?=$objectId;?> = function (){  
-        $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Tambah SPB');  
-        $('#fm<?=$objectId;?>').form('clear');  
-        $('#tanggal<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
-        autoKegiatan<?=$objectId;?>('','');       
-        $('#nomor<?=$objectId;?>').val('/PPK/<?=date('Y')?>');  
-        
-        url = base_url+'report/rpt_spb_ditolak/save/add';  
-    }
-    //end newData 
+ 
 
 
     clearFilter<?=$objectId;?> = function (){
@@ -20,11 +10,7 @@ $(function(){
             $("#filter_kategori_id<?=$objectId?>").val('-1');
             $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-01-Y')?>');
             $('#periodeakhir<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
-//        $("#filter_nama").val('');
-//        $("#filter_alamat").val('');
-
-
-        //$('#dg<=$objectId;?>').datagrid({url:"<=base_url()?>report/rpt_spb_ditolak/grid/"+filnip+"/"+filnama+"/"+filalamat});
+			$("#txtNomor<?=$objectId;?>").val();
     }
 
         //tipe 1=grid, 2=pdf, 3=excel
@@ -33,17 +19,18 @@ $(function(){
         var filakhir = $("#periodeakhir<?=$objectId;?>").datebox('getValue');	
         var filbidang = $("#filter_bidang_id<?=$objectId;?>").val();
         var filkategori = $("#filter_kategori_id<?=$objectId;?>").val();
-        
+        var filnomor = $("#txtNomor<?=$objectId;?>").val();
 
         filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
         filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
+		 filnomor = ((filnomor=="undefined")||(filnomor=="")||(filnomor==null))?"-1":filnomor;
         if (tipe==1){
-                return "<?=base_url()?>report/rpt_spb_ditolak/grid/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spb_ditolak/grid/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
         }
         else if (tipe==2){
-                return "<?=base_url()?>report/rpt_spb_ditolak/pdf/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spb_ditolak/pdf/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
         }else if (tipe==3){
-                return "<?=base_url()?>report/rpt_spb_ditolak/excel/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spb_ditolak/excel/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
         }
 
     }
@@ -56,49 +43,7 @@ $(function(){
     }
     //end searhData 
 
-    editData<?=$objectId;?> = function (){
-        var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-        $('#fm<?=$objectId;?>').form('clear');  
-        //alert(row.dokter_kode);
-        if (row){
-                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit SPB');
-                $('#fm<?=$objectId;?>').form('load',row);
-                autoKegiatan<?=$objectId;?>('',row.kegiatan);
-                url = base_url+'report/rpt_spb_ditolak/save/edit/'+row.spb_id;//+row.id;//'update_user.php?id='+row.id;
-        }
-    }
-        //end editData
-
-    deleteData<?=$objectId;?> = function (){
-        var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-        if(row){
-            if(confirm("Apakah yakin akan menghapus data '" + row.nomor + "'?")){
-                var response = '';
-                $.ajax({ type: "GET",
-                    url: base_url+'report/rpt_spb_ditolak/delete/' + row.nomor ,
-                    async: false,
-                    success : function(response){
-                        var response = eval('('+response+')');
-                        if (response.success){
-                            $.messager.show({
-                                title: 'Success',
-                                msg: 'Data Berhasil Dihapus'
-                            });
-
-                            // reload and close tab
-                            $('#dg<?=$objectId;?>').datagrid('reload');
-                        } else {
-                            $.messager.show({
-                                title: 'Error',
-                                msg: response.msg
-                            });
-                        }
-                    }
-                });
-            }
-        }
-    }
-        //end deleteData 
+    
 
     printData<?=$objectId;?>=function(){			
         //$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
@@ -111,74 +56,7 @@ $(function(){
         window.open(getUrl<?=$objectId;?>(3));;
     }
 
-    saveData<?=$objectId;?>=function(){
-        $('#fm<?=$objectId;?>').form('submit',{
-            url: url,
-            onSubmit: function(){
-                return $(this).form('validate');
-            },
-            success: function(result){
-                //alert(result);
-                var result = eval('('+result+')');
-                if (result.success){
-                    $.messager.show({
-                            title: 'Pesan',
-                            msg: 'Data berhasil disimpan'
-                    });
-                    $('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
-                    $('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
-                } else {
-                    $.messager.show({
-                            title: 'Error',
-                            msg: result.msg
-                    });
-                }
-            }
-        });
-    }
-        //end saveData
-         setKegiatan<?=$objectId;?> = function (valu){
-            //$('#kode_iku_e1<?=$objectId;?>').value = valu;
-              $('textarea').autosize();  
-        }
-        $("#bidang_id<?=$objectId?>").change(function(){
-            autoKegiatan<?=$objectId;?>("","")
-           
-        });
-        function autoKegiatan<?=$objectId;?>(key,val){
-           
-            var tgl = $('#tanggal<?=$objectId;?>').datebox('getValue','<?=date('d-m-Y')?>');
-   
-            var tahun = parseInt(tgl.split('-')[2]);
-            var bidang_id = $("#bidang_id<?=$objectId?>").val();
-           
-            if (tahun=="") tahun = "-1";
-            if ((bidang_id==null)||(bidang_id=="")) bidang_id = "-1";
-             $("#divKegiatan<?=$objectId?>").load(
-                base_url+"report/rpt_spb_ditolak/getListKegiatan/<?=$objectId;?>/"+tahun+"/"+bidang_id,
-                function(){
-                    $('textarea').autosize();   
-
-                    $("#txtbeban_kegiatan<?=$objectId;?>").click(function(){
-                       // alert('kadie=<?=$objectId;?>') ;
-                        $("#drop<?=$objectId;?>").slideDown("slow");
-                    });
-
-                    $("#drop<?=$objectId;?> li").click(function(e){
-                            var chose = $(this).text();
-                            $("#txtbeban_kegiatan<?=$objectId;?>").val(chose);
-                            $("#drop<?=$objectId;?>").slideUp("slow");
-                    });
-            //	alert(val);
-//                    if (key!=null)
-                            //$('#kode_sasaran_e2ListSasaran<?=$objectId;?>').val(key);
-                    if (val!=null)
-                            $('#txtbeban_kegiatan<?=$objectId;?>').val(val);
-                }
-            ); 
-            //alert("here");
-
-         }
+    
 
         setTimeout(function(){
             var wHeight = $(window).height();
@@ -215,8 +93,8 @@ $(function(){
                         <td> <?=$kategorilistFilter?>  </td>
                     </tr>
                     <tr>
-						 <td>Nomor SPB : &nbsp;</td>
-                        <td colspan="2"><input name="nomor" style="width:225px" id="nomor<?=$objectId;?>" class="easyui-validatebox" /></td>
+						 <td>Nomor SPBY : &nbsp;</td>
+                        <td colspan="2"><input name="txtNomor" style="padding:7px;font-size:14px" size="33px"  id="txtNomor<?=$objectId;?>" class="easyui-validatebox" /></td>
                             <td>&nbsp;</td>
                     </tr>
                     <tr>
@@ -242,7 +120,7 @@ $(function(){
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data SPB PPK Yang Telah Diverifikasi " toolbar="#tb<?=$objectId;?>" 
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data SPBY PPK Yang Telah Diverifikasi " toolbar="#tb<?=$objectId;?>" 
                fitColumns="false" singleSelect="true" rownumbers="true" pagination="true" noWrap="false" showFooter="true">
 	  <thead>
 	  <tr>
@@ -267,51 +145,4 @@ $(function(){
 	  </thead> 
 	</table>
 
-	 <!-- AREA untuk Form Add/EDIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 	
-	<div id="dlg<?=$objectId;?>" class="easyui-dialog" style="width:800px;height:450px;padding:10px 20px" closed="true" buttons="#dlg-buttons">
-	  <div class="ftitle">Tambah/Edit Data SPB</div>
-	  <form id="fm<?=$objectId;?>" method="post">
-		 <div class="fitem">
-		  <label style="width:150px;vertical-align:top">Tanggal :</label>
-		  <input name="tanggal" style="width:100px" id="tanggal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  required="true">
-		</div>
-              <div class="fitem">
-		  <label style="width:150px;vertical-align:top">No.SPB :</label>
-                  <input name="nomor" id="nomor<?=$objectId?>" class="easyui-validatebox"  style="text-transform: uppercase" required="true" >
-		</div>
-              <div class="fitem">
-		  <label style="width:150px;vertical-align:top">Bidang :</label>
-		 <?=$bidanglist?>  
-		</div>
-              <div class="fitem">
-		  <label style="width:150px;vertical-align:top">Kategori :</label>
-		 <?=$kategorilist?>  
-		</div>
-		<div class="fitem">
-		  <label style="width:150px;vertical-align:top">Dibayarkan kepada :</label>
-		  <input name="tujuan" class="easyui-validatebox" size="30" required="true">
-		</div>
-		<div class="fitem">
-		  <label style="width:150px;vertical-align:top">Tujuan Pembayaran :</label>
-		  <input name="untuk" class="easyui-validatebox" size="50" required="true">
-		</div>
-		<div class="fitem">
-		  <label style="width:150px;vertical-align:top">Beban Kegiatan :</label>
-                  <span id="divKegiatan<?=$objectId?>"></span>
-                <!--  <input name="beban_kode" class="easyui-validatebox" size="10" required="true"> -->
-		</div>
-          <!--    <div class="fitem">
-		  <label style="width:150px;vertical-align:top">Nama Beban Kegiatan :</label>
-		  <input name="beban_kegiatan" class="easyui-validatebox" size="50" required="true">
-		</div> -->
-              <div class="fitem">
-		  <label style="width:150px;vertical-align:top">Jumlah :</label>
-		  <input name="jumlah" class="easyui-numberbox" style="text-align:right" data-options="precision:0,groupSeparator:'.',decimalSeparator:','"  required="true">
-		</div>
-	  </form>
-    </div>
-    <div id="dlg-buttons">
-	  <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveData<?=$objectId;?>()">Simpan</a>
-	  <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Batal</a>
-    </div>
