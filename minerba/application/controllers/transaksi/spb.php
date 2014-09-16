@@ -26,6 +26,7 @@ class Spb extends CI_Controller {
         $data['bidanglistFilter'] = $this->bidang_model->getListBidangFilter($data['objectId']);
         $data['kategorilist'] = $this->spb_kategori_model->getListKategori($data['objectId']);
         $data['kategorilistFilter'] = $this->spb_kategori_model->getListKategoriFilter($data['objectId']);
+        $data['tipePeriode'] = $this->spb_model->get_filter_periode_type();
         $this->load->view('transaksi/spb_v',$data);
     }
     
@@ -44,13 +45,14 @@ class Spb extends CI_Controller {
         $data['bidanglistFilter'] = $this->bidang_model->getListBidangFilter($data['objectId']);
         $data['kategorilist'] = $this->spb_kategori_model->getListKategori($data['objectId']);
         $data['kategorilistFilter'] = $this->spb_kategori_model->getListKategoriFilter($data['objectId']);
+		$data['tipePeriode'] = $this->spb_model->get_filter_periode_type();
         $this->load->view('transaksi/spb_approval_v',$data);
     }
 
-    function grid($tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor){	
+    function grid($tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor,$tipeperiode){	
         $periodeawal = $this->utility->ourDeFormatSQLDate($periodeawal);
 	$periodeakhir = $this->utility->ourDeFormatSQLDate($periodeakhir);
-        echo $this->spb_model->easyGrid(1,$tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor);
+        echo $this->spb_model->easyGrid(1,$tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor,$tipeperiode);
     }
     
     function getListKegiatan($objectId,$tahun,$bidang){
@@ -58,6 +60,12 @@ class Spb extends CI_Controller {
         echo $this->kegiatan_model->getListKegiatan($objectId,$tahun,$bidang);
     }
 
+	function get_spb_ditolak($nomor){
+		$nomor = $this->utility->HexToAscii($nomor);
+		echo json_encode($this->spb_model->get_spb_ditolak($nomor));
+	}
+	
+	
     private function get_form_values() {
             // XXS Filtering enforced for user input
         $data['nomor'] = $this->input->post("nomor", TRUE);

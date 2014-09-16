@@ -25,12 +25,12 @@ $(function(){
         filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
 		 filnomor = ((filnomor=="undefined")||(filnomor=="")||(filnomor==null))?"-1":filnomor;
         if (tipe==1){
-                return "<?=base_url()?>report/rpt_spb_ditolak/grid/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
+                return "<?=base_url()?>report/rpt_spb_history/grid/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
         }
         else if (tipe==2){
-                return "<?=base_url()?>report/rpt_spb_ditolak/pdf/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
+                return "<?=base_url()?>report/rpt_spb_history/pdf/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
         }else if (tipe==3){
-                return "<?=base_url()?>report/rpt_spb_ditolak/excel/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
+                return "<?=base_url()?>report/rpt_spb_history/excel/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
         }
 
     }
@@ -39,7 +39,9 @@ $(function(){
         //ambil nilai-nilai filter
         
 
-        $('#dg<?=$objectId;?>').datagrid({url:getUrl<?=$objectId;?>(1)});
+        $('#dg<?=$objectId;?>').datagrid({url:getUrl<?=$objectId;?>(1),
+		  nowrap:false
+		});
     }
     //end searhData 
 
@@ -120,13 +122,24 @@ $(function(){
 	  </div>
 	</div>
 	
-	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data SPBY Yang Ditolak " toolbar="#tb<?=$objectId;?>" 
-               fitColumns="false" singleSelect="true" rownumbers="true" pagination="true" noWrap="false" showFooter="true">
+	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="History Perubahan Data SPBY " toolbar="#tb<?=$objectId;?>" data-options="
+                singleSelect:true,
+              
+                rownumbers:true,
+                fitColumns:false,
+                view:groupview,
+				 noWrap:false,
+				 showFooter:true,
+				 pagination:true,
+                groupField:'nomor',
+                groupFormatter:function(value,rows){
+                    return value + ' - ' + rows.length + 'x perubahan';
+                }
+            ">
 	  <thead>
-	  <tr>
-		<th halign="center" align="left" rowspan="2" field="keterangan" sortable="true" width="120">Keterangan Ditolak</th>
-		<th halign="center" align="left" rowspan="2" field="tanggal" sortable="true" width="80">Tanggal</th>
+	  <tr>		
 		<th halign="center" align="center" rowspan="2" field="nomor" sortable="true" width="200">Nomor</th>
+		<th halign="center" align="left" rowspan="2" field="tanggal" sortable="true" width="100">Tanggal</th>
 		<th halign="center" align="right" rowspan="2" field="jumlah" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
 		<th halign="center" align="left" rowspan="2" field="bidang" sortable="true" width="100">Bidang</th>
 		<th halign="center" align="left" rowspan="2" field="kategori" sortable="true" width="100">Kategori</th>

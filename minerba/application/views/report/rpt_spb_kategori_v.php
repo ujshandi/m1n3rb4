@@ -7,6 +7,7 @@ $(function(){
         //ambil nilai-nilai filter
             $("#filter_bidang_id<?=$objectId?>").val('-1');
             $("#filter_kategori_id<?=$objectId?>").val('-1');
+            $("#tipe_periode<?=$objectId?>").val('0');
             $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-01-Y')?>');
             $('#periodeakhir<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
 //        $("#filter_nama").val('');
@@ -22,17 +23,18 @@ $(function(){
         var filakhir = $("#periodeakhir<?=$objectId;?>").datebox('getValue');	
         var filbidang = $("#filter_bidang_id<?=$objectId;?>").val();
         var filkategori = $("#filter_kategori_id<?=$objectId;?>").val();
+        var tipe_periode = $("#tipe_periode<?=$objectId;?>").val();
         
 
         filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
         filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
         if (tipe==1){
-                return "<?=base_url()?>report/rpt_spb_kategori/grid/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spb_kategori/grid/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+tipe_periode;
         }
         else if (tipe==2){
-                return "<?=base_url()?>report/rpt_spb_kategori/pdf/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spb_kategori/pdf/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+tipe_periode;
         }else if (tipe==3){
-                return "<?=base_url()?>report/rpt_spb_kategori/excel/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori;
+                return "<?=base_url()?>report/rpt_spb_kategori/excel/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+tipe_periode;
         }
 
     }
@@ -81,7 +83,7 @@ $(function(){
                 <div class="fsearch fieldset">  <h1><span>Kriteria Pencarian</span></h1>                     
                     <table border="0" cellpadding="1" cellspacing="1">				
                     <tr>
-                        <td>Periode : &nbsp;</td>
+                        <td><?=form_dropdown('tipe_periode',$tipePeriode,'0','id="tipe_periode'.$objectId.'" ')?></td>
                         <td><input name="periodeawal" style="width:100px" id="periodeawal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input  style="width:100px" name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
                         <td width="20px">&nbsp;</td>
                           <td>Bidang : &nbsp;</td>

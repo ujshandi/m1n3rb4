@@ -13,12 +13,12 @@ class Spb_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	
-    public function easyGrid($purpose=1,$tipeapproval,$filawal,$filakhir,$filbidang,$filkategori,$filNomor){
+    public function easyGrid($purpose=1,$tipeapproval,$filawal,$filakhir,$filbidang,$filkategori,$filNomor,$tipeperiode){
         $lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;
         $page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
         $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 
-        $count = $this->GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori,$filNomor);
+        $count = $this->GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori,$filNomor,$tipeperiode);
         $response = new stdClass();
         $response->total = $count;
         $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'tujuan';  
@@ -50,8 +50,17 @@ class Spb_model extends CI_Model
 					  $viewname = 'v_spb_bendahara s';
                 break;
             }
+			switch ($tipeperiode) {
+				case "1" : //verifikasi
+					$fieldTgl = 'right(status_verifikasi,10)';
+				break;
+				case "2" : //penguji
+					$fieldTgl = 'right(status_penguji,10)';
+				break;
+				default : $fieldTgl = 's.tanggal';
+			}
             if($filawal != '' && $filawal != '-1' && $filawal != null) {
-                $this->db->where("s.tanggal between '$filawal' and '$filakhir'");
+                $this->db->where($fieldTgl." between '$filawal' and '$filakhir'");
             }
             if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
                 $this->db->where("s.bidang_id",$filbidang);
@@ -200,9 +209,9 @@ class Spb_model extends CI_Model
     }
 	
 	//jumlah data record buat paging
-    public function GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori,$filNomor){
+    public function GetRecordCount($tipeapproval,$filawal,$filakhir,$filbidang,$filkategori,$filNomor,$tipeperiode){
 		$viewname = 'v_spb_draft';
-         switch ($tipeapproval){
+        switch ($tipeapproval){
                 case "verifikasi" : /// adalah draft yg telah di buat tanda terima
 					$viewname = 'v_spb_verifikasi';
 					//$this->db->where("((status_verifikasi is null) or (status_verifikasi=''))");
@@ -223,9 +232,20 @@ class Spb_model extends CI_Model
                       //      . "select kategori_non_bahan from tbl_konstanta)");
 					  $viewname = 'v_spb_bendahara';
                 break;
-            }
+        }
+		
+		switch ($tipeperiode) {
+			case "1" : //verifikasi
+				$fieldTgl = 'right(status_verifikasi,10)';
+			break;
+			case "2" : //penguji
+				$fieldTgl = 'right(status_penguji,10)';
+			break;
+			default : $fieldTgl = 'tanggal';
+		}
+			
         if($filawal != '' && $filawal != '-1' && $filawal != null) {
-            $this->db->where("tanggal between '$filawal' and '$filakhir'");
+            $this->db->where($fieldTgl." between '$filawal' and '$filakhir'");
         }
         if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
             $this->db->where("bidang_id",$filbidang);
@@ -252,6 +272,19 @@ class Spb_model extends CI_Model
         $rs = $query->num_rows() ;		
         $query->free_result();
         return ($rs>0);
+    }
+	
+	 public function get_spb_ditolak($nomor){	
+        
+        $this->db->where('nomor',$nomor);
+
+        $this->db->select('*');
+        $this->db->from('tbl_spb_tolak');
+		$this->db->limit(1,0);
+        $query = $this->db->get();
+       	
+        
+        return ($query->result());
     }
 	
     public function isSaveDelete($kode){			
@@ -308,7 +341,37 @@ class Spb_model extends CI_Model
 
 	//update data
     public function UpdateOnDb($data, $kode) {
-        $this->db->where('spb_id',$kode);
+        
+		$this->db->trans_start();
+		//create hostory
+		$this->db->flush_cache();
+		$this->db->select("*");
+		$this->db->from("tbl_spb");
+		$this->db->where('spb_id',$kode);
+		$old = $this->db->get();
+		
+		$this->db->flush_cache();
+		$this->db->set('spb_id',$old->row()->spb_id);
+		$this->db->set('nomor',$old->row()->nomor);
+        $this->db->set('tanggal',$old->row()->tanggal);
+        $this->db->set('bidang_id',$old->row()->bidang_id);
+        $this->db->set('kategori_id',$old->row()->kategori_id);
+        $this->db->set('tujuan',$old->row()->tujuan);
+        $this->db->set('untuk',$old->row()->untuk);
+        $this->db->set('beban_kegiatan',$old->row()->beban_kegiatan);
+        $this->db->set('beban_kode',$old->row()->beban_kode);
+        $this->db->set('jumlah',$old->row()->jumlah);
+        $this->db->set('log_insert',$old->row()->log_insert);
+        $this->db->set('status_verifikasi',$old->row()->status_verifikasi);
+        $this->db->set('status_penguji',$old->row()->status_penguji);
+        $this->db->set('status_spm',$old->row()->status_spm);
+        $this->db->set('status_bendahara',$old->row()->status_bendahara);        
+        $this->db->set('log_update', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
+		$this->db->insert('tbl_spb_history');
+		
+		
+		$this->db->flush_cache();
+		$this->db->where('spb_id',$kode);
         //query insert data		
         $this->db->set('nomor',$data['nomor']);
         $this->db->set('tanggal',$this->utility->ourDeFormatSQLDate($data['tanggal']));
@@ -327,11 +390,8 @@ class Spb_model extends CI_Model
         $errMess = $this->db->_error_message();
             //var_dump($errMess);die;
             //return
-        if($result) {
-            return TRUE;
-        }else {
-            return FALSE;
-        }
+        $this->db->trans_complete();
+		return $this->db->trans_status();
     }
     
     public function approveVerifikasi($id) {
@@ -420,7 +480,7 @@ class Spb_model extends CI_Model
         $this->db->set('jumlah',$qt->row()->jumlah);
         $this->db->set('log_insert', 		$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
         $this->db->set('keterangan',$data['keterangan']);
-        $this->db->insert('tbl_spb_history');
+        $this->db->insert('tbl_spb_tolak');
         
         
         $this->db->flush_cache();
@@ -462,24 +522,17 @@ class Spb_model extends CI_Model
         }
     }
     
-    public function getListKL($objectId=""){		
-        $this->db->flush_cache();
-        $this->db->select('nomor,tujuan');
-        $this->db->from('tbl_spb');
-        $this->db->order_by('nomor');
-
-        $que = $this->db->get();
-
-        $out = '<select name="nomor" id="nomor'.$objectId.'" class="easyui-validatebox" required="true">';
-
-        foreach($que->result() as $r){
-                $out .= '<option value="'.$r->nomor.'">'.$r->tujuan.'</option>';
-        }
-
-        $out .= '</select>';
-
-        echo $out;
-    }
 	
+	function get_filter_periode_type() {
+		
+		$list[0] = 'Tgl.Input';
+		$list[1] = 'Tgl.Verifikasi';
+		$list[2] = 'Tgl.Persetujuan';
+		
+		return $list;
+	}
+	
+	
+    
 }
 ?>

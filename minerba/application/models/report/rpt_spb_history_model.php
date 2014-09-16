@@ -3,7 +3,7 @@
  *INVISI
 */
 
-class Rpt_spb_ditolak_model extends CI_Model
+class Rpt_spb_history_model extends CI_Model
 {	
 	/**
 	* constructor
@@ -59,7 +59,7 @@ class Rpt_spb_ditolak_model extends CI_Model
             $this->db->order_by($sort." ".$order );
             if($purpose==1){$this->db->limit($limit,$offset);}
             $this->db->select("s.*,k.kategori,b.bidang ",false);
-            $this->db->from('tbl_spb_tolak s left join tbl_bidang b on b.bidang_id=s.bidang_id'
+            $this->db->from('tbl_spb_history s left join tbl_bidang b on b.bidang_id=s.bidang_id'
                     . ' left join tbl_spb_kategori k on k.kategori_id = s.kategori_id',false);
             $query = $this->db->get();
           
@@ -207,7 +207,7 @@ class Rpt_spb_ditolak_model extends CI_Model
 		if($filNomor != '' && $filNomor != '-1' && $filNomor != null) {
 			$this->db->like("nomor",$filNomor);
 		}
-        $query=$this->db->from('tbl_spb_tolak');
+        $query=$this->db->from('tbl_spb_history');
         return $this->db->count_all_results();
         $this->db->free_result();
     }

@@ -10,6 +10,7 @@ $(function(){
             $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-m-Y')?>');
             $('#periodeakhir<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
             $("#txtNomor<?=$objectId?>").val('');
+            $("#tipe_periode<?=$objectId?>").val('0');
 //        $("#filter_nama").val('');
 //        $("#filter_alamat").val('');
 
@@ -24,17 +25,18 @@ $(function(){
         var filbidang = $("#filter_bidang_id<?=$objectId;?>").val();
         var filkategori = $("#filter_kategori_id<?=$objectId;?>").val();
 		var filnomor = $("#txtNomor<?=$objectId;?>").val();
+		var tipeperiode = $("#tipe_periode<?=$objectId;?>").val();
 
         filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
         filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
         filnomor = ((filnomor=="undefined")||(filnomor=="")||(filnomor==null))?"-1":filnomor;
         if (tipe==1){
-                return "<?=base_url()?>report/rpt_spm_bendahara/grid/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
+                return "<?=base_url()?>report/rpt_spm_bendahara/grid/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor+"/"+tipeperiode;
         }
         else if (tipe==2){
-                return "<?=base_url()?>report/rpt_spm_bendahara/pdf/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
+                return "<?=base_url()?>report/rpt_spm_bendahara/pdf/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor+"/"+tipeperiode;
         }else if (tipe==3){
-                return "<?=base_url()?>report/rpt_spm_bendahara/excel/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
+                return "<?=base_url()?>report/rpt_spm_bendahara/excel/<?=$tipereport?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor+"/"+tipeperiode;
         }
 
     }
@@ -83,7 +85,7 @@ $(function(){
                 <div class="fsearch fieldset">  <h1><span>Kriteria Pencarian</span></h1>                     
                     <table border="0" cellpadding="1" cellspacing="4">				
                     <tr>
-                        <td>Periode : &nbsp;</td>
+                        <td><?=form_dropdown('tipe_periode',$tipePeriode,'0','id="tipe_periode'.$objectId.'" ')?></td>
                         <td><input name="periodeawal" style="width:100px" id="periodeawal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input  style="width:100px" name="periodeakhir" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
                         <td width="20px">&nbsp;</td>
                         <td>Bidang : &nbsp;</td>
@@ -93,8 +95,8 @@ $(function(){
                         <td> <?=$kategorilistFilter?>  </td>
                     </tr>
                     <tr>
-						 <td>Nomor SPBY : &nbsp;</td>
-                        <td colspan="2"><input name="txtNomor" style="padding:7px;font-size:14px" size="33px"  id="txtNomor<?=$objectId;?>" class="easyui-validatebox" /></td>
+						 <td align="right">Nomor SPBY : &nbsp;</td>
+                        <td colspan="2"><input name="txtNomor" style="padding:7px;font-size:14px" size="31px"  id="txtNomor<?=$objectId;?>" class="easyui-validatebox" /></td>
                             <td>&nbsp;</td>
                     </tr>
                     <tr>
@@ -124,7 +126,9 @@ $(function(){
                fitColumns="false" singleSelect="true" rownumbers="true" pagination="true" noWrap="false" showFooter="true">
 	  <thead>
 	  <tr>
-              <th halign="center" align="left" rowspan="2" field="tanggal" sortable="true" width="80">Tanggal</th>
+         <th halign="center" align="left" rowspan="2" field="tanggal" sortable="true" width="80">Tgl.Input</th>
+         <th halign="center" align="left" rowspan="2" field="status_verifikasi_tanggal" sortable="true" width="80">Tgl.Verifikasi</th>
+         <th halign="center" align="left" rowspan="2" field="status_penguji_tanggal" sortable="true" width="82">Tgl.Persetujuan</th>
 		<th halign="center" align="center" rowspan="2" field="nomor" sortable="true" width="200">Nomor</th>
 		<th halign="center" align="right" rowspan="2" field="jumlah" sortable="true" width="100" formatter="formatMoney">Jumlah</th>
 		<th halign="center" align="left" rowspan="2" field="bidang" sortable="true" width="100">Bidang</th>

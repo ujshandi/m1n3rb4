@@ -27,6 +27,7 @@ class Rpt_spm_bendahara extends CI_Controller {
         $data['bidanglistFilter'] = $this->bidang_model->getListBidangFilter($data['objectId']);
         $data['kategorilist'] = $this->spb_kategori_model->getListKategori($data['objectId']);
         $data['kategorilistFilter'] = $this->spb_kategori_model->getListKategoriFilter($data['objectId']);
+		$data['tipePeriode'] = $this->spb_model->get_filter_periode_type();
         $this->load->view('report/rpt_spm_bendahara_v',$data);
     }
     
@@ -38,6 +39,7 @@ class Rpt_spm_bendahara extends CI_Controller {
         $data['bidanglistFilter'] = $this->bidang_model->getListBidangFilter($data['objectId']);
         $data['kategorilist'] = $this->spb_kategori_model->getListKategori($data['objectId']);
         $data['kategorilistFilter'] = $this->spb_kategori_model->getListKategoriFilter($data['objectId']);
+		$data['tipePeriode'] = $this->spb_model->get_filter_periode_type();
         $this->load->view('report/rpt_spm_bendahara_v',$data);
     }
     
@@ -49,15 +51,16 @@ class Rpt_spm_bendahara extends CI_Controller {
         $data['bidanglistFilter'] = $this->bidang_model->getListBidangFilter($data['objectId']);
         $data['kategorilist'] = $this->spb_kategori_model->getListKategori($data['objectId']);
         $data['kategorilistFilter'] = $this->spb_kategori_model->getListKategoriFilter($data['objectId']);
+		$data['tipePeriode'] = $this->spb_model->get_filter_periode_type();
         $this->load->view('report/rpt_spm_bendahara_v',$data);
     }
     
     
 
-    function grid($tipereport,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor){	
+    function grid($tipereport,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor,$tipeperiode){	
         $periodeawal = $this->utility->ourDeFormatSQLDate($periodeawal);
 	$periodeakhir = $this->utility->ourDeFormatSQLDate($periodeakhir);
-        echo $this->rpt_spm_bendahara_model->easyGrid(1,$tipereport,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor);
+        echo $this->rpt_spm_bendahara_model->easyGrid(1,$tipereport,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor,$tipeperiode);
     }
  
     

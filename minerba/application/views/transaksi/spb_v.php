@@ -90,9 +90,12 @@
 		  <label style="width:150px;vertical-align:top">Tanggal :</label>
 		  <input name="tanggal" style="width:100px" id="tanggal<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  required="true">
 		</div>
-              <div class="fitem">
+         <div class="fitem">
 		  <label style="width:150px;vertical-align:top">No.SPBY :</label>
-                  <input name="nomor" id="nomor<?=$objectId?>" class="easyui-validatebox"  style="text-transform: uppercase" required="true" >
+                 <input name="nomor" id="nomor<?=$objectId?>" class="easyui-validatebox"  style="text-transform: uppercase" required="true" >
+					&nbsp;
+                  <input type="checkbox" name="revisi" id="chkRevisi<?=$objectId?>" value="1"  />&nbsp;Revisi
+				  
 		</div>
               <div class="fitem">
 		  <label style="width:150px;vertical-align:top">Bidang :</label>
@@ -104,11 +107,11 @@
 		</div>
 		<div class="fitem">
 		  <label style="width:150px;vertical-align:top">Dibayarkan kepada :</label>
-		  <input name="tujuan" class="easyui-validatebox" size="30" >
+		  <input name="tujuan" id="tujuan<?=$objectId?>"  class="easyui-validatebox" size="30" >
 		</div>
 		<div class="fitem">
 		  <label style="width:150px;vertical-align:top">Tujuan Pembayaran :</label>
-		  <input name="untuk" class="easyui-validatebox" size="50" >
+		  <input name="untuk" id="untuk<?=$objectId?>"  class="easyui-validatebox" size="50" >
 		</div>
 		<div class="fitem">
 		  <label style="width:150px;vertical-align:top">Beban Kegiatan :</label>
@@ -121,7 +124,7 @@
 		</div> -->
               <div class="fitem">
 		  <label style="width:150px;vertical-align:top">Jumlah :</label>
-		  <input name="jumlah" class="easyui-numberbox" style="text-align:right" data-options="precision:0,groupSeparator:'.',decimalSeparator:','"  >
+		  <input name="jumlah" id="jumlah<?=$objectId?>" class="easyui-numberbox" style="text-align:right" data-options="precision:0,groupSeparator:'.',decimalSeparator:','"  >
 		</div>
 	  </form>
     </div>
@@ -145,6 +148,51 @@ $(function(){
         url = base_url+'transaksi/spb/save/add';  
     }
     //end newData 
+	
+	$("#chkRevisi<?=$objectId?>").click(function(){
+		if ($(this).is(':checked')) {
+			$('#nomor<?=$objectId;?>').val('');  
+			$('#nomor<?=$objectId;?>').bind('blur',loadDataTolak<?=$objectId?>);
+		} else {
+			$('#nomor<?=$objectId;?>').val('/PPK/<?=date('Y')?>');  
+			$('#nomor<?=$objectId;?>').unbind('blur',loadDataTolak<?=$objectId?>);
+		}
+	})
+	
+	loadDataTolak<?=$objectId?> = function(){
+		var nomor = $('#nomor<?=$objectId;?>').val();  
+		var nomor_old = nomor;
+		nomor = DoAsciiHex(nomor,'A2H');
+		$.ajax({
+			url : '<?=base_url()?>transaksi/spb/get_spb_ditolak/'+nomor,
+			dataType:'json',
+			success : function (data,status,Xhr){
+				$('#fm<?=$objectId;?>').form('clear');  
+				$('#nomor<?=$objectId;?>').val(nomor_old);  
+				$('#chkRevisi<?=$objectId;?>').prop("checked",true);  
+				$('#tanggal<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
+				if (data=="") alert("Data SPBY "+nomor_old+" tidak ditemukan pada daftar SPBY yang pernah ditolak.");
+				 $.each(data, function(index, element) {
+					//alert(element.nomor);
+					
+					$("#bidang_id<?=$objectId?>").val(element.bidang_id);
+					$("#kategori_id<?=$objectId?>").val(element.kategori_id);
+					
+					$("#jumlah<?=$objectId?>").numberbox({						
+						precision:0,groupSeparator:'.',decimalSeparator:',',
+						value :element.jumlah
+					}); 
+					$("#untuk<?=$objectId?>").val(element.untuk);
+					$("#tujuan<?=$objectId?>").val(element.tujuan);
+					//$("#bidang_id<?=$objectId?>").change(); 
+					autoKegiatan<?=$objectId;?>('','['+element.beban_kode+']'+element.beban_kegiatan);
+				//	$('#txtbeban_kegiatan<?=$objectId;?>').val('['+element.beban_kode+']'+element.beban_kegiatan);
+					//$("#tujuan<?=$objectId?>").val(element.tujuan);
+				});
+			}
+		});
+	}
+	
 
 
     clearFilter<?=$objectId;?> = function (){
@@ -167,18 +215,18 @@ $(function(){
         var filbidang = $("#filter_bidang_id<?=$objectId;?>").val();
         var filkategori = $("#filter_kategori_id<?=$objectId;?>").val();
         var filnomor = $("#txtNomor<?=$objectId;?>").val();
-        
+        var tipe_periode = '-1';
 
         filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
         filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
         filnomor = ((filnomor=="undefined")||(filnomor=="")||(filnomor==null))?"-1":filnomor;
         if (tipe==1){
-                return "<?=base_url()?>transaksi/spb/grid/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
+                return "<?=base_url()?>transaksi/spb/grid/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor+"/"+tipe_periode;
         }
         else if (tipe==2){
-                return "<?=base_url()?>transaksi/spb/pdf/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
+                return "<?=base_url()?>transaksi/spb/pdf/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor+"/"+tipe_periode;
         }else if (tipe==3){
-                return "<?=base_url()?>transaksi/spb/excel/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
+                return "<?=base_url()?>transaksi/spb/excel/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor+"/"+tipe_periode;
         }
 
     }
@@ -250,7 +298,22 @@ $(function(){
         $('#fm<?=$objectId;?>').form('submit',{
             url: url,
             onSubmit: function(){
-                return $(this).form('validate');
+                var rs = false;				
+					if ($("#bidang_id<?=$objectId?>").val()==null) {
+						alert("Bidang harus dipilih");
+						$("#bidang_id<?=$objectId?>").focus();
+					}
+					else if ($("#kategori_id<?=$objectId?>").val()==null) {
+						alert("Kategori harus dipilih");
+						$("#kategori_id<?=$objectId?>").focus();
+					}
+					else
+					  rs = true;
+				
+				if (rs){
+					rs = $(this).form('validate');
+				}	
+				return rs;
             },
             success: function(result){
                 //alert(result);

@@ -241,7 +241,7 @@ $(function(){
 		
 		<th halign="center" align="left" field="bidang" sortable="true" width="300">Bidang</th>
 		
-		<th halign="center" align="left" field="tujuan" sortable="true" width="500">Keterangan</th>
+		<th halign="center" align="left" field="keterangan" sortable="true" width="500">Keterangan</th>
 		
 		<th halign="center" field="bidang_id" hidden="true"  width="0">bidang_id</th>	
 		<th halign="center" field="tanda_id" hidden="true"  width="0">tanda_id</th>
