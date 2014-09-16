@@ -13,12 +13,12 @@ class Rpt_spb_bidang_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	
-    public function easyGrid($purpose=1,$filawal,$filakhir,$filbidang,$filkategori){
+    public function easyGrid($purpose=1,$filawal,$filakhir,$filbidang,$filkategori,$tipeperiode){
         $lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;
         $page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
         $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 
-        $count = $this->GetRecordCount($filawal,$filakhir,$filbidang,$filkategori);
+        $count = $this->GetRecordCount($filawal,$filakhir,$filbidang,$filkategori,$tipeperiode);
         $response = new stdClass();
         $response->total = $count;
         $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'b.bidang';  
@@ -40,9 +40,35 @@ class Rpt_spb_bidang_model extends CI_Model
         if ($count>0){
             $filtanggal ='';
             $wherekategori ='';
+			switch ($tipeperiode) {
+				case "1" : //verifikasi
+					$fieldTglDraft = 'right(d.status_verifikasi,10)';
+					$fieldTglVerifikasi = 'right(v.status_verifikasi,10)';
+					$fieldTglPenguji = 'right(p.status_verifikasi,10)';
+					$fieldTglSpm = 'right(s.status_verifikasi,10)';
+					$fieldTglBendahara = 'right(h.status_verifikasi,10)';
+				break;
+				case "2" : //penguji
+					$fieldTglDraft = 'right(d.status_penguji,10)';
+					$fieldTglVerifikasi = 'right(v.status_penguji,10)';
+					$fieldTglPenguji = 'right(p.status_penguji,10)';
+					$fieldTglSpm = 'right(s.status_penguji,10)';
+					$fieldTglBendahara = 'right(h.status_penguji,10)';
+				break;
+				default : 
+					$fieldTglDraft = 'd.tanggal';
+					$fieldTglVerifikasi = 'v.tanggal';
+					$fieldTglPenguji = 'p.tanggal';
+					$fieldTglSpm = 's.tanggal';
+					$fieldTglBendahara = 'h.tanggal';
+			}
             if($filawal != '' && $filawal != '-1' && $filawal != null) {
                 //$this->db->where("s.tanggal between '$filawal' and '$filakhir'");
-				$filtanggal = "tanggal between '$filawal' and '$filakhir'";
+				$filtanggalDraft = $fieldTglDraft." between '$filawal' and '$filakhir'";
+				$filtanggalVerifikasi = $fieldTglVerifikasi." between '$filawal' and '$filakhir'";
+				$filtanggalPenguji = $fieldTglPenguji." between '$filawal' and '$filakhir'";
+				$filtanggalSpm = $fieldTglSpm." between '$filawal' and '$filakhir'";
+				$filtanggalBendahara = $fieldTglBendahara." between '$filawal' and '$filakhir'";
             }
 			if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
                 $this->db->where("b.bidang_id",$filbidang);
@@ -54,6 +80,7 @@ class Rpt_spb_bidang_model extends CI_Model
             }
             $this->db->order_by($sort." ".$order );
             if($purpose==1){$this->db->limit($limit,$offset);}
+			$this->db->_protect_identifiers = FALSE;
             $this->db->select(" b.bidang, 
 count(d.bidang_id) as draft_count, sum(ifnull(d.jumlah,0)) as draft_sum,
 count(v.bidang_id) as verifikasi_count, sum(ifnull(v.jumlah,0)) as verifikasi_sum,
@@ -61,14 +88,14 @@ count(p.bidang_id) as penguji_count, sum(ifnull(p.jumlah,0)) as penguji_sum,
 count(s.bidang_id) as spm_count, sum(ifnull(s.jumlah,0)) as spm_sum,
 count(h.bidang_id) as bendahara_count, sum(ifnull(h.jumlah,0)) as bendahara_sum ",false);
             $this->db->from('tbl_bidang b
-left join v_spb_draft d on b.bidang_id = d.bidang_id '.($filtanggal<>''?' and d.'.$filtanggal:'').($wherekategori<>''?' and d.'.$wherekategori:'').'
-left join v_spb_verifikasi v on b.bidang_id = v.bidang_id '.($filtanggal<>''?' and v.'.$filtanggal:'').($wherekategori<>''?' and v.'.$wherekategori:'').'
-left join v_spb_penguji p on b.bidang_id = p.bidang_id '.($filtanggal<>''?' and p.'.$filtanggal:'').($wherekategori<>''?' and p.'.$wherekategori:'').'
-left join v_spb_spm s on b.bidang_id = s.bidang_id '.($filtanggal<>''?' and s.'.$filtanggal:'').($wherekategori<>''?' and s.'.$wherekategori:'').'
-left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' and h.'.$filtanggal:'').($wherekategori<>''?' and h.'.$wherekategori:''),false);
+left join v_spb_draft d on b.bidang_id = d.bidang_id '.($filtanggalDraft<>''?' and '.$filtanggalDraft:'').($wherekategori<>''?' and d.'.$wherekategori:'').'
+left join v_spb_verifikasi v on b.bidang_id = v.bidang_id '.($filtanggalVerifikasi<>''?' and '.$filtanggalVerifikasi:'').($wherekategori<>''?' and v.'.$wherekategori:'').'
+left join v_spb_penguji p on b.bidang_id = p.bidang_id '.($filtanggalPenguji<>''?' and '.$filtanggalPenguji:'').($wherekategori<>''?' and p.'.$wherekategori:'').'
+left join v_spb_spm s on b.bidang_id = s.bidang_id '.($filtanggalSpm<>''?' and '.$filtanggalSpm:'').($wherekategori<>''?' and s.'.$wherekategori:'').'
+left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggalBendahara<>''?' and '.$filtanggalBendahara:'').($wherekategori<>''?' and h.'.$wherekategori:''),false);
 			$this->db->group_by('b.bidang');
             $query = $this->db->get();
-          
+			$this->db->_protect_identifiers = TRUE;
             $i=0;
             $no =$lastNo;
             foreach ($query->result() as $row)            {
@@ -165,7 +192,7 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
     }
 	
 	//jumlah data record buat paging
-    public function GetRecordCount($filawal,$filakhir,$filbidang,$filkategori){
+    public function GetRecordCount($filawal,$filakhir,$filbidang,$filkategori,$tipeperiode){
         
        /* if($filawal != '' && $filawal != '-1' && $filawal != null) {
             $this->db->where("tanggal between '$filawal' and '$filakhir'");
@@ -174,7 +201,7 @@ left join v_spb_bendahara h on b.bidang_id = h.bidang_id '.($filtanggal<>''?' an
         if($filkategori != '' && $filkategori != '-1' && $filkategori != null) {
             $this->db->where("kategori_id",$filkategori);
         }*/
-		  if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
+		if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
             $this->db->where("bidang_id",$filbidang);
         }
         $query=$this->db->from('tbl_bidang');

@@ -1,261 +1,4 @@
-<script  type="text/javascript" >
-$(function(){
-    var url;
-    
-       
-    
 
-    clearFilter<?=$objectId;?> = function (){
-        $("#filter_bidang_id<?=$objectId?>").val('-1');
-        $("#filter_kategori_id<?=$objectId?>").val('-1');
-        $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-01-Y')?>');
-        $('#periodeakhir<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
-		$("#txtNomor<?=$objectId?>").val('');
-        //$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>transaksi/spb/grid/"+filnip+"/"+filnama+"/"+filalamat});
-    }
-
-        //tipe 1=grid, 2=pdf, 3=excel
-    getUrl<?=$objectId;?> = function (tipe){
-        var filawal =  $('#periodeawal<?=$objectId;?>').datebox('getValue');	
-        var filakhir = $("#periodeakhir<?=$objectId;?>").datebox('getValue');	
-        var filbidang = $("#filter_bidang_id<?=$objectId;?>").val();
-        var filkategori = $("#filter_kategori_id<?=$objectId;?>").val();
-        var filnomor = $("#txtNomor<?=$objectId;?>").val();
-         filnomor = ((filnomor=="undefined")||(filnomor=="")||(filnomor==null))?"-1":filnomor;
-
-        filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
-        filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
-        if (tipe==1){
-                return "<?=base_url()?>transaksi/spb/grid/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
-        }
-        else if (tipe==2){
-                return "<?=base_url()?>transaksi/spb/pdf/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
-        }else if (tipe==3){
-                return "<?=base_url()?>transaksi/spb/excel/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor;
-        }
-
-    }
-
-    searchData<?=$objectId;?> = function (){
-        //ambil nilai-nilai filter
-       
-
-        $('#dg<?=$objectId;?>').datagrid({url:getUrl<?=$objectId;?>(1)});
-    }
-    //end searhData 
-    approveData<?=$objectId;?> = function (tipeapprove){
-        var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-        $('#fm<?=$objectId;?>').form('clear');  
-        //alert(row.dokter_kode);
-        if (row){
-                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Persetujuan SPBY');
-                $('#fm<?=$objectId;?>').form('load',row);
-                autoKegiatan<?=$objectId;?>('',row.kegiatan);
-                $('#btnApprove<?=$objectId?>').show();
-                $('#btnTolak<?=$objectId?>').show();
-                url = base_url+'transaksi/spb/approve/'+tipeapprove+'/'+row.spb_id;//+row.id;//'update_user.php?id='+row.id;
-        }
-    }
-    
-    editData<?=$objectId;?> = function (viewmode){
-        var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-        $('#fm<?=$objectId;?>').form('clear');  
-        //alert(row.dokter_kode);
-        if (row){
-                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit SPBY');
-                $('#fm<?=$objectId;?>').form('load',row);
-                autoKegiatan<?=$objectId;?>('',row.kegiatan);
-                if (viewmode){
-                    $('#btnApprove<?=$objectId?>').hide();
-                    $('#btnTolak<?=$objectId?>').hide();
-                }
-                else{
-                    $('#btnApprove<?=$objectId?>').show();
-                    $('#btnTolak<?=$objectId?>').show();
-                }    
-                    
-                url = base_url+'transaksi/spb/save/edit/'+row.nomor;//+row.id;//'update_user.php?id='+row.id;
-        }
-    }
-        //end editData
-
-    deleteData<?=$objectId;?> = function (){
-        var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
-        if(row){
-            if(confirm("Apakah yakin akan menghapus data '" + row.nomor + "'?")){
-                var response = '';
-                $.ajax({ type: "GET",
-                    url: base_url+'transaksi/spb/delete/' + row.nomor ,
-                    async: false,
-                    success : function(response){
-                        var response = eval('('+response+')');
-                        if (response.success){
-                            $.messager.show({
-                                title: 'Success',
-                                msg: 'Data Berhasil Dihapus'
-                            });
-
-                            // reload and close tab
-                            $('#dg<?=$objectId;?>').datagrid('reload');
-                        } else {
-                            $.messager.show({
-                                title: 'Error',
-                                msg: response.msg
-                            });
-                        }
-                    }
-                });
-            }
-        }
-    }
-        //end deleteData 
-
-     setKegiatan<?=$objectId;?> = function (valu){
-            //$('#kode_iku_e1<?=$objectId;?>').value = valu;
-              $('textarea').autosize();  
-        }
-   
-    function autoKegiatan<?=$objectId;?>(key,val){
-
-        var tgl = $('#tanggal<?=$objectId;?>').datebox('getValue','<?=date('d-m-Y')?>');
-
-        var tahun = parseInt(tgl.split('-')[2]);
-        var bidang_id = $("#bidang_id<?=$objectId?>").val();
-
-        if (tahun=="") tahun = "-1";
-        if ((bidang_id==null)||(bidang_id=="")) bidang_id = "-1";
-         $("#divKegiatan<?=$objectId?>").load(
-            base_url+"transaksi/spb/getListKegiatan/<?=$objectId;?>/"+tahun+"/"+bidang_id,
-            function(){
-                $('textarea').autosize();   
-
-                $("#txtbeban_kegiatan<?=$objectId;?>").click(function(){
-                   // alert('kadie=<?=$objectId;?>') ;
-                    $("#drop<?=$objectId;?>").slideDown("slow");
-                });
-
-                $("#drop<?=$objectId;?> li").click(function(e){
-                        var chose = $(this).text();
-                        $("#txtbeban_kegiatan<?=$objectId;?>").val(chose);
-                        $("#drop<?=$objectId;?>").slideUp("slow");
-                });
-        //	alert(val);
-//                    if (key!=null)
-                        //$('#kode_sasaran_e2ListSasaran<?=$objectId;?>').val(key);
-                if (val!=null)
-                        $('#txtbeban_kegiatan<?=$objectId;?>').val(val);
-            }
-        ); 
-        //alert("here");
-
-     }
-
-    printData<?=$objectId;?>=function(){			
-        //$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
-		alert("underconstruction");return;
-        window.open(getUrl<?=$objectId;?>(2));;
-    }
-
-    toExcel<?=$objectId;?>=function(){
-		alert("underconstruction");return;
-        window.open(getUrl<?=$objectId;?>(3));;
-    }
-    
-    getKeterangan<?=$objectId;?>=function(){
-        var keterangan = '';
-       $.messager.prompt('Masukkan Alasan Penolakan', 'Alasan : ', function(r){
-                        
-                        if (r){
-                            //alert('you type: '+r);
-                            keterangan = r;
-                            alert(keterangan);
-                        }
-                        
-                    }); 
-        return keterangan;            
-        
-    }
-    
-    tolakData<?=$objectId;?>=function(tipeapprove){
-       $.messager.prompt('Masukkan Alasan Penolakan', 'Alasan : ', function(r){
-                        
-            if (r){
-                //alert('you type: '+r);
-                keterangan = r;
-                if (keterangan!=""){
-                    $('#fm<?=$objectId;?>').form('submit',{
-                        url: base_url+'transaksi/spb/tolak/'+tipeapprove+'/'+$("#spb_id<?=$objectId?>").val(),      
-                        onSubmit: function(){
-                            $("#keterangan<?=$objectId?>").val(keterangan);
-                            var isValid = $(this).form('validate');
-                           return isValid;
-                        },
-                        success: function(result){
-                            alert(result);
-                            var result = eval('('+result+')');
-                            if (result.success){
-                                $.messager.show({
-                                        title: 'Pesan',
-                                        msg: 'Data berhasil ditolak'
-                                });
-                                $('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
-                                $('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
-                            } else {
-                                $.messager.show({
-                                        title: 'Error',
-                                        msg: result.msg
-                                });
-                            }
-                        }
-                    });//end form submit
-                }else{
-                    alert("Alasan harus diisi");
-                }
-            }
-            else {
-                alert("Alasan harus diisi");
-            }            
-        }); 
-        
-    }
-    
-    saveData<?=$objectId;?>=function(){
-        var spm_bendahara= $("#spm_bendahara<?=$objectId?>").val();
-        if (spm_bendahara==null) spm_bendahara = '';
-        $('#fm<?=$objectId;?>').form('submit',{
-            url: url+'/'+spm_bendahara,
-            onSubmit: function(){
-                return $(this).form('validate');
-            },
-            success: function(result){
-                //alert(result);
-                var result = eval('('+result+')');
-                if (result.success){
-                    $.messager.show({
-                            title: 'Pesan',
-                            msg: 'Data berhasil diapprove'
-                    });
-                    $('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
-                    $('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
-                } else {
-                    $.messager.show({
-                            title: 'Error',
-                            msg: result.msg
-                    });
-                }
-            }
-        });
-    }
-        //end saveData
-
-        setTimeout(function(){
-            var wHeight = $(window).height();	
-            clearFilter<?=$objectId?>();
-            $("#dg<?=$objectId;?>").css('height',wHeight-156);    
-            searchData<?=$objectId?>();
-        },100);
- });
-</script>
 	<style type="text/css">
 		#fm<?=$objectId;?>{
 			margin:0;
@@ -270,7 +13,7 @@ $(function(){
                 <div class="fsearch fieldset">  <h1><span>Kriteria Pencarian</span></h1>                     
                 <table border="0" cellpadding="1" cellspacing="4">				
                 <tr>
-                    <td>Periode : &nbsp;</td>
+                    <td><?=form_dropdown('tipe_periode',$tipePeriode,'0','id="tipe_periode'.$objectId.'" ')?></td>
                     <td><input name="periodeawal" style="width:100px" id="periodeawal<?=$objectId;?>" class="easyui-datebox"  data-options="formatter:myDateFormatter,parser:myDateParser"  > s.d. <input name="periodeakhir" style="width:100px" id="periodeakhir<?=$objectId;?>" class="easyui-datebox" data-options="formatter:myDateFormatter,parser:myDateParser"  ></td>
                     <td width="20px">&nbsp;</td>
                     <td>Bidang : &nbsp;</td>
@@ -281,8 +24,8 @@ $(function(){
                 </tr>
 			
 					 <tr>
-                        <td>No.SPBY : &nbsp;</td>
-                        <td><input type="text" size="33px" name="txtNomor" style="padding:7px;font-size:14px" id="txtNomor<?=$objectId;?>" class="easyui-validatebox"/></td>
+                        <td align="right">No.SPBY : &nbsp;</td>
+                        <td><input type="text" size="31px" name="txtNomor" style="padding:7px;font-size:14px" id="txtNomor<?=$objectId;?>" class="easyui-validatebox"/></td>
 					</tr>	
             
                 <tr>
@@ -415,3 +158,281 @@ $(function(){
           <?php }?>
 	  <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg<?=$objectId;?>').dialog('close')">Batal</a>
     </div>
+
+	
+	<script  type="text/javascript" >
+$(function(){
+    var url;
+    
+       
+    
+
+    clearFilter<?=$objectId;?> = function (){
+        $("#filter_bidang_id<?=$objectId?>").val('-1');
+        $("#filter_kategori_id<?=$objectId?>").val('-1');
+        $('#periodeawal<?=$objectId;?>').datebox('setValue','<?=date('01-01-Y')?>');
+        $('#periodeakhir<?=$objectId;?>').datebox('setValue','<?=date('d-m-Y')?>');
+		$("#txtNomor<?=$objectId?>").val('');
+		$("#tipe_periode<?=$objectId?>").val('0');
+        //$('#dg<?=$objectId;?>').datagrid({url:"<?=base_url()?>transaksi/spb/grid/"+filnip+"/"+filnama+"/"+filalamat});
+    }
+
+        //tipe 1=grid, 2=pdf, 3=excel
+    getUrl<?=$objectId;?> = function (tipe){
+        var filawal =  $('#periodeawal<?=$objectId;?>').datebox('getValue');	
+        var filakhir = $("#periodeakhir<?=$objectId;?>").datebox('getValue');	
+        var filbidang = $("#filter_bidang_id<?=$objectId;?>").val();
+        var filkategori = $("#filter_kategori_id<?=$objectId;?>").val();
+        var filnomor = $("#txtNomor<?=$objectId;?>").val();
+		var tipeperiode = $("#tipe_periode<?=$objectId?>").val();
+		
+         filnomor = ((filnomor=="undefined")||(filnomor=="")||(filnomor==null))?"-1":filnomor;
+
+        filbidang = ((filbidang=="undefined")||(filbidang=="")||(filbidang==null))?"-1":filbidang;
+        filkategori = ((filkategori=="undefined")||(filkategori=="")||(filbidang==null))?"-1":filkategori;
+        if (tipe==1){
+                return "<?=base_url()?>transaksi/spb/grid/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor+"/"+tipeperiode;
+        }
+        else if (tipe==2){
+                return "<?=base_url()?>transaksi/spb/pdf/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor+"/"+tipeperiode;
+        }else if (tipe==3){
+                return "<?=base_url()?>transaksi/spb/excel/<?=$tipeapproval?>/"+filawal+"/"+filakhir+"/"+filbidang+"/"+filkategori+"/"+filnomor+"/"+tipeperiode;
+        }
+
+    }
+
+    searchData<?=$objectId;?> = function (){
+        //ambil nilai-nilai filter
+       
+
+        $('#dg<?=$objectId;?>').datagrid({url:getUrl<?=$objectId;?>(1)});
+    }
+    //end searhData 
+    approveData<?=$objectId;?> = function (tipeapprove){
+        var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+        $('#fm<?=$objectId;?>').form('clear');  
+        //alert(row.dokter_kode);
+        if (row){
+                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Persetujuan SPBY');
+                $('#fm<?=$objectId;?>').form('load',row);
+                autoKegiatan<?=$objectId;?>('',row.kegiatan);
+                $('#btnApprove<?=$objectId?>').show();
+                $('#btnTolak<?=$objectId?>').show();
+                url = base_url+'transaksi/spb/approve/'+tipeapprove+'/'+row.spb_id;//+row.id;//'update_user.php?id='+row.id;
+        }
+    }
+    
+    editData<?=$objectId;?> = function (viewmode){
+        var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+        $('#fm<?=$objectId;?>').form('clear');  
+        //alert(row.dokter_kode);
+        if (row){
+                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit SPBY');
+                $('#fm<?=$objectId;?>').form('load',row);
+                autoKegiatan<?=$objectId;?>('',row.kegiatan);
+                if (viewmode){
+                    $('#btnApprove<?=$objectId?>').hide();
+                    $('#btnTolak<?=$objectId?>').hide();
+                }
+                else{
+                    $('#btnApprove<?=$objectId?>').show();
+                    $('#btnTolak<?=$objectId?>').show();
+                }    
+                    
+                url = base_url+'transaksi/spb/save/edit/'+row.spb_id;//+row.id;//'update_user.php?id='+row.id;
+        }
+    }
+        //end editData
+
+    deleteData<?=$objectId;?> = function (){
+        var row = $('#dg<?=$objectId;?>').datagrid('getSelected');
+        if(row){
+            if(confirm("Apakah yakin akan menghapus data '" + row.nomor + "'?")){
+                var response = '';
+                $.ajax({ type: "GET",
+                    url: base_url+'transaksi/spb/delete/' + row.spb_id ,
+                    async: false,
+                    success : function(response){
+                        var response = eval('('+response+')');
+                        if (response.success){
+                            $.messager.show({
+                                title: 'Success',
+                                msg: 'Data Berhasil Dihapus'
+                            });
+
+                            // reload and close tab
+                            $('#dg<?=$objectId;?>').datagrid('reload');
+                        } else {
+                            $.messager.show({
+                                title: 'Error',
+                                msg: response.msg
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    }
+        //end deleteData 
+
+     setKegiatan<?=$objectId;?> = function (valu){
+            //$('#kode_iku_e1<?=$objectId;?>').value = valu;
+              $('textarea').autosize();  
+        }
+   
+    function autoKegiatan<?=$objectId;?>(key,val){
+
+        var tgl = $('#tanggal<?=$objectId;?>').datebox('getValue','<?=date('d-m-Y')?>');
+
+        var tahun = parseInt(tgl.split('-')[2]);
+        var bidang_id = $("#bidang_id<?=$objectId?>").val();
+
+        if (tahun=="") tahun = "-1";
+        if ((bidang_id==null)||(bidang_id=="")) bidang_id = "-1";
+         $("#divKegiatan<?=$objectId?>").load(
+            base_url+"transaksi/spb/getListKegiatan/<?=$objectId;?>/"+tahun+"/"+bidang_id,
+            function(){
+                $('textarea').autosize();   
+
+                $("#txtbeban_kegiatan<?=$objectId;?>").click(function(){
+                   // alert('kadie=<?=$objectId;?>') ;
+                    $("#drop<?=$objectId;?>").slideDown("slow");
+                });
+
+                $("#drop<?=$objectId;?> li").click(function(e){
+                        var chose = $(this).text();
+                        $("#txtbeban_kegiatan<?=$objectId;?>").val(chose);
+                        $("#drop<?=$objectId;?>").slideUp("slow");
+                });
+        //	alert(val);
+//                    if (key!=null)
+                        //$('#kode_sasaran_e2ListSasaran<?=$objectId;?>').val(key);
+                if (val!=null)
+                        $('#txtbeban_kegiatan<?=$objectId;?>').val(val);
+            }
+        ); 
+        //alert("here");
+
+     }
+
+    printData<?=$objectId;?>=function(){			
+        //$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
+		alert("underconstruction");return;
+        window.open(getUrl<?=$objectId;?>(2));;
+    }
+
+    toExcel<?=$objectId;?>=function(){
+		alert("underconstruction");return;
+        window.open(getUrl<?=$objectId;?>(3));;
+    }
+    
+    getKeterangan<?=$objectId;?>=function(){
+        var keterangan = '';
+       $.messager.prompt('Masukkan Alasan Penolakan', 'Alasan : ', function(r){
+                        
+                        if (r){
+                            //alert('you type: '+r);
+                            keterangan = r;
+                            alert(keterangan);
+                        }
+                        
+                    }); 
+        return keterangan;            
+        
+    }
+    
+    tolakData<?=$objectId;?>=function(tipeapprove){
+       $.messager.prompt('Masukkan Alasan Penolakan', 'Alasan : ', function(r){
+                        
+            if (r){
+                //alert('you type: '+r);
+                keterangan = r;
+                if (keterangan!=""){
+                    $('#fm<?=$objectId;?>').form('submit',{
+                        url: base_url+'transaksi/spb/tolak/'+tipeapprove+'/'+$("#spb_id<?=$objectId?>").val(),      
+                        onSubmit: function(){
+                            $("#keterangan<?=$objectId?>").val(keterangan);
+                            var isValid = $(this).form('validate');
+                           return isValid;
+                        },
+                        success: function(result){
+                          //  alert(result);
+                            var result = eval('('+result+')');
+                            if (result.success){
+                                $.messager.show({
+                                        title: 'Pesan',
+                                        msg: 'Data berhasil ditolak'
+                                });
+                                $('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
+                                $('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
+                            } else {
+                                $.messager.show({
+                                        title: 'Error',
+                                        msg: result.msg
+                                });
+                            }
+                        }
+                    });//end form submit
+                }else{
+                    alert("Alasan harus diisi");
+                }
+            }
+            else {
+                alert("Alasan harus diisi");
+            }            
+        }); 
+        
+    }
+    
+    saveData<?=$objectId;?>=function(){
+        var spm_bendahara= $("#spm_bendahara<?=$objectId?>").val();
+        if (spm_bendahara==null) spm_bendahara = '';
+        $('#fm<?=$objectId;?>').form('submit',{
+            url: url+'/'+spm_bendahara,
+            onSubmit: function(){
+                var rs = false;				
+					if ($("#bidang_id<?=$objectId?>").val()==null) {
+						alert("Bidang harus dipilih");
+						$("#bidang_id<?=$objectId?>").focus();
+					}
+					else if ($("#kategori_id<?=$objectId?>").val()==null) {
+						alert("Kategori harus dipilih");
+						$("#kategori_id<?=$objectId?>").focus();
+					}
+					else
+					  rs = true;
+				
+				if (rs){
+					rs = $(this).form('validate');
+				}	
+				return rs;
+            },
+            success: function(result){
+                //alert(result);
+                var result = eval('('+result+')');
+                if (result.success){
+                    $.messager.show({
+                            title: 'Pesan',
+                            msg: 'Data berhasil diapprove'
+                    });
+                    $('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
+                    $('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
+                } else {
+                    $.messager.show({
+                            title: 'Error',
+                            msg: result.msg
+                    });
+                }
+            }
+        });
+    }
+        //end saveData
+
+        setTimeout(function(){
+            var wHeight = $(window).height();	
+            clearFilter<?=$objectId?>();
+            $("#dg<?=$objectId;?>").css('height',wHeight-156);    
+            searchData<?=$objectId?>();
+        },100);
+ });
+</script>

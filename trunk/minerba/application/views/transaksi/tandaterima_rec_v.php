@@ -1,6 +1,6 @@
 <script  type="text/javascript" >
 $(function(){
-    var url=base_url+'transaksi/tandaterima/save/add';
+    var url=base_url+'transaksi/tandaterima/save/<?=($editmode?"edit/".$tanda_id:"add")?>';
      $('textarea').autosize(); 
    
    cancel<?=$objectId;?>=function(){
@@ -36,8 +36,9 @@ $(function(){
                             title: 'Pesan',
                             msg: 'Data berhasil disimpan'
                     });
-                    $('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
-                    $('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
+                    //$('#dlg<?=$objectId;?>').dialog('close');		// close the dialog
+					$('#tt').tabs('close', '<?=($editmode?"Edit":"Tambah")?> Tanda Terima');
+                  // $('#dg<?=$objectId;?>').datagrid('reload');	// reload the user data
                 } else {
                     $.messager.show({
                             title: 'Error',

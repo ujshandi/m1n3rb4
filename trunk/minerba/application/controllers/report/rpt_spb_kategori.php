@@ -25,16 +25,17 @@ class Rpt_spb_kategori extends CI_Controller {
         $data['tipeapproval'] = 'draft';        
         $data['bidanglistFilter'] = $this->bidang_model->getListBidangFilter($data['objectId']);
 		$data['kategorilistFilter'] = $this->spb_kategori_model->getListKategoriFilter($data['objectId']);
+		$data['tipePeriode'] = $this->spb_model->get_filter_periode_type();
         $this->load->view('report/rpt_spb_kategori_v',$data);
     }
     
   
     
 
-    function grid($periodeawal,$periodeakhir,$bidang,$kategori){	
+    function grid($periodeawal,$periodeakhir,$bidang,$kategori,$tipeperiode){	
         $periodeawal = $this->utility->ourDeFormatSQLDate($periodeawal);
 	$periodeakhir = $this->utility->ourDeFormatSQLDate($periodeakhir);
-        echo $this->rpt_spb_kategori_model->easyGrid(1,$periodeawal,$periodeakhir,$bidang,$kategori);
+        echo $this->rpt_spb_kategori_model->easyGrid(1,$periodeawal,$periodeakhir,$bidang,$kategori,$tipeperiode);
     }
  
     

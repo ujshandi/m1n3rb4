@@ -13,12 +13,12 @@ class Rpt_spm_bendahara_model extends CI_Model
 		//$this->CI =& get_instance();
     }
 	
-    public function easyGrid($purpose=1,$tipereport,$filawal,$filakhir,$filbidang,$filkategori,$filNomor){
+    public function easyGrid($purpose=1,$tipereport,$filawal,$filakhir,$filbidang,$filkategori,$filNomor,$tipeperiode){
         $lastNo = isset($_POST['lastNo']) ? intval($_POST['lastNo']) : 0;
         $page = isset($_POST['page']) ? intval($_POST['page']) : 1;  
         $limit = isset($_POST['rows']) ? intval($_POST['rows']) : 10;  
 
-        $count = $this->GetRecordCount($tipereport,$filawal,$filakhir,$filbidang,$filkategori,$filNomor);
+        $count = $this->GetRecordCount($tipereport,$filawal,$filakhir,$filbidang,$filkategori,$filNomor,$tipeperiode);
         $response = new stdClass();
         $response->total = $count;
         $sort = isset($_POST['sort']) ? strval($_POST['sort']) : 'tujuan';  
@@ -42,8 +42,17 @@ class Rpt_spm_bendahara_model extends CI_Model
                 break;
                 
             }
+		switch ($tipeperiode) {
+			case "1" : //verifikasi
+				$fieldTgl = 'right(status_verifikasi,10)';
+			break;
+			case "2" : //penguji
+				$fieldTgl = 'right(status_penguji,10)';
+			break;
+			default : $fieldTgl = 's.tanggal';
+		}
             if($filawal != '' && $filawal != '-1' && $filawal != null) {
-                $this->db->where("s.tanggal between '$filawal' and '$filakhir'");
+                $this->db->where($fieldTgl." between '$filawal' and '$filakhir'");
             }
             if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
                 $this->db->where("s.bidang_id",$filbidang);
@@ -176,7 +185,7 @@ class Rpt_spm_bendahara_model extends CI_Model
     }
 	
 	//jumlah data record buat paging
-    public function GetRecordCount($tipereport,$filawal,$filakhir,$filbidang,$filkategori,$filNomor){
+    public function GetRecordCount($tipereport,$filawal,$filakhir,$filbidang,$filkategori,$filNomor,$tipeperiode){
         switch ($tipereport){
                 
                 case "spm" : 
@@ -191,8 +200,17 @@ class Rpt_spm_bendahara_model extends CI_Model
                 break;
                 
             }
+		switch ($tipeperiode) {
+			case "1" : //verifikasi
+				$fieldTgl = 'right(status_verifikasi,10)';
+			break;
+			case "2" : //penguji
+				$fieldTgl = 'right(status_penguji,10)';
+			break;
+			default : $fieldTgl = 'tanggal';
+		}	
         if($filawal != '' && $filawal != '-1' && $filawal != null) {
-            $this->db->where("tanggal between '$filawal' and '$filakhir'");
+            $this->db->where($fieldTgl." between '$filawal' and '$filakhir'");
         }
         if($filbidang != '' && $filbidang != '-1' && $filbidang != null) {
             $this->db->where("bidang_id",$filbidang);

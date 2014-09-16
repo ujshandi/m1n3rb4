@@ -93,6 +93,7 @@ class Tandaterima extends CI_Controller {
     private function get_form_values() {
             // XXS Filtering enforced for user input
         $data['nomor'] = $this->input->post("nomor", TRUE);
+        $data['tanda_id'] = $this->input->post("tanda_id", TRUE);
         $data['tanggal'] = $this->input->post("tanggal", TRUE);
         $data['tipe'] = $this->input->post("tanggal", TRUE);
         $data['keterangan'] = $this->input->post("keterangan", TRUE);       
@@ -109,7 +110,7 @@ class Tandaterima extends CI_Controller {
         $data = $this->get_form_values();
         $status = "";
         $result = false;
-
+	//	var_dump($kode);die;
         //validasi form
         $this->form_validation->set_rules("nomor", 'Nomor Tanda Terima', 'trim|required|xss_clean');
         
