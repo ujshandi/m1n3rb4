@@ -44,11 +44,12 @@ class Tandaterima extends CI_Controller {
         $data['objectId'] = "addTandaTerima"; 
         $data['editmode'] = false;
         $data['tipetandaterima'] = 'draft';
+        $data['tanda_id'] = '0';
         $data['bidanglist'] = $this->bidang_model->getListBidang($data['objectId']);
         $this->load->view('transaksi/tandaterima_rec_v',$data);
     }
     
-     public function edit($id){
+     public function edit($id,$forPrint=false){
         $data['title'] = 'Edit Tanda Terima SPB';	
         $data['objectId'] = "editTandaTerima";  
         $data['tipetandaterima'] = 'draft';
@@ -60,8 +61,12 @@ class Tandaterima extends CI_Controller {
         $data['keterangan'] = $row->keterangan;
         $data['bidang_id'] = $row->bidang_id;
         $data['tanda_id'] = $row->tanda_id;
-        
-        $this->load->view('transaksi/tandaterima_rec_v',$data);
+        if ($forPrint){
+			$data['listSpb'] =  $this->tandaterima_model->easyGridDetail(2,$id);
+			$this->load->view('transaksi/tandaterima_print_v',$data);
+		}
+		else
+			$this->load->view('transaksi/tandaterima_rec_v',$data);
     }
   
     function grid($tipetandaterima,$periodeawal,$periodeakhir,$bidang,$nomor,$nomorTerima){	
@@ -126,7 +131,7 @@ class Tandaterima extends CI_Controller {
         }else {
             if($aksi=="add"){ // add
                 if (!$this->tandaterima_model->isExistKode($data['nomor'])){
-                        $result = $this->tandaterima_model->InsertOnDb($data,$status);
+                        $result = $this->tandaterima_model->InsertOnDb($data,$status,$kode);
                 }
                 else
                         $data['pesan_error'] .= 'Nomor sudah ada';
@@ -139,7 +144,7 @@ class Tandaterima extends CI_Controller {
         }
 
         if ($result){
-                echo json_encode(array('success'=>true));
+                echo json_encode(array('success'=>true,"tandaid"=>$kode));
         } else {
                 echo json_encode(array('msg'=>$data['pesan_error']));
         }
@@ -160,6 +165,10 @@ class Tandaterima extends CI_Controller {
             }
         }
     }
+	
+	public function print_tandaterima($id){
+		$this->edit($id,true);
+	}
 
     public function pdf(){
         $this->load->library('cezpdf');	
