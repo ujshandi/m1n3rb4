@@ -240,7 +240,8 @@ class Tandaterima_model extends CI_Model
                 $response->rows[$i]['kegiatan']='['.$row->beban_kode.']'.$row->beban_kegiatan;
                 
                 //utk kepentingan export pdf===================
-                $pdfdata[] = array($no,$response->rows[$i]['nomor']);
+                $pdfdata[] = array($no,$response->rows[$i]['nomor'],$response->rows[$i]['tanggal'],$response->rows[$i]['bidang'],
+				$response->rows[$i]['kategori'],$response->rows[$i]['jumlah'],$response->rows[$i]['untuk'],$response->rows[$i]['tujuan'],$response->rows[$i]['kegiatan']);
         //============================================================
                 $i++;
             } 
@@ -333,7 +334,7 @@ class Tandaterima_model extends CI_Model
     }
 	
     public function isSaveDelete($kode){			
-        $this->db->where('nomor',$kode); //buat validasi		
+      /*  $this->db->where('nomor',$kode); //buat validasi		
         $this->db->select('*');
         $this->db->from('tbl_sasaran_kl');
 
@@ -351,12 +352,13 @@ class Tandaterima_model extends CI_Model
             $rs = $query->num_rows() ;		
             $query->free_result();
             $isSave = ($rs==0);
-        }
+        }*/
+		$isSave = true;
         return $isSave;
     }
 	
 	//insert data
-    public function InsertOnDb($data,& $error) {
+    public function InsertOnDb($data,& $error, & $tandaid) {
             //query insert data		
         $this->db->trans_start();
         $this->db->set('nomor',$data['nomor']);
