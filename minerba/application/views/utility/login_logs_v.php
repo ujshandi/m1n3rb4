@@ -160,7 +160,7 @@
                     <tr>
                         <td width="60px">Periode :</td>
                         <td width="300px">
-                                <input name="periode_awal" value="<?=date('d-m-Y');?>" id="periode_awal<?=$objectId;?>" type="text" size="13" class="easyui-datebox" required="required"> &nbsp;&nbsp;s/d&nbsp;&nbsp;
+                                <input name="periode_awal" value="<?=date('d-m-Y');?>" id="periode_awal<?=$objectId;?>" type="text" size="13" class="easyui-datebox" required="required"> &nbsp;&nbsp;s.d.&nbsp;&nbsp;
                                 <input id="periode_akhir<?=$objectId;?>" name="periode_akhir" value="<?=date('d-m-Y');?>" type="text" size="13" class="easyui-datebox" required="required">
                         </td>
                     </tr>

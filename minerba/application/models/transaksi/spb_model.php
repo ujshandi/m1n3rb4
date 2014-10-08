@@ -80,7 +80,7 @@ class Spb_model extends CI_Model
 			$this->db->select("* ",false);  
 			$this->db->from($viewname,false);
             $query = $this->db->get();
-          
+         
             $i=0;
             $no =$lastNo;
             foreach ($query->result() as $row)            {
@@ -149,8 +149,24 @@ class Spb_model extends CI_Model
                 $response->rows[$i]['jumlah']=$row->jumlah; //$this->utility->ourFormatNumber($row->jumlah);
                 $jumlah += $row->jumlah;
                 //utk kepentingan export pdf===================
-                $pdfdata[] = array($no,$response->rows[$i]['nomor'],$response->rows[$i]['tujuan'],$response->rows[$i]['untuk'],$response->rows[$i]['beban_kegiatan']);
+                $pdfdata[] = array($no,$response->rows[$i]['tanggal'],$response->rows[$i]['nomor'],$this->utility->ourFormatNumber($response->rows[$i]['jumlah']),$response->rows[$i]['bidang'],$response->rows[$i]['kategori'],$response->rows[$i]['untuk'],$response->rows[$i]['tujuan'],$response->rows[$i]['kegiatan']);
         //============================================================
+				//utk kepentingan export excel ==========================
+				$row->spb_id = $no;
+				$row->bidang = $response->rows[$i]['bidang'];
+				$row->kegiatan = $response->rows[$i]['kegiatan'];
+				
+				unset($row->log_insert);
+				unset($row->log_update);
+				unset($row->kategori_id);
+				unset($row->bidang_id);
+				unset($row->status_penguji);
+				unset($row->status_spm);
+				unset($row->status_bendahara);
+				unset($row->status_verifikasi);
+				unset($row->spm_bendahara);
+				unset($row->beban_kode);
+				unset($row->beban_kegiatan);
                 $i++;
             } 
 
@@ -198,9 +214,9 @@ class Spb_model extends CI_Model
         }
         else if($purpose==3){//to excel
                 //tambahkan header kolom
-            $colHeaders = array("Kode","Nama Kementerian","Singkatan","Nama Menteri");		
-            //var_dump($query->result());die;
-            to_excel($query,"Kementerian",$colHeaders);
+            $colHeaders = array('No.','Nomor','Tanggal','Kepada','Untuk Pembayaran','Jumlah','Bidang','Kategori','Kegiatan');		
+          //  var_dump($query);die;
+            to_excel($query,"SPBY",$colHeaders);
         }
         else if ($purpose==4) { //WEB SERVICE
             return $response;
@@ -259,6 +275,16 @@ class Spb_model extends CI_Model
         $query=$this->db->from($viewname);
         return $this->db->count_all_results();
         $this->db->free_result();
+    }
+	
+	
+	public function selectById($id){
+        $this->db->select("*", false);
+        $this->db->from('tbl_spb');
+        $this->db->where('spb_id',$id);
+
+        $query = $this->db->get();
+        return $query->row();
     }
 
     public function isExistKode($kode=null){	

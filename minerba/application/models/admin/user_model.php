@@ -123,52 +123,7 @@ class User_model extends CI_Model
 		echo $out;
 	}
 	
-	public function getListUnitKerja($app_type=null,$e1=null,$label=''){
-		
-		$this->db->flush_cache();
-		
-		if (($app_type==null)||($app_type=="")){
-			$out = '<select name="unit_kerja" width="300" style="width: 300px">';
-			$out .= '<option value="">All</option>';
-			$out .= '</select>';
-		} else {
-			if ($app_type=="KL"){
-				$this->db->select('kode_satker as kode,nama_satker as nama');
-				$this->db->from('tbl_satker');
-				$this->db->order_by('kode_satker');
-			}
-			else if ($app_type=="E1"){
-				$this->db->select('kode_e1 as kode,nama_e1 as nama');
-				$this->db->from('tbl_eselon1');
-				$e1 = $this->session->userdata('unit_kerja_e1');
-				if (($e1!=-1)&&($e1!=null)){
-					$this->db->where('kode_e1',$e1);
-					$value = $e1;
-				}
-				//if (FILTER_E1_LOCKING) $this->db->where('kode_e1 in ('.FILTER_E1_LIST.')');
-				$this->db->order_by('kode_e1');
-			}
-			else if ($app_type=="E2"){
-				$this->db->select('kode_e2 as kode,nama_e2 as nama');
-				$this->db->from('tbl_eselon2');
-				$this->db->where('kode_e1',$e1);
-				$this->db->order_by('kode_e2');
-			}
-			
-			
-			$que = $this->db->get();
-			
-			$out = $label.'<select name="unit_kerja_'.$app_type.'" id="unit_kerja_'.$app_type.'">';
-			$out .= '<option selected="selected" value="-1">Semua</option>';
-			foreach($que->result() as $r){
-				$out .= '<option value="'.$r->kode.'">'.$r->nama.'</option>';
-			}
-			
-			$out .= '</select>';
-		  }
-		
-		echo $out;
-	}
+	
 	
 	
 	//khusus grid
@@ -226,8 +181,7 @@ class User_model extends CI_Model
 				$response->rows[$i]['level_id']=$row->level_id;
 				$response->rows[$i]['group_name']=$row->group_name;
 				$response->rows[$i]['level_name']=$row->level_name;
-				$response->rows[$i]['unit_kerja_E1']= ($row->unit_kerja_e1=='-1'?'Semua':$row->unit_kerja_e1);
-				$response->rows[$i]['unit_kerja_E2']=($row->unit_kerja_e2=='-1'?'Semua':$row->unit_kerja_e2);
+				
 
 				$i++;
 			} 
@@ -242,8 +196,7 @@ class User_model extends CI_Model
 				$response->rows[$count]['group_name']='';
 				$response->rows[$count]['level_id']='';
 				$response->rows[$count]['level_name']='';
-				$response->rows[$count]['unit_kerja_E1']='';
-				$response->rows[$count]['unit_kerja_E2']='';
+				
 		}
 		
 		return json_encode($response);
@@ -271,8 +224,7 @@ class User_model extends CI_Model
 		$this->db->set('passwd',md5($data['passwd']));
 		$this->db->set('group_id',$data['group_id']);		
 		$this->db->set('level_id',$data['level_id']);		
-		$this->db->set('unit_kerja_E1',$data['unit_kerja_E1']);
-		$this->db->set('unit_kerja_E2',$data['unit_kerja_E2']);
+		
 		$this->db->set('log_insert',$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 		
 		$result = $this->db->insert('tbl_user');
@@ -297,8 +249,7 @@ class User_model extends CI_Model
 		//$this->db->set('passwd',md5($data['passwd']));
 		$this->db->set('group_id',$data['group_id']);
 		$this->db->set('level_id',$data['level_id']);
-		$this->db->set('unit_kerja_E1',$data['unit_kerja_E1']);
-		$this->db->set('unit_kerja_E2',$data['unit_kerja_E2']);
+		
 		$this->db->set('log_update',$this->session->userdata('user_id').';'.date('Y-m-d H:i:s'));
 		
 		$result=$this->db->update('tbl_user');

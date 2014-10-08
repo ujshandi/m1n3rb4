@@ -10,6 +10,7 @@ class Spb extends CI_Controller {
 
         $this->load->model('/security/sys_menu_model');
         $this->load->model('/transaksi/spb_model');
+        $this->load->model('/report/rpt_spb_ditolak_model');
         $this->load->model('/rujukan/spb_kategori_model');
         $this->load->model('/rujukan/bidang_model');
         $this->load->model('/rujukan/kegiatan_model');
@@ -179,20 +180,73 @@ class Spb extends CI_Controller {
         }
     }
 
-    public function pdf(){
+	public function print_tolak($id){
+		$row=$this->rpt_spb_ditolak_model->selectById($id);
+		$data[]=array('label'=>'Nomor','separator'=>":",'value' => $row->nomor);
+		$data[]=array('label'=>'Tanggal','separator'=>":",'value' =>$this->utility->ourFormatDate2($row->tanggal));
+		$data[]=array('label'=>'Keterangan','separator'=>":",'value' =>$row->keterangan);
+		
+		
+		
+		 $this->load->library('cezpdf');	
+		
+     
+      
+        $pdf = new $this->cezpdf($paper='A4',$orientation='potrait');
+        $pdf->ezSetCmMargins(1,1,1,1);
+        $pdf->selectFont( APPPATH."libraries/fonts/Helvetica.afm" );
+
+		
+        $pdf->ezText('<u><b>Bukti Pengembalian SPBY</b></u>',12,array('justification'=>'center'));
+		
+
+        $pdf->ezText('');
+        $pdf->ezText('');
+        $pdf->ezText('Dengan ini dikembalikan berkas SPBY sebagai berikut :',10,array('justification'=>'left'));
+        $pdf->ezText('');
+		
+		$pdf->ezTable($data,array('label'=>'Type','separator'=>':','value'=>'<i>Alias</i>'),'',array('showHeadings'=>0,'shaded'=>0,'showLines'=>0,'maxWidth'=>500, 'xPos' => 40,'xOrientation' => 'right'));
+
+		$pdf->ezSetY(200);
+        $footer[]=array('label'=>'Penerima Berkas','value'=>'Verifikator');
+		$pdf->ezTable($footer,array('label'=>'Type','value'=>':'),'',array('showHeadings'=>0,'shaded'=>0,'showLines'=>0, 'xPos' => 440,'xOrientation' => 'right','colGap' => 5 ,'cols'=>array(
+								0=>array("width"=>100),
+								1=>array("width"=>200))
+								));
+        //halaman 
+        $pdf->ezStartPageNumbers(480,10,8,'right','Tgl.Cetak '.date('d-m-Y H:n:s'),1);//.'  Hal. {PAGENUM} dari {TOTALPAGENUM}',1);
+		
+       
+		
+        $opt['Content-Disposition'] = "SPBY_DITOLAK.pdf";
+        $pdf->ezStream($opt);
+	}
+	
+	
+    public function pdf($tipeapproval,$periode_awal,$periode_akhir,$bidang,$kategori,$nomor,$tipeperiode){
         $this->load->library('cezpdf');	
-        $pdfdata = $this->spb_model->easyGrid(2);
+		 $periodeawal = $this->utility->ourDeFormatSQLDate($periode_awal);
+		$periodeakhir = $this->utility->ourDeFormatSQLDate($periode_akhir);
+        
+        $pdfdata = $this->spb_model->easyGrid(2,$tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor,$tipeperiode);
         if (count($pdfdata)==0){
                 echo "Data Tidak Tersedia";
                 return;
         }
         //$pdfdata = $pdfdata->rows;
-        $pdfhead = array('No.','Kode','Nama Kementerian','Singkatan','Nama Menteri');
-        $pdf = new $this->cezpdf($paper='A4',$orientation='potrait');
+        $pdfhead = array('No.','Tanggal','Nomor','Jumlah','Bidang','Kategori','Untuk Pembayaran','Kepada','Kegiatan');
+        $pdf = new $this->cezpdf($paper='A4',$orientation='landscape');
         $pdf->ezSetCmMargins(1,1,1,1);
         $pdf->selectFont( APPPATH."libraries/fonts/Helvetica.afm" );
 //	$pdf->ezText('Biroren Kemenhub',8,array('left'=>'1'));
-        $pdf->ezText('Unit Kerja Kementerian',12,array('left'=>'1'));
+		switch ($tipeapproval){
+			case "draft" : $purposeTitle = "(DRAFT)"; break;
+			case "verifikasi" : $purposeTitle = "Yang Harus di Verifikasi"; break;
+			case "penguji" : $purposeTitle = "Yang Akan di Periksa oleh Pejabat Penguji "; break;
+			default :$purposeTitle = "";
+		}
+        $pdf->ezText('Daftar SPBY '.$purposeTitle,12,array('left'=>'1'));
+        $pdf->ezText('Periode : '.$periode_awal." s.d. ".$periode_akhir,12,array('left'=>'1'));
 //	if (($filtahun != null)&&($filtahun != "-1"))
         //$pdf->ezText('Tahun 2012',12,array('left'=>'1'));
 //	$pdf->ezText('Tahun 2012',12,array('left'=>'1'));
@@ -200,8 +254,8 @@ class Spb extends CI_Controller {
                 // $pdf->ezText($this->eselon1_model->getNamaE1($file1),12,array('left'=>'1'));
         $pdf->ezText('');
         //halaman 
-        $pdf->ezStartPageNumbers(550,10,8,'right','',1);
-
+        $pdf->ezStartPageNumbers(650,10,8,'right','Tgl.Cetak '.date('d-m-Y H:n:s').'  Hal. {PAGENUM} dari {TOTALPAGENUM}',1);
+		
         $options = array(
                 'showLines' => 2,
                 'showHeadings' => 1,
@@ -213,20 +267,41 @@ class Spb extends CI_Controller {
                 'xOrientation' => 'right',
                         'cols'=>array(
                          0=>array('justification'=>'center','width'=>25),
-                         1=>array('width'=>50),
-                         2=>array('width'=>225),
-                         3=>array('width'=>100),
-                         4=>array('width'=>125)),
+                         1=>array('width'=>55),
+                         2=>array('width'=>80),
+                         3=>array('width'=>65,'justification'=>'right'),
+                         4=>array('width'=>130),
+                         5=>array('width'=>60),
+                         6=>array('width'=>100),
+                         7=>array('width'=>100),
+                         8=>array('width'=>155)),
                 'width'=>'520'
         );
         $pdf->ezTable( $pdfdata, $pdfhead, NULL, $options );
-        $opt['Content-Disposition'] = "Kementerian.pdf";
+		
+        $opt['Content-Disposition'] = "SPBY.pdf";
         $pdf->ezStream($opt);
     }
 
-    public function excel(){
-            echo  $this->spb_model->easyGrid(3);
+    public function excel($tipeapproval,$periode_awal,$periode_akhir,$bidang,$kategori,$nomor,$tipeperiode){
+		$periodeawal = $this->utility->ourDeFormatSQLDate($periode_awal);
+		$periodeakhir = $this->utility->ourDeFormatSQLDate($periode_akhir);
+        echo  $this->spb_model->easyGrid(3,$tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor,$tipeperiode);
+		
     }
+	
+	
+	public function print_tolak_old($id){
+		$row=$this->rpt_spb_ditolak_model->selectById($id);
+		$data['nomor'] = $row->nomor;
+		$data['tanggal'] = $this->utility->ourFormatDate2($row->tanggal);
+		$data['keterangan'] = $row->keterangan;
+		
+		
+		$this->load->view('transaksi/bukti_tolak_print_v',$data);
+		//$this->edit($id,true);
+	}
+	
 
 }
 ?>

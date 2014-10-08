@@ -65,29 +65,35 @@ class Rpt_spm_bendahara extends CI_Controller {
  
     
     
-    public function pdf(){
+    public function pdf($tipereport,$periode_awal,$periode_akhir,$bidang,$kategori,$nomor,$tipeperiode){
         $this->load->library('cezpdf');	
-        $pdfdata = $this->spb_model->easyGrid(2);
+		 $periodeawal = $this->utility->ourDeFormatSQLDate($periode_awal);
+		$periodeakhir = $this->utility->ourDeFormatSQLDate($periode_akhir);
+        
+        $pdfdata = $this->rpt_spm_bendahara_model->easyGrid(2,$tipereport,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor,$tipeperiode);
         if (count($pdfdata)==0){
                 echo "Data Tidak Tersedia";
                 return;
         }
-        //$pdfdata = $pdfdata->rows;
-        $pdfhead = array('No.','Kode','Nama Kementerian','Singkatan','Nama Menteri');
-        $pdf = new $this->cezpdf($paper='A4',$orientation='potrait');
+
+        $pdfhead = array('No.','Tgl.Input','Tgl.Verifikasi','Tgl.Persetujuan','Nomor','Jumlah','Bidang','Kategori','Untuk Pembayaran','Kepada','Kegiatan');
+        $pdf = new $this->cezpdf($paper='LEGAL',$orientation='landscape');
         $pdf->ezSetCmMargins(1,1,1,1);
         $pdf->selectFont( APPPATH."libraries/fonts/Helvetica.afm" );
-//	$pdf->ezText('Biroren Kemenhub',8,array('left'=>'1'));
-        $pdf->ezText('Unit Kerja Kementerian',12,array('left'=>'1'));
-//	if (($filtahun != null)&&($filtahun != "-1"))
-        //$pdf->ezText('Tahun 2012',12,array('left'=>'1'));
-//	$pdf->ezText('Tahun 2012',12,array('left'=>'1'));
-        // if (($file1 != null)&&($file1 != "-1"))
-                // $pdf->ezText($this->eselon1_model->getNamaE1($file1),12,array('left'=>'1'));
+
+		switch ($tipereport){
+			case "spm" : $purposeTitle = "Untuk Pengajuan SPM "; break;
+			
+			case "bendahara" : $purposeTitle =  "Untuk Bendaharawan"; break;
+			default :$purposeTitle = "";
+		}
+        $pdf->ezText('Daftar SPBY '.$purposeTitle,12,array('left'=>'1'));
+        $pdf->ezText('Periode : '.$periode_awal." s.d. ".$periode_akhir,12,array('left'=>'1'));
+
         $pdf->ezText('');
         //halaman 
-        $pdf->ezStartPageNumbers(550,10,8,'right','',1);
-
+        $pdf->ezStartPageNumbers(650,10,8,'right','Tgl.Cetak '.date('d-m-Y H:n:s').'  Hal. {PAGENUM} dari {TOTALPAGENUM}',1);
+		
         $options = array(
                 'showLines' => 2,
                 'showHeadings' => 1,
@@ -99,19 +105,28 @@ class Rpt_spm_bendahara extends CI_Controller {
                 'xOrientation' => 'right',
                         'cols'=>array(
                          0=>array('justification'=>'center','width'=>25),
-                         1=>array('width'=>50),
-                         2=>array('width'=>225),
-                         3=>array('width'=>100),
-                         4=>array('width'=>125)),
+                         1=>array('width'=>60),
+                         2=>array('width'=>60),
+                         3=>array('width'=>70),
+                         4=>array('width'=>80),
+                         5=>array('width'=>65,'justification'=>'right'),
+                         6=>array('width'=>130),
+                         7=>array('width'=>60),
+                         8=>array('width'=>100),
+                         9=>array('width'=>100),
+                         10=>array('width'=>175)),
                 'width'=>'520'
         );
         $pdf->ezTable( $pdfdata, $pdfhead, NULL, $options );
-        $opt['Content-Disposition'] = "Kementerian.pdf";
+		
+        $opt['Content-Disposition'] = "SPBY.pdf";
         $pdf->ezStream($opt);
     }
 
-    public function excel(){
-            echo  $this->spb_model->easyGrid(3);
+    public function excel($tipereport,$periode_awal,$periode_akhir,$bidang,$kategori,$nomor,$tipeperiode){
+		$periodeawal = $this->utility->ourDeFormatSQLDate($periode_awal);
+		$periodeakhir = $this->utility->ourDeFormatSQLDate($periode_akhir);	
+		echo  $this->rpt_spm_bendahara_model->easyGrid(3,$tipereport,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor,$tipeperiode);
     }
 
 }

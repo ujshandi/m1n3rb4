@@ -43,11 +43,11 @@ class Home extends CI_Controller {
 	
 	public function loadMenu(){
 	//	var_dump('tes');
-		echo $this->sys_menu_model->loadMenu($this->session->userdata('app_type'),null,true);
+		echo $this->sys_menu_model->loadMenu('xx',null,true);
 	}
 	
 	function getLoginStatus(){
-		echo $this->session->userdata('logged_in');
+		echo $this->session->userdata('logged_in_e_tracking');
 	}
 	
 }

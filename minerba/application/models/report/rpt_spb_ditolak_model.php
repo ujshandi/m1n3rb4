@@ -116,8 +116,25 @@ class Rpt_spb_ditolak_model extends CI_Model
                 $response->rows[$i]['jumlah']=$row->jumlah; //$this->utility->ourFormatNumber($row->jumlah);
                 $jumlah += $row->jumlah;
                 //utk kepentingan export pdf===================
-                $pdfdata[] = array($no,$response->rows[$i]['nomor'],$response->rows[$i]['tujuan'],$response->rows[$i]['untuk'],$response->rows[$i]['beban_kegiatan']);
+                $pdfdata[] = array($no,$response->rows[$i]['keterangan'],$response->rows[$i]['tanggal'],$response->rows[$i]['nomor'],$this->utility->ourFormatNumber($response->rows[$i]['jumlah']),$response->rows[$i]['bidang'],$response->rows[$i]['kategori'],$response->rows[$i]['untuk'],$response->rows[$i]['tujuan'],$response->rows[$i]['kegiatan']);
         //============================================================
+		//utk kepentingan export excel ==========================
+				$row->spb_id = $no;
+				$row->bidang = $response->rows[$i]['bidang'];
+				$row->kegiatan = $response->rows[$i]['kegiatan'];
+				
+				unset($row->log_insert);
+				unset($row->log_update);
+				unset($row->kategori_id);
+				unset($row->bidang_id);
+				unset($row->status_penguji);
+				unset($row->status_spm);
+				unset($row->status_bendahara);
+				unset($row->status_verifikasi);
+				unset($row->spm_bendahara);
+				unset($row->beban_kode);
+				unset($row->beban_kegiatan);
+				
                 $i++;
             } 
 
@@ -166,9 +183,9 @@ class Rpt_spb_ditolak_model extends CI_Model
         }
         else if($purpose==3){//to excel
                 //tambahkan header kolom
-            $colHeaders = array("Kode","Nama Kementerian","Singkatan","Nama Menteri");		
+           $colHeaders = array('No.','Nomor','Tanggal','Kepada','Untuk Pembayaran','Jumlah','Keterangan','Kategori','Bidang','Kegiatan');			
             //var_dump($query->result());die;
-            to_excel($query,"Kementerian",$colHeaders);
+            to_excel($query,"SPBYDitolak",$colHeaders);
         }
         else if ($purpose==4) { //WEB SERVICE
             return $response;
@@ -210,6 +227,15 @@ class Rpt_spb_ditolak_model extends CI_Model
         $query=$this->db->from('tbl_spb_tolak');
         return $this->db->count_all_results();
         $this->db->free_result();
+    }
+	
+	public function selectById($id){
+        $this->db->select("*", false);
+        $this->db->from('tbl_spb_tolak');
+        $this->db->where('spb_id',$id);
+
+        $query = $this->db->get();
+        return $query->row();
     }
 
 	

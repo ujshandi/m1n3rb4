@@ -59,11 +59,11 @@ class login_log_model extends CI_Model
 				$xlog = explode(';', $row->user_info);
 				$response->rows[$i]['log_id_user']=str_replace("id=","",$xlog[0]);
 				$response->rows[$i]['log_user_name']=str_replace("name=","",$xlog[1]);
-				$response->rows[$i]['log_e1']=str_replace("e1=","",$xlog[2]);
-				$response->rows[$i]['log_e2']=str_replace("e2=","",$xlog[3]);
+				//$response->rows[$i]['log_e1']=str_replace("e1=","",$xlog[2]);
+			//	$response->rows[$i]['log_e2']=str_replace("e2=","",$xlog[3]);
 				
-				$response->rows[$i]['log_e1'] = ($response->rows[$i]['log_e1']=='-1'?'-':$response->rows[$i]['log_e1']);
-				$response->rows[$i]['log_e2'] = ($response->rows[$i]['log_e2']=='-1'?'-':$response->rows[$i]['log_e2']);
+			//	$response->rows[$i]['log_e1'] = ($response->rows[$i]['log_e1']=='-1'?'-':$response->rows[$i]['log_e1']);
+				//$response->rows[$i]['log_e2'] = ($response->rows[$i]['log_e2']=='-1'?'-':$response->rows[$i]['log_e2']);
 			//utk kepentingan export excel ==========================
 				
 				
@@ -79,17 +79,11 @@ class login_log_model extends CI_Model
 			// $query->free_result();
 		}else {
 				$response->rows[$count]['no']= '';
-				$response->rows[$count]['tahun']='';
-				$response->rows[$count]['kode_kl']='';
-				$response->rows[$count]['nama_kl']='';
-				$response->rows[$count]['kode_sasaran_kl']='';
-				$response->rows[$count]['deskripsi_sasaran_kl']='';
-				$response->rows[$count]['kode_iku_kl']='';
-				$response->rows[$count]['deskripsi_iku_kl']='';
-				$response->rows[$count]['target']='';
-				$response->rows[$count]['log_status']='';
-				$response->rows[$count]['log_user']='';
-				$response->rows[$count]['log_date']='';
+				$response->rows[$count]['logi_time']='';
+				$response->rows[$count]['log_id_user']='';
+				$response->rows[$count]['log_user_name']='';
+				$response->rows[$count]['user_info']='';
+				$response->rows[$count]['ip']='';
 				$response->lastNo = 0;				
 		}
 		

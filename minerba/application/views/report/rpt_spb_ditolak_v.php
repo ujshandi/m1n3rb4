@@ -47,12 +47,12 @@ $(function(){
 
     printData<?=$objectId;?>=function(){			
         //$.jqURL.loc(getUrl<?=$objectId;?>(2),{w:800,h:600,wintype:"_blank"});
-		alert("underconstruction");return;
+		//alert("underconstruction");return;
         window.open(getUrl<?=$objectId;?>(2));;
     }
 
     toExcel<?=$objectId;?>=function(){
-		alert("underconstruction");return;
+		//alert("underconstruction");return;
         window.open(getUrl<?=$objectId;?>(3));;
     }
 
