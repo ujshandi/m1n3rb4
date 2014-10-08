@@ -116,7 +116,7 @@
 			  <td colspan="2">
 				<table class="table" style="margin-right:-5px" align="right" border="0" width="50%" cellpadding="3px" cellspacing="0">
 				<tr>
-					<th>Pemohon</th>
+					<th>Yang Menyerahkan</th>
 					<th>Penerima</th>
 				</tr>
 				<tr height="100px">

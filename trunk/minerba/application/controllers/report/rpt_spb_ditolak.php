@@ -40,29 +40,29 @@ class Rpt_spb_ditolak extends CI_Controller {
  
     
     
-    public function pdf(){
+    public function pdf($tipeapproval,$periode_awal,$periode_akhir,$bidang,$kategori,$nomor){
         $this->load->library('cezpdf');	
-        $pdfdata = $this->spb_model->easyGrid(2);
+		 $periodeawal = $this->utility->ourDeFormatSQLDate($periode_awal);
+		$periodeakhir = $this->utility->ourDeFormatSQLDate($periode_akhir);
+        
+        $pdfdata = $this->rpt_spb_ditolak_model->easyGrid(2,$tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor);
         if (count($pdfdata)==0){
                 echo "Data Tidak Tersedia";
                 return;
         }
-        //$pdfdata = $pdfdata->rows;
-        $pdfhead = array('No.','Kode','Nama Kementerian','Singkatan','Nama Menteri');
-        $pdf = new $this->cezpdf($paper='A4',$orientation='potrait');
+
+        $pdfhead = array('No.','Keterangan Ditolak','Tanggal','Nomor','Jumlah','Bidang','Kategori','Untuk Pembayaran','Kepada','Kegiatan');
+        $pdf = new $this->cezpdf($paper='A4',$orientation='landscape');
         $pdf->ezSetCmMargins(1,1,1,1);
         $pdf->selectFont( APPPATH."libraries/fonts/Helvetica.afm" );
-//	$pdf->ezText('Biroren Kemenhub',8,array('left'=>'1'));
-        $pdf->ezText('Unit Kerja Kementerian',12,array('left'=>'1'));
-//	if (($filtahun != null)&&($filtahun != "-1"))
-        //$pdf->ezText('Tahun 2012',12,array('left'=>'1'));
-//	$pdf->ezText('Tahun 2012',12,array('left'=>'1'));
-        // if (($file1 != null)&&($file1 != "-1"))
-                // $pdf->ezText($this->eselon1_model->getNamaE1($file1),12,array('left'=>'1'));
+
+		
+        $pdf->ezText('Daftar SPBY Yang Ditolak',12,array('left'=>'1'));
+        $pdf->ezText('Periode : '.$periode_awal." s.d. ".$periode_akhir,12,array('left'=>'1'));
         $pdf->ezText('');
         //halaman 
-        $pdf->ezStartPageNumbers(550,10,8,'right','',1);
-
+        $pdf->ezStartPageNumbers(650,10,8,'right','Tgl.Cetak '.date('d-m-Y H:n:s').'  Hal. {PAGENUM} dari {TOTALPAGENUM}',1);
+		
         $options = array(
                 'showLines' => 2,
                 'showHeadings' => 1,
@@ -74,19 +74,27 @@ class Rpt_spb_ditolak extends CI_Controller {
                 'xOrientation' => 'right',
                         'cols'=>array(
                          0=>array('justification'=>'center','width'=>25),
-                         1=>array('width'=>50),
-                         2=>array('width'=>225),
-                         3=>array('width'=>100),
-                         4=>array('width'=>125)),
+                         1=>array('width'=>100),
+                         2=>array('width'=>55),
+                         3=>array('width'=>80),
+                         4=>array('width'=>65,'justification'=>'right'),
+                         5=>array('width'=>100),
+                         6=>array('width'=>55),
+                         7=>array('width'=>90),
+                         8=>array('width'=>80),
+                         9=>array('width'=>135)),
                 'width'=>'520'
         );
         $pdf->ezTable( $pdfdata, $pdfhead, NULL, $options );
-        $opt['Content-Disposition'] = "Kementerian.pdf";
+		
+        $opt['Content-Disposition'] = "SPBY.pdf";
         $pdf->ezStream($opt);
     }
 
-    public function excel(){
-            echo  $this->spb_model->easyGrid(3);
+    public function excel($tipeapproval,$periode_awal,$periode_akhir,$bidang,$kategori,$nomor){
+			 $periodeawal = $this->utility->ourDeFormatSQLDate($periode_awal);
+		$periodeakhir = $this->utility->ourDeFormatSQLDate($periode_akhir);
+            echo  $this->rpt_spb_ditolak_model->easyGrid(3,$tipeapproval,$periodeawal,$periodeakhir,$bidang,$kategori,$nomor);
     }
 
 }

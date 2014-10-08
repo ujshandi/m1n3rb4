@@ -26,14 +26,15 @@ class Sys_menu_model extends CI_Model
     }
 	
 	public function loadMenu($app_type,$imported=null,$cekPolicy=false){
-		$sql = "select m.* from tbl_menu m where hide<>1 and menu_parent is null and app_types like '%$app_type%'"
+		$sql = "select m.* from tbl_menu m where hide<>1 and menu_parent is null "
 		//.($menuparent==null?' where menu_parent is null ':' where menu_parent = '.$menuparent)
 		.($imported==null?'  ':' and imported = '.$imported)
 		.' order by menu_id ';
+		//var_dump($sql);die;
 		$query = $this->db->query($sql);
 		$result = array();
 		foreach ($query->result() as $row){
-			/* if ($cekPolicy){
+			/* if ($cekPolicy)
 				if (!$this->cekAkses("ADD;EDIT;VIEW;DELETE;PRINT;PROSES;EXCEl;",$row->menu_id,$this->session->userdata('group_id'),$this->session->userdata('level_id'))) {
 					continue;
 				}
@@ -44,9 +45,9 @@ class Sys_menu_model extends CI_Model
 			$node['text'] = $row->menu_name;
 			$node['state'] = 'closed';//($row->menu_parent==null?'closed':'open');
 			
-			$node['children'] = $this->loadChild($row->menu_id,$app_type,$imported,$cekPolicy,$policy);
+			$node['children'] = $this->loadChild($row->menu_id,$imported,$cekPolicy,$policy);
 			if (($cekPolicy)&&($policy=="")) {
-				$policy = $this->getAccessPolicy($row->menu_id,$this->session->userdata('group_id'),$this->session->userdata('level_id'));
+				$policy = $this->getAccessPolicy($row->menu_id,$this->session->userdata('user_id'),$this->session->userdata('level_id'));
 				if ($policy=="")
 					continue;
 			}
@@ -56,13 +57,14 @@ class Sys_menu_model extends CI_Model
 		return json_encode($result);
 	}
 	
-	public function loadChild($menuparent,$app_type,$imported=null,$cekPolicy=false,& $policy){
+	public function loadChild($menuparent, $imported=null,$cekPolicy=false,& $policy){
 		$sql = 'select m.* from tbl_menu m '
 		.' where hide<>1 and menu_parent = '.$menuparent
-		."  and app_types like '%$app_type%' "
+	//	."  and app_types like '%$app_type%' "
 		.($imported==null?'  ':' and imported = '.$imported)
 		.' order by menu_id ';
 		$query = $this->db->query($sql);
+	//	var_dump($this->session->userdata('level_id'));
 		$result = array();
 		foreach ($query->result() as $row){
 			$node =array();
@@ -74,17 +76,17 @@ class Sys_menu_model extends CI_Model
 			$node['attributes'] = $attr;
 			//var_dump($policy."=".$row->menu_id.'='.$this->session->userdata('group_id'));
 			
-			$node['children'] = $this->loadChild($row->menu_id,$app_type,$imported,$cekPolicy,$policy);
+			$node['children'] = $this->loadChild($row->menu_id, $imported,$cekPolicy,$policy);
 			//$policy .= $this->getAccessPolicy($row->menu_id,$this->session->userdata('group_id'),$this->session->userdata('level_id'));
 			if ($node['children']!=null) 
 				$node['state'] = 'closed';
 			else {
 				if (($cekPolicy) ) {
 					//if ($policy!="")
-					$currentPolicy = $this->getAccessPolicy($row->menu_id,$this->session->userdata('group_id'),$this->session->userdata('level_id'));	
+					$currentPolicy = $this->getAccessPolicy($row->menu_id,$this->session->userdata('user_id'),$this->session->userdata('level_id'));	
 //				var_dump($currentPolicy."=".$row->menu_id.'='.$this->session->userdata('group_id'));
 					$policy .= $currentPolicy;
-					//else {
+					//else 
 						if ($currentPolicy =='')
 							continue;
 					//}
@@ -95,17 +97,17 @@ class Sys_menu_model extends CI_Model
 		return $result;
 	}
 	
-	public function getAccessPolicy($menu_id,$group_id,$level_id){
+	public function getAccessPolicy($menu_id,$user_id,$level_id){
 		if ($level_id=="1") //superadmin
-			return "ADD;VIEW;EDIT;DELETE;PRINT;EXCEL;IMPORT;PROSES;";
+			return "ADD;VIEW;EDIT;DELETE;PRINT;EXCEL;IMPORT;PROSES;APPROVAL;";
 		else {
 			$this->db->flush_cache();
 			$this->db->select('policy');
 			$this->db->where('menu_id',$menu_id);	
-			$this->db->where('group_id',$group_id);				
-			$this->db->where('level_id',$level_id);				
+			$this->db->where('user_id',$user_id);				
+			//$this->db->where('level_id',$level_id);				
 			
-			$this->db->from('tbl_group_access');
+			$this->db->from('tbl_user_access');
 			$result = $this->db->get();
 		
 			if(isset($result->row()->policy)){
@@ -116,16 +118,16 @@ class Sys_menu_model extends CI_Model
 		}
 	}
 	
-	public function cekAkses($policy,$menu_id,$group_id,$level_id){
+	public function cekAkses($policy,$menu_id,$user_id,$level_id){
 		if ($level_id=="1") //superadmin
 			return true;
 		else {
 			//var_dump($policy.'='.$menu_id.'='.$group_id.'='.$level_id);
 			$this->db->where('menu_id',$menu_id);	
-			$this->db->where('group_id',$group_id);				
-			$this->db->where('level_id',$level_id);				
+			$this->db->where('user_id',$user_id);				
+		//	$this->db->where('level_id',$level_id);				
 			$this->db->where("policy like '%$policy%'");				
-			$this->db->from('tbl_group_access');
+			$this->db->from('tbl_user_access');
 			//var_dump($this->db->where());
 		//	var_dump($this->db->count_all_results());die;
 			return ($this->db->count_all_results()>0);
@@ -362,7 +364,7 @@ class Sys_menu_model extends CI_Model
 			
 			if ($parent_menu_id != "") {
 				if ($has_child=1){
-				//if ($has_child==0){
+				//if ($has_child==0)
 					$rs .=  "</li>";
 					$this->gotoMenuList .=  "</li>";
 				}
@@ -450,11 +452,12 @@ class Sys_menu_model extends CI_Model
 		case "4" : $this->db->where('can_acc',"1");	break;
 		case "5" : $this->db->where('can_view',"1");	break;
 		case "6" : $this->db->where('can_print',"1");	break;
+		case "7" : $this->db->where('can_approve',"1");	break;
 		}
 		
 		$this->db->where('menu_id',$menu_id);				
-		$this->db->where('group_id',$group_id);						
-		$this->db->from('sys_group_access');
+		$this->db->where('user_id',$group_id);						
+		$this->db->from('tbl_user_access');
 		//var_dump($this->db->where());
 	//	var_dump($this->db->count_all_results());die;
 		return ($this->db->count_all_results()>0);
@@ -480,6 +483,9 @@ class Sys_menu_model extends CI_Model
 	public function isCanPrint($menu_id,$group_id){
 		return $this->isCan(6,$menu_id,$group_id);
 	}
+	public function isCanApprove($menu_id,$group_id){
+		return $this->isCan(7,$menu_id,$group_id);
+	}
 	
 	public function getAutoTab($group_id){
 /*
@@ -487,12 +493,12 @@ class Sys_menu_model extends CI_Model
 		$this->db->from('tbl_menu');
 		$this->db->where_like('policy','%AUTOTAB;%',false);
 */
-		$sql = "select tbl_menu.* from tbl_menu inner join tbl_group_access g on tbl_menu.menu_id = g.menu_id where g.policy like '%AUTOTAB;%'  and hide<>1 and group_id ='$group_id' ";//like '%$app_type%'  ";
+		$sql = "select tbl_menu.* from tbl_menu inner join tbl_user_access g on tbl_menu.menu_id = g.menu_id where g.policy like '%AUTOTAB;%'  and hide<>1 and user_id ='$group_id' ";//like '%$app_type%'  ";
 		$query = $this->db->query($sql);
 		$response = array();//stdClass();
 /*
 		$i=0;
-		foreach ($query->result() as $row){
+		foreach ($query->result() as $row)
 			$response[]=array($row->menu_name,$row->url);
 			$i++;
 		}

@@ -244,16 +244,16 @@ $(function(){
 	</style>
 	<div id="tb<?=$objectId;?>" style="height:auto">
 	  <div style="margin-bottom:5px">
-		<? if($this->sys_menu_model->cekAkses('ADD;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('ADD;',3,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="newData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-add" plain="true">Tambah</a>  
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('EDIT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('EDIT;',3,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="editData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-edit" plain="true">Edit</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('DELETE;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('DELETE;',3,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="deleteData<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-remove" plain="true">Hapus</a>
 		<?}?>
-		<? if($this->sys_menu_model->cekAkses('IMPORT;',2,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('IMPORT;',3,$this->session->userdata('group_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="import<?=$objectId;?>();" class="easyui-linkbutton" iconCls="icon-import" plain="true">Import</a>
 		<?}?>
 	

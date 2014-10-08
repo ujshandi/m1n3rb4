@@ -4,7 +4,7 @@ class User_access extends CI_Controller{
 	
 	public function __construct()	{
 		parent::__construct();
-		if ($this->session->userdata('logged_in') != TRUE) redirect('security/login');		
+		if ($this->session->userdata('logged_in_e_tracking') != TRUE) redirect('security/login');		
 		$this->load->model('/security/sys_menu_model');
 		$this->load->model('/admin/user_access_model');
 		

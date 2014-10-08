@@ -124,8 +124,27 @@ class Rpt_spm_bendahara_model extends CI_Model
                 $response->rows[$i]['jumlah']=$row->jumlah; //$this->utility->ourFormatNumber($row->jumlah);
                 $jumlah += $row->jumlah;
                 //utk kepentingan export pdf===================
-                $pdfdata[] = array($no,$response->rows[$i]['nomor'],$response->rows[$i]['tujuan'],$response->rows[$i]['untuk'],$response->rows[$i]['beban_kegiatan']);
+                $pdfdata[] = array($no,$response->rows[$i]['tanggal'],$response->rows[$i]['status_verifikasi_tanggal'],$response->rows[$i]['status_penguji_tanggal'],$response->rows[$i]['nomor'],$this->utility->ourFormatNumber($response->rows[$i]['jumlah']),$response->rows[$i]['bidang'],$response->rows[$i]['kategori'],$response->rows[$i]['untuk'],$response->rows[$i]['tujuan'],$response->rows[$i]['kegiatan']);
         //============================================================
+			//utk kepentingan export excel ==========================
+				$row->spb_id = $no;
+				$row->tgl_verifikasi = $response->rows[$i]['status_verifikasi_tanggal'];
+				$row->tgl_penguji = $response->rows[$i]['status_penguji_tanggal'];
+				$row->bidang = $response->rows[$i]['bidang'];
+				$row->kegiatan = $response->rows[$i]['kegiatan'];
+				
+				unset($row->log_insert);
+				unset($row->log_update);
+				unset($row->kategori_id);
+				unset($row->bidang_id);
+				unset($row->status_penguji);
+				unset($row->status_spm);
+				unset($row->status_bendahara);
+				unset($row->status_verifikasi);
+				unset($row->spm_bendahara);
+				unset($row->beban_kode);
+				unset($row->beban_kegiatan);
+				
                 $i++;
             } 
 
@@ -174,9 +193,9 @@ class Rpt_spm_bendahara_model extends CI_Model
         }
         else if($purpose==3){//to excel
                 //tambahkan header kolom
-            $colHeaders = array("Kode","Nama Kementerian","Singkatan","Nama Menteri");		
+            $colHeaders =  array('No.','Nomor','Tgl.Input','Kepada','Untuk Pembayaran','Jumlah','Bidang','Kategori','Tgl.Verifikasi','Tgl.Persetujuan','Kegiatan');		
             //var_dump($query->result());die;
-            to_excel($query,"Kementerian",$colHeaders);
+            to_excel($query,"SPBY".strtoupper($tipereport),$colHeaders);
         }
         else if ($purpose==4) { //WEB SERVICE
             return $response;
