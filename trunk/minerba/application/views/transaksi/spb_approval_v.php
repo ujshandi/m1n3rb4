@@ -213,7 +213,7 @@ $(function(){
         $('#fm<?=$objectId;?>').form('clear');  
         //alert(row.dokter_kode);
         if (row){
-                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Persetujuan SPBY');
+                $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle',(tipeapprove=="verifikasi"?"Verifikasi":"Persetujuan")+' SPBY');
                 $('#fm<?=$objectId;?>').form('load',row);
                 autoKegiatan<?=$objectId;?>('',row.kegiatan);
                 $('#btnApprove<?=$objectId?>').show();
