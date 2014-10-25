@@ -166,10 +166,69 @@ class Tandaterima extends CI_Controller {
         }
     }
 	
-	public function print_tandaterima($id){
+	public function print_tandaterima_old($id){
 		$this->edit($id,true);
 	}
 
+	public function print_tandaterima($id){
+		$this->load->library('cezpdf');	
+		
+		$header = $this->tandaterima_model->selectById($id);
+		$rowData= $this->tandaterima_model->easyGridDetail(2,$id);;
+		if (isset($rowData)){
+			foreach ($rowData as $r){
+				
+				$row[] = array($r[0],$r[1],$r[3],$r[4],$r[5],$r[6],$r[7]);
+			}
+		}
+		
+		$data[]=array('label'=>'Nomor','separator'=>":",'value' => $header->nomor);
+		$data[]=array('label'=>'Tanggal','separator'=>":",'value' =>$this->utility->ourFormatDate2($header->tanggal));
+		$data[]=array('label'=>'Keterangan','separator'=>":",'value' =>$header->keterangan);
+		
+		$columnHeader = array("<b>No</b>","<b>Nomor</b>","<b>Bidang</b>","<b>Kategori</b>","<b>Jumlah</b>","<b>Untuk Pembayaran</b>","<b>Tujuan Pembayaran</b>");
+		
+        $pdf = new $this->cezpdf($paper='A4',$orientation='potrait');
+        $pdf->ezSetCmMargins(1,1,1,1);
+        $pdf->selectFont( APPPATH."libraries/fonts/Helvetica.afm" );
+
+		
+        $pdf->ezText('<u><b>Bukti Tanda Terima SPBY</b></u>',12,array('justification'=>'center'));
+		
+
+        $pdf->ezText('');
+        $pdf->ezText('');
+       
+		
+		$pdf->ezTable($data,array('label'=>'Type','separator'=>':','value'=>'<i>Alias</i>'),'',array('showHeadings'=>0,'shaded'=>0,'showLines'=>0,'maxWidth'=>550, 'xPos' => 40,'xOrientation' => 'right'));
+		$pdf->ezText('');
+        $pdf->ezText('');
+		$pdf->ezTable($row,$columnHeader,'',array('showHeadings'=>1,'shaded'=>0,'showLines'=>1,'maxWidth'=>530, 'xPos' => 40,'xOrientation' => 'right','cols'=>array(
+			'1'=>array('width'=>90),
+			'4'=>array('width'=>70,"justification"=>"right"),
+			'5'=>array('width'=>100),	
+			'6'=>array('width'=>100)
+		)));
+		$pdf->ezSetY(200);
+        $footer[]=array('label'=>'','value'=>'');
+        $footer[]=array('label'=>'','value'=>'');
+        $footer[]=array('label'=>'','value'=>'');
+        $footer[]=array('label'=>'','value'=>'');
+        $footer[]=array('label'=>'','value'=>'');
+        $footer[]=array('label'=>'','value'=>'');
+		$pdf->ezTable($footer,array('label'=>'Yang Menyerahkan','value'=>'Penerima'),'',array('showHeadings'=>1,'shaded'=>0,'showLines'=>1, 'xPos' => 350,'xOrientation' => 'right','colGap' => 5 ,'cols'=>array(
+								'label'=>array("width"=>100,'justification'=>'center'),
+								'value'=>array("width"=>100,'justification'=>'center'))
+								));
+        //halaman 
+        $pdf->ezStartPageNumbers(480,10,8,'right','Tgl.Cetak '.date('d-m-Y H:n:s'),1);//.'  Hal. {PAGENUM} dari {TOTALPAGENUM}',1);
+		
+       
+		
+        $opt['Content-Disposition'] = "TandaTerima.pdf";
+        $pdf->ezStream($opt);
+	}
+	
     public function pdf(){
         $this->load->library('cezpdf');	
         $pdfdata = $this->tandaterima_model->easyGrid(2);
