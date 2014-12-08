@@ -40,7 +40,7 @@
             </tr>
             </table>
 	  <div style="margin-bottom:5px">
-		<? if($this->sys_menu_model->cekAkses('APPROVAL;',(($tipeapproval=="penguji")?24:23),$this->session->userdata('user_id'),$this->session->userdata('level_id'))){?>
+		<? if($this->sys_menu_model->cekAkses('PROSES;',(($tipeapproval=="penguji")?24:23),$this->session->userdata('user_id'),$this->session->userdata('level_id'))){?>
 			<a href="#" onclick="approveData<?=$objectId;?>('<?=$tipeapproval?>');" class="easyui-linkbutton" iconCls="icon-ok" plain="true">Persetujuan</a>  
 		<?}?>
 		<? if($this->sys_menu_model->cekAkses('VIEW;',(($tipeapproval=="penguji")?24:23),$this->session->userdata('user_id'),$this->session->userdata('level_id'))){?>
@@ -60,23 +60,24 @@
 	
 	<table id="dg<?=$objectId;?>" style="height:auto;width:auto" title="Data <?=$title;?> " toolbar="#tb<?=$objectId;?>"
                fitColumns="false" singleSelect="true" rownumbers="true" pagination="true"noWrap="false" showFooter="true">
-            <thead data-options="frozen:true">
+			   <? if ($tipeapproval=="penguji"){
+            echo '<thead data-options="frozen:true">				
                 <tr>
-                    <th halign="center" align="left" colspan="2" sortable="true" width="80">Persetujuan</th>
+                    <th halign="center" align="left" colspan="2" sortable="true" width="80">Verifikasi</th>
                     <th halign="center" align="center" rowspan="2" field="nomor" sortable="true" width="200">Nomor</th>   
                 </tr>
-                
                  
                      <tr>
 		
-		<th halign="center" align="center" field="pejabat_oleh" sortable="true" width="100">Oleh</th>
-		<th halign="center" align="center" field="pejabat_tanggal" sortable="true" width="80">Tanggal</th>
+		<th halign="center" align="center" field="status_verifikasi_oleh" sortable="true" width="100">Oleh</th>
+		<th halign="center" align="center" field="status_verifikasi_tanggal" sortable="true" width="80">Tanggal</th>
                  </tr>
             </thead>
-            
+        ';
+                } ?>    
           <thead>
               <tr>
-		<th halign="center" align="left" rowspan="2" field="tanggal" sortable="true" width="80">Tgl.SPBY</th>
+		<th halign="center" align="left"  rowspan="2" field="tanggal" sortable="true" width="80">Tgl.SPBY</th>
 		<th halign="center" align="right" rowspan="2" field="jumlah" formatter="formatMoney" sortable="true" width="100">Jumlah</th>
 		<th halign="center" align="left" rowspan="2" field="bidang" sortable="true" width="100">Bidang</th>
 		<th halign="center" align="left" rowspan="2" field="kategori" sortable="true" width="100">Kategori</th>
