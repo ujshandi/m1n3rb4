@@ -68,7 +68,7 @@ $(function(){
             if (row){
                 $('#dlg<?=$objectId;?>').dialog('open').dialog('setTitle','Edit Pengguna');
                 $('#fm<?=$objectId;?>').form('load',row);
-                setE2<?=$objectId?>(row.unit_kerja_E2);
+//                setE2<=$objectId?>(row.unit_kerja_E2);
                 //alert(row.unit_kerja_E2);
                 //setTimeout(function(){
                 //},100);
@@ -88,7 +88,7 @@ $(function(){
                     return $(this).form('validate');
                 },
                 success: function(result){
-                        //alert(result);
+                    //    alert(result);
                     var result = eval('('+result+')');
                     if (result.success){
                             /* $.messager.show({
