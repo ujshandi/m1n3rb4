@@ -627,7 +627,7 @@
 		<div class="bg">
 		  
 			<div class="logo"><a href="<?=base_url()?>">home</a></div>
-			<div class="title"><h1>e-Tracking</h1><h2>Aplikasi Penelusuran Approval SPBY - MINERBA</h2><!--<h2>Sistem Informasi Pengukuran Kinerja Kementerian Perhubungan</h2>--></div>
+			<div class="title"><h1>e-Tracking</h1><h2>SISTEM INFORMASI PENGELOLAAN ANGGARAN - PUSDIKLAT MINERAL DAN BATUBARA</h2><!--<h2>Sistem Informasi Pengukuran Kinerja Kementerian Perhubungan</h2>--></div>
 			
 			<div class="rpanel">
 				<div class="left">
@@ -660,7 +660,7 @@
 	<div id="footer">
 		<div class="footer_content">
 	        <div class="footer_bottom">
-	            <div class="copyright" style="align:center">&copy; e-Tracking 2014 - <a href="#" target="_blank">Aplikasi Penelusuran Approval SPB - MINERBA</a></div>
+	            <div class="copyright" style="align:center">&copy; e-Tracking 2014 - <a href="#" target="_blank">SISTEM INFORMASI PENGELOLAAN ANGGARAN - PUSDIKLAT MINERAL DAN BATUBARA</a></div>
 	            <!-- modif by chan 
 	            <div class="footer_right_links">
 	                <ul>

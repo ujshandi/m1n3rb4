@@ -55,8 +55,8 @@
 <body>	
 	<div id="alertMessage" class="error"/><?=$err_msg;?>
 	<br>
-	<h2 align="center"><font color="#FF7F00">Aplikasi Penelusuran Approval SPB</font></h2>
-	<h3 align="center"><font color="#FF7F00">Kementerian Energi Sumber Daya Dan Mineral</font></h3>
+	<h2 align="center"><font color="#FF7F00">SISTEM INFORMASI PENGELOLAAN ANGGARAN</font></h2>
+	<h3 align="center"><font color="#FF7F00">PUSDIKLAT MINERAL DAN BATUBARA</font></h3>
     <div id="login">
 		<div class="ribbon"/>
     	<div class="inner">                
@@ -88,7 +88,7 @@
 	<!--Login div-->
 	<div class="clear"></div>
 	<div id="versionBar">
-		<div class="copyright" > Copyright 2014  All Rights Reserved <span class="tip"><a href="#" style="color:#A31F1A" title="Kemenhub">Kementerian Energi Sumber Daya Dan Mineral</a></span></div>
+		<div class="copyright" > Copyright 2014  All Rights Reserved <span class="tip"><a href="#" style="color:#A31F1A" title="Kemenhub">PUSDIKLAT MINERAL DAN BATUBARA</a></span></div>
   <!-- // copyright-->
 	</div>
 	
