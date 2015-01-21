@@ -229,30 +229,42 @@ class Tandaterima extends CI_Controller {
         $pdf->ezStream($opt);
 	}
 	
-    public function pdf(){
+    public function pdf($tipetandaterima,$periode_awal,$periode_akhir,$bidang,$nomor,$nomorTerima){
         $this->load->library('cezpdf');	
-        $pdfdata = $this->tandaterima_model->easyGrid(2);
+		 $periodeawal = $this->utility->ourDeFormatSQLDate($periode_awal);
+		$periodeakhir = $this->utility->ourDeFormatSQLDate($periode_akhir);
+        
+        $pdfdata = $this->tandaterima_model->easyGrid(2,$tipetandaterima,$periodeawal,$periodeakhir,$bidang,$nomor,$nomorTerima);
+	//	var_dump($pdfdata);die;
         if (count($pdfdata)==0){
                 echo "Data Tidak Tersedia";
                 return;
         }
         //$pdfdata = $pdfdata->rows;
-        $pdfhead = array('No.','Kode','Nama Kementerian','Singkatan','Nama Menteri');
-        $pdf = new $this->cezpdf($paper='A4',$orientation='potrait');
+        $pdfhead = array('No.','Tanggal','Nomor SPB', 'Jumlah','Kategori','Untuk Pembayaran');
+        $pdf = new $this->cezpdf($paper='A4',$orientation='landscape');
         $pdf->ezSetCmMargins(1,1,1,1);
-        $pdf->selectFont( APPPATH."libraries/fonts/Helvetica.afm" );
-//	$pdf->ezText('Biroren Kemenhub',8,array('left'=>'1'));
-        $pdf->ezText('Unit Kerja Kementerian',12,array('left'=>'1'));
-//	if (($filtahun != null)&&($filtahun != "-1"))
-        //$pdf->ezText('Tahun 2012',12,array('left'=>'1'));
-//	$pdf->ezText('Tahun 2012',12,array('left'=>'1'));
-        // if (($file1 != null)&&($file1 != "-1"))
-                // $pdf->ezText($this->eselon1_model->getNamaE1($file1),12,array('left'=>'1'));
+        $pdf->selectFont( APPPATH."libraries/fonts/Helvetica.afm" ); 
+		// switch ($tipeapproval){
+			// case "draft" : $purposeTitle = "(DRAFT)"; break;
+			// case "verifikasi" : $purposeTitle = "Yang Harus di Verifikasi"; break;
+			// case "penguji" : $purposeTitle = "Yang Akan di Periksa oleh Pejabat Penguji "; break;
+			// default :$purposeTitle = "";
+		// }
+        $pdf->ezText('Daftar Tanda Terima '.$purposeTitle,12,array('left'=>'1'));
+        $pdf->ezText('Periode : '.$periode_awal." s.d. ".$periode_akhir,12,array('left'=>'1')); 
         $pdf->ezText('');
         //halaman 
-        $pdf->ezStartPageNumbers(550,10,8,'right','',1);
-
-        $options = array(
+        $pdf->ezStartPageNumbers(650,10,8,'right','Tgl.Cetak '.date('d-m-Y H:n:s').'  Hal. {PAGENUM} dari {TOTALPAGENUM}',1);
+		
+		foreach ($pdfdata as $m){
+			//var_dump($m);die;
+			$pdf->ezText('Tanggal Tanda Terima 	: '.$m[1],12,array('left'=>'1')); 
+			$pdf->ezText('No.Tanda Terima 		: '.$m[2],12,array('left'=>'1')); 
+			$pdf->ezText('Bidang 				: '.$m[3],12,array('left'=>'1')); 
+			$pdf->ezText('Keterangan			: '.$m[4],12,array('left'=>'1')); 
+			 $pdf->ezText('');
+			 $options = array(
                 'showLines' => 2,
                 'showHeadings' => 1,
                 'fontSize' => 8,
@@ -263,19 +275,29 @@ class Tandaterima extends CI_Controller {
                 'xOrientation' => 'right',
                         'cols'=>array(
                          0=>array('justification'=>'center','width'=>25),
-                         1=>array('width'=>50),
-                         2=>array('width'=>225),
-                         3=>array('width'=>100),
-                         4=>array('width'=>125)),
-                'width'=>'520'
-        );
-        $pdf->ezTable( $pdfdata, $pdfhead, NULL, $options );
-        $opt['Content-Disposition'] = "Kementerian.pdf";
+                         1=>array('width'=>55), 
+                         2=>array('width'=>100), 
+                         3=>array('justification'=>'right','width'=>60), 
+                         4=>array('width'=>155),
+						 5=>array('width'=>200)),
+                'width'=>'700'
+				);
+				$pdfdetail =  $this->tandaterima_model->easyGridDetail(2,$m[5]);;
+				$pdf->ezTable( $pdfdetail, $pdfhead, NULL, $options );
+				 $pdf->ezText('');
+		}
+		
+       
+		
+        $opt['Content-Disposition'] = "rekapTandaTerima.pdf";
         $pdf->ezStream($opt);
     }
 
-    public function excel(){
-            echo  $this->tandaterima_model->easyGrid(3);
+    public function excel($tipetandaterima,$periode_awal,$periode_akhir,$bidang,$nomor,$nomorTerima){
+	 $periodeawal = $this->utility->ourDeFormatSQLDate($periode_awal);
+		$periodeakhir = $this->utility->ourDeFormatSQLDate($periode_akhir);
+        
+            echo  $this->tandaterima_model->easyGrid(3,$tipetandaterima,$periodeawal,$periodeakhir,$bidang,$nomor,$nomorTerima);
     }
 
 }

@@ -66,8 +66,19 @@ class Tandaterima_model extends CI_Model
              //   $response->rows[$i]['jumlah']=$row->jumlah; //$this->utility->ourFormatNumber($row->jumlah);
              //   $jumlah += $row->jumlah;
                 //utk kepentingan export pdf===================
-                $pdfdata[] = array($no,$response->rows[$i]['nomor']);
+                $pdfdata[] = array($no,$response->rows[$i]['tanggal'],$response->rows[$i]['nomor'],$response->rows[$i]['bidang'],$response->rows[$i]['keterangan'],$response->rows[$i]['tanda_id']);
         //============================================================
+				//utk kepentingan export excel ==========================
+				$row->tanda_id = $no;
+				$row->bidang = $response->rows[$i]['bidang'];
+				
+				unset($row->tipe);
+				unset($row->log_insert);
+				unset($row->log_update);
+				unset($row->bidang_id);
+				
+				
+		
                 $i++;
             } 
 
@@ -93,9 +104,9 @@ class Tandaterima_model extends CI_Model
         }
         else if($purpose==3){//to excel
                 //tambahkan header kolom
-            $colHeaders = array("Kode","Nama Kementerian","Singkatan","Nama Menteri");		
-            //var_dump($query->result());die;
-            to_excel($query,"Kementerian",$colHeaders);
+            $colHeaders = array("No","Tanggal","Nomor Tanda Terima","Bidang","Keterangan");		
+        //    var_dump($query);die;
+            to_excel($query,"TandaTerima",$colHeaders);
         }
         else if ($purpose==4) { //WEB SERVICE
             return $response;
@@ -240,8 +251,7 @@ class Tandaterima_model extends CI_Model
                 $response->rows[$i]['kegiatan']='['.$row->beban_kode.']'.$row->beban_kegiatan;
                 
                 //utk kepentingan export pdf===================
-                $pdfdata[] = array($no,$response->rows[$i]['nomor'],$response->rows[$i]['tanggal'],$response->rows[$i]['bidang'],
-				$response->rows[$i]['kategori'],$response->rows[$i]['jumlah'],$response->rows[$i]['untuk'],$response->rows[$i]['tujuan'],$response->rows[$i]['kegiatan']);
+                $pdfdata[] = array($no,$response->rows[$i]['tanggal'],$response->rows[$i]['nomor'],$response->rows[$i]['jumlah'],$response->rows[$i]['kategori'],$response->rows[$i]['untuk']);
         //============================================================
                 $i++;
             } 
